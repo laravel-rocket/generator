@@ -1,0 +1,15 @@
+<?php
+
+namespace App\Presenters;
+
+/**
+ *
+ * @property \App\Models\%%CLASS%% $entity
+ */
+
+class %%CLASS%%Presenter extends BasePresenter
+{
+    protected $multilingualFields = [%%MULTILINGUAL_COLUMNS%%];
+
+    protected $imageFields = [%%IMAGE_COLUMNS%%];
+}
