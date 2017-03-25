@@ -105,13 +105,12 @@ class RepositoryGenerator extends Generator
     }
 
     /**
-     * @param string $name
-     *
+     * @param  string $name
      * @return bool
      */
     protected function bindInterface($name)
     {
-        $bindingPath = base_path('/Providers/RepositoryBindServiceProvider.php');
+        $bindingPath = base_path('/Providers/RepositoryServiceProvider.php');
         $className = $this->getRepositoryClass($name);
 
         $key = '/* NEW BINDING */';

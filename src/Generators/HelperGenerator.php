@@ -101,7 +101,7 @@ class HelperGenerator extends Generator
     protected function bindInterface($helperName)
     {
         $className = $this->getHelperClass($helperName);
-        $bindingPath = base_path('/Providers/HelperBindServiceProvider.php');
+        $bindingPath = base_path('/Providers/HelperServiceProvider.php');
 
         $key = '/* NEW BINDING */';
         $bind = '$this->app->singleton('.PHP_EOL."            \\App\\Helpers\\".$className."Interface::class,".PHP_EOL."            \\App\\Helpers\\Production\\".$className."::class".PHP_EOL.'        );'.PHP_EOL.PHP_EOL.'        ';

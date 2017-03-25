@@ -26,9 +26,9 @@ abstract class Generator
 
     /**
      *
-     * @param \Illuminate\Config\Repository $config
+     * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
-     * @param \Illuminate\View\Factory $view
+     * @param \Illuminate\View\Factory          $view
      */
     public function __construct(
         ConfigRepository $config,
@@ -42,7 +42,7 @@ abstract class Generator
     }
 
     /**
-     * @param string $name
+     * @param string      $name
      * @param string|null $baseDirectory
      */
     abstract public function generate($name, $baseDirectory = null);
@@ -61,8 +61,8 @@ abstract class Generator
     }
 
     /**
-     * @param array $data
-     * @param string $stubPath
+     * @param  array  $data
+     * @param  string $stubPath
      * @return string
      */
     protected function replace($data, $stubPath)
@@ -78,8 +78,8 @@ abstract class Generator
     }
 
     /**
-     * @param array $data
-     * @param string $filePath
+     * @param  array  $data
+     * @param  string $filePath
      * @return bool
      */
     protected function replaceFile($data, $filePath)
@@ -114,7 +114,7 @@ abstract class Generator
     }
 
     /**
-     * @param string $path
+     * @param  string $path
      * @return bool
      */
     protected function alreadyExists($path)
@@ -155,10 +155,10 @@ abstract class Generator
     }
 
     /**
-     * @param string $modelName
-     * @param string $classPath
-     * @param string $stabFilePath
-     * @param array $additionalData
+     * @param  string $modelName
+     * @param  string $classPath
+     * @param  string $stabFilePath
+     * @param  array  $additionalData
      * @return bool
      */
     protected function generateFile($modelName, $classPath, $stabFilePath, $additionalData = [])
@@ -180,7 +180,7 @@ abstract class Generator
             'model' => strtolower($modelName),
         ] + $additionalData, $stabFilePath);
 
-        if( empty($content) ) {
+        if ( empty($content) ) {
             return false;
         }
 

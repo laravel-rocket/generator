@@ -31,9 +31,9 @@ class GeneratorCommand extends Command
 
     /**
      *
-     * @param \Illuminate\Config\Repository $config
+     * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
-     * @param \Illuminate\View\Factory $view
+     * @param \Illuminate\View\Factory          $view
      */
     public function __construct(
         ConfigRepository $config,
@@ -64,6 +64,7 @@ class GeneratorCommand extends Command
     {
         /** @var Generator $generator */
         $generator = app()->make($this->generator);
+
         return $generator->generate($name);
     }
 

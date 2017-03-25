@@ -14,6 +14,7 @@ class ModelGenerator extends Generator
         $modelName = $this->getModelName($name);
         $this->generateModel($modelName);
         $this->generateModelUnitTest($modelName);
+        $this->generateModelFactory($modelName);
     }
 
     /**
@@ -163,6 +164,7 @@ class ModelGenerator extends Generator
         foreach ($tables as $table) {
             $ret[] = $table->getName();
         }
+
         return $ret;
     }
 
@@ -203,8 +205,6 @@ class ModelGenerator extends Generator
             $columnName = $column->getName();
             if (preg_match('/^(.*_image)_id$/', $columnName, $matches)) {
 
-
-
                 $relationName = \StringHelper::snake2Camel($matches[1]);
                 $relations .= '    public function '.$relationName.'()'.PHP_EOL.'    {'.PHP_EOL.'        return $this->hasOne(\App\Models\Image::class, \'id\', \''.$columnName.'\');'.PHP_EOL.'    }'.PHP_EOL.PHP_EOL;
             } elseif (preg_match('/^(.*)_id$/', $columnName, $matches)) {
@@ -219,7 +219,6 @@ class ModelGenerator extends Generator
 
         return $relations;
     }
-
 
     /**
      * @param  string $modelName
@@ -237,5 +236,37 @@ class ModelGenerator extends Generator
         }
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
+    }
+
+    /**
+     * @param  string $modelName
+     * @return bool
+     */
+    protected function generateModelFactory($modelName)
+    {
+        $className = $this->getModelClass($modelName);
+        $tableName = $this->getTableName($modelName);
+
+        $columns = $this->getFillableColumns($tableName);
+
+        $factoryPath = base_path('/../database/factories/ModelFactory.php');
+        $key = '/* NEW MODEL FACTORY */';
+
+        $data = '$factory->define(App\Models\\'.$className.'::class, function (Faker\Generator $faker) {'.PHP_EOL.'    return ['.PHP_EOL;
+        foreach ($columns as $column) {
+            if (preg_match('/_id$/', $column->getName())) {
+                $defaultValue = 0;
+            } else {
+                $defaultValue = "''";
+            }
+            $data .= "        '".$column->getName()."' => ".$defaultValue.",".PHP_EOL;
+        }
+        $data .= '    ];'.PHP_EOL.'});'.PHP_EOL.PHP_EOL.$key;
+
+        $this->replaceFile([
+            $key => $data,
+        ], $factoryPath);
+
+        return true;
     }
 }
