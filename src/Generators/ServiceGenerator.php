@@ -107,7 +107,7 @@ class ServiceGenerator extends Generator
      */
     protected function bindInterface($name)
     {
-        $bindingPath = base_path('/src/Providers/ServiceServiceProvider.php');
+        $bindingPath = base_path('/app/Providers/ServiceServiceProvider.php');
 
         $key = '/* NEW BINDING */';
         $bind = '$this->app->singleton('.PHP_EOL."            \\App\\Services\\".$name."ServiceInterface::class,"
