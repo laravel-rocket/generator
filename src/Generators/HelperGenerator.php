@@ -83,7 +83,7 @@ class HelperGenerator extends Generator
      */
     protected function generateHelperUnitTest($helperName)
     {
-        $classPath = base_path('/../tests/Helpers/'.$helperName.'Test.php');
+        $classPath = base_path('/tests/Helpers/'.$helperName.'Test.php');
         $stubFilePath = __DIR__.'/../../stubs/helper/helper_unittest.stub';
 
         return $this->generateFile($helperName, $classPath, $stubFilePath);
@@ -109,7 +109,7 @@ class HelperGenerator extends Generator
 
     protected function addFacadeToConfig($helperName)
     {
-        $appConfigPath = base_path('/../config/app.php');
+        $appConfigPath = base_path('/config/app.php');
         $key = '/* NEW FACADE */';
         $facade = "'".$helperName."'  => \\App\\Facades\\".$helperName.'::class,'.PHP_EOL.'        '.$key;
 

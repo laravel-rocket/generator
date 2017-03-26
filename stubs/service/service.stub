@@ -2,7 +2,8 @@
 
 namespace App\Services\Production;
 
-use \App\Services\%%CLASS%%Interface;
+use App\Services\%%CLASS%%Interface;
+use LaravelRocket\Foundation\Services\Production\BaseService;
 
 class %%CLASS%% extends BaseService implements %%CLASS%%Interface
 {

@@ -88,7 +88,7 @@ class ServiceGenerator extends Generator
      */
     protected function generateServiceUnitTest($modelName)
     {
-        $classPath = base_path('/../tests/Services/'.$modelName.'ServiceTest.php');
+        $classPath = base_path('/tests/Services/'.$modelName.'ServiceTest.php');
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
