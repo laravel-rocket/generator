@@ -180,12 +180,21 @@ abstract class Generator
 
         $this->makeDirectory($classPath);
 
-        $content = $this->replace([
+        $defaultData = [
                 'MODEL' => $modelName,
                 'model' => lcfirst($modelName),
                 'CLASS' => $className,
                 'class' => lcfirst($className),
-            ] + $additionalData, $stabFilePath);
+
+            ];
+        $data = $additionalData;
+        foreach( $defaultData as $key => $value ) {
+            if (!key_exists($key, $data)) {
+                $data[$key] = $value;
+            }
+        }
+
+        $content = $this->replace($data, $stabFilePath);
 
         if (empty($content)) {
             return false;
