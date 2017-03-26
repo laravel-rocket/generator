@@ -5,7 +5,7 @@ namespace LaravelRocket\Generator\Generators;
 class ModelGenerator extends Generator
 {
 
-    protected $name        = 'make:model';
+    protected $name        = 'rocket:model';
 
     protected $description = 'Create a new model class';
 

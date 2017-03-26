@@ -5,7 +5,7 @@ namespace LaravelRocket\Generator\Generators;
 class ServiceGenerator extends Generator
 {
 
-    protected $name        = 'make:service';
+    protected $name        = 'rocket:service';
 
     protected $description = 'Create a new service class';
 
