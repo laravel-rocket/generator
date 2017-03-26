@@ -38,7 +38,7 @@ class ServiceProvider extends BaseServiceProvider
         );
 
         $this->app->singleton(
-            'command.model.make',
+            'command.rocket.model.make',
             function ($app) {
                 return new ModelGeneratorCommand($app['config'], $app['files'], $app['view']);
             }
@@ -54,7 +54,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->commands(
             'command.rocket.make.repository',
             'command.rocket.make.service',
-            'command.model.make',
+            'command.rocket.model.make',
             'command.rocket.make.helper'
         );
     }
