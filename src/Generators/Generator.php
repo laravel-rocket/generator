@@ -26,9 +26,9 @@ abstract class Generator
 
     /**
      *
-     * @param \Illuminate\Config\Repository     $config
+     * @param \Illuminate\Config\Repository $config
      * @param \Illuminate\Filesystem\Filesystem $files
-     * @param \Illuminate\View\Factory          $view
+     * @param \Illuminate\View\Factory $view
      */
     public function __construct(
         ConfigRepository $config,
@@ -42,7 +42,7 @@ abstract class Generator
     }
 
     /**
-     * @param string      $name
+     * @param string $name
      * @param string|null $baseDirectory
      */
     abstract public function generate($name, $baseDirectory = null);
@@ -61,7 +61,7 @@ abstract class Generator
     }
 
     /**
-     * @param  array  $data
+     * @param  array $data
      * @param  string $stubPath
      * @return string
      */
@@ -78,7 +78,7 @@ abstract class Generator
     }
 
     /**
-     * @param  array  $data
+     * @param  array $data
      * @param  string $filePath
      * @return bool
      */
@@ -111,6 +111,7 @@ abstract class Generator
     protected function getClassName($name)
     {
         $names = array_slice(explode('\\', $name), -1, 1);
+
         return count($names) ? $names[0] : $name;
     }
 
@@ -159,7 +160,7 @@ abstract class Generator
      * @param  string $modelName
      * @param  string $classPath
      * @param  string $stabFilePath
-     * @param  array  $additionalData
+     * @param  array $additionalData
      * @return bool
      */
     protected function generateFile($modelName, $classPath, $stabFilePath, $additionalData = [])
@@ -174,14 +175,19 @@ abstract class Generator
             }
         }
 
+        $pathInfo = pathinfo($classPath);
+        $className = $pathInfo['filename'];
+
         $this->makeDirectory($classPath);
 
         $content = $this->replace([
                 'MODEL' => $modelName,
-                'model' => strtolower($modelName),
+                'model' => lcfirst($modelName),
+                'CLASS' => $className,
+                'class' => lcfirst($className),
             ] + $additionalData, $stabFilePath);
 
-        if ( empty($content) ) {
+        if (empty($content)) {
             return false;
         }
 

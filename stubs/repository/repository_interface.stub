@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use LaravelRocket\Foundation\Repositories\SingleKeyModelRepositoryInterface;
 /**
  *
  * @method \App\Models\%%MODEL%%[] getEmptyList()
