@@ -262,9 +262,9 @@ class ModelGenerator extends Generator
         $imageFieldString = count($imageFields) > 0 ? "'".join("','", array_unique($imageFields))."'" : '';
 
         return $this->generateFile($modelName, $classPath, $stubFilePath, [
-                'MULTILINGUAL_COLUMNS' => $multilingualKeyString,
-                'IMAGE_COLUMNS'        => $imageFieldString,
-            ]);
+            'MULTILINGUAL_COLUMNS' => $multilingualKeyString,
+            'IMAGE_COLUMNS'        => $imageFieldString,
+        ]);
     }
 
     /**
@@ -277,7 +277,9 @@ class ModelGenerator extends Generator
 
         $stubFilePath = __DIR__.'/../../stubs/model/model_unittest.stub';
 
-        return $this->generateFile($modelName, $classPath, $stubFilePath);
+        return $this->generateFile($modelName, $classPath, $stubFilePath, [
+                'model' => lcfirst($modelName),
+            ]);
     }
 
     /**

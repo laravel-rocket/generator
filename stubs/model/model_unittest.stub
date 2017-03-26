@@ -2,33 +2,33 @@
 
 namespace Tests\Models;
 
-use App\Models\%%CLASS%%;
+use App\Models\%%MODEL%%;
 use Tests\TestCase;
 
-class %%CLASS%%Test extends TestCase
+class %%MODEL%%Test extends TestCase
 {
 
     protected $useDatabase = true;
 
     public function testGetInstance()
     {
-        /** @var  \App\Models\%%CLASS%% $%%class%% */
-        $%%class%% = new %%CLASS%%();
-        $this->assertNotNull($%%class%%);
+        /** @var  \App\Models\%%MODEL%% $%%model%% */
+        $%%model%% = new %%MODEL%%();
+        $this->assertNotNull($%%model%%);
     }
 
     public function testStoreNew()
     {
-        /** @var  \App\Models\%%CLASS%% $%%class%% */
-        $%%class%%Model = new %%CLASS%%();
+        /** @var  \App\Models\%%MODEL%% $%%model%% */
+        $%%model%%Model = new %%MODEL%%();
 
-        $%%class%%Data = factory(%%CLASS%%::class)->make();
-        foreach( $%%class%%Data->toFillableArray() as $key => $value ) {
-            $%%class%%Model->$key = $value;
+        $%%model%%Data = factory(%%MODEL%%::class)->make();
+        foreach( $%%model%%Data->toFillableArray() as $key => $value ) {
+            $%%model%%Model->$key = $value;
         }
-        $%%class%%Model->save();
+        $%%model%%Model->save();
 
-        $this->assertNotNull(%%CLASS%%::find($%%class%%Model->id));
+        $this->assertNotNull(%%MODEL%%::find($%%model%%Model->id));
     }
 
 }

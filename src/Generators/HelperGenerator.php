@@ -44,7 +44,7 @@ class HelperGenerator extends Generator
         $className = $this->getHelperClass($helperName);
         $classPath = $this->convertClassToPath($className);
 
-        $stubFilePath = __DIR__.'../stubs/helper/helper.stub';
+        $stubFilePath = __DIR__.'/../../stubs/helper/helper.stub';
 
         return $this->generateFile($className, $classPath, $stubFilePath);
     }
@@ -58,7 +58,7 @@ class HelperGenerator extends Generator
         $className = '\\App\\Helpers\\'.$helperName.'Interface';
         $classPath = $this->convertClassToPath($className);
 
-        $stubFilePath = __DIR__.'../stubs/helper/helper_interface.stub';
+        $stubFilePath = __DIR__.'/../../stubs/helper/helper_interface.stub';
 
         return $this->generateFile($className, $classPath, $stubFilePath);
     }
@@ -72,7 +72,7 @@ class HelperGenerator extends Generator
         $className = '\\App\\Facades\\'.$helperName;
         $classPath = $this->convertClassToPath($className);
 
-        $stubFilePath = __DIR__.'../stubs/helper/facade.stub';
+        $stubFilePath = __DIR__.'/../../stubs/helper/facade.stub';
 
         return $this->generateFile($className, $classPath, $stubFilePath);
     }
@@ -84,7 +84,7 @@ class HelperGenerator extends Generator
     protected function generateHelperUnitTest($helperName)
     {
         $classPath = base_path('/../tests/Helpers/'.$helperName.'Test.php');
-        $stubFilePath = __DIR__.'../stubs/helper/helper_unittest.stub';
+        $stubFilePath = __DIR__.'/../../stubs/helper/helper_unittest.stub';
 
         return $this->generateFile($helperName, $classPath, $stubFilePath);
     }
