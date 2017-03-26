@@ -106,12 +106,11 @@ class RepositoryGenerator extends Generator
      */
     protected function bindInterface($name)
     {
-        $bindingPath = base_path('/Providers/RepositoryServiceProvider.php');
-        $className = $this->getRepositoryClass($name);
+        $bindingPath = base_path('/app/Providers/RepositoryServiceProvider.php');
 
         $key = '/* NEW BINDING */';
-        $bind = '$this->app->singleton('.PHP_EOL."            \\App\\Repositories\\".$className."Interface::class,"
-            .PHP_EOL."            \\App\\Repositories\\Eloquent\\".$className."::class".PHP_EOL.'        );'
+        $bind = '$this->app->singleton('.PHP_EOL."            \\App\\Repositories\\".$name."RepositoryInterface::class,"
+            .PHP_EOL."            \\App\\Repositories\\Eloquent\\".$name."Repository::class".PHP_EOL.'        );'
             .PHP_EOL.PHP_EOL.'        ';
         $this->replaceFile([
             $key => $bind,

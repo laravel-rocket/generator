@@ -108,11 +108,10 @@ class ServiceGenerator extends Generator
     protected function bindInterface($name)
     {
         $bindingPath = base_path('/Providers/ServiceServiceProvider.php');
-        $className = $this->getServiceClass($name);
 
         $key = '/* NEW BINDING */';
-        $bind = '$this->app->singleton('.PHP_EOL."            \\App\\Services\\".$className."Interface::class,"
-            .PHP_EOL."            \\App\\Services\\Eloquent\\".$className."::class".PHP_EOL.'        );'
+        $bind = '$this->app->singleton('.PHP_EOL."            \\App\\Services\\".$name."ServiceInterface::class,"
+            .PHP_EOL."            \\App\\Services\\Eloquent\\".$name."Service::class".PHP_EOL.'        );'
             .PHP_EOL.PHP_EOL.'        ';
         $this->replaceFile([
             $key => $bind,
