@@ -1,7 +1,9 @@
-<?php namespace Tests\Repositories;
+<?php
+
+namespace Tests\Repositories;
 
 use App\Models\%%MODEL%%;
-use Tests\TestCase;
+use LaravelRocket\Foundation\Tests\TestCase;
 
 class %%MODEL%%RepositoryTest extends TestCase
 {
@@ -16,24 +18,24 @@ class %%MODEL%%RepositoryTest extends TestCase
 
     public function testGetList()
     {
-        $%%models%% = factory(%%MODEL%%::class, 3)->create();
-        $%%model%%Ids = $%%models%%->pluck('id')->toArray();
+        $models = factory(%%MODEL%%::class, 3)->create();
+        $%%model%%Ids = $models->pluck('id')->toArray();
 
         /** @var  \App\Repositories\%%MODEL%%RepositoryInterface $repository */
         $repository = \App::make(\App\Repositories\%%MODEL%%RepositoryInterface::class);
         $this->assertNotNull($repository);
 
-        $%%models%%Check = $repository->get('id', 'asc', 0, 1);
-        $this->assertInstanceOf(%%MODEL%%::class, $%%models%%Check[0]);
+        $modelsCheck = $repository->get('id', 'asc', 0, 1);
+        $this->assertInstanceOf(%%MODEL%%::class, $modelsCheck[0]);
 
-        $%%models%%Check = $repository->getByIds($%%model%%Ids);
-        $this->assertEquals(3, count($%%models%%Check));
+        $modelsCheck = $repository->getByIds($%%model%%Ids);
+        $this->assertEquals(3, count($modelsCheck));
     }
 
     public function testFind()
     {
-        $%%models%% = factory(%%MODEL%%::class, 3)->create();
-        $%%model%%Ids = $%%models%%->pluck('id')->toArray();
+        $models = factory(%%MODEL%%::class, 3)->create();
+        $%%model%%Ids = $models->pluck('id')->toArray();
 
         /** @var  \App\Repositories\%%MODEL%%RepositoryInterface $repository */
         $repository = \App::make(\App\Repositories\%%MODEL%%RepositoryInterface::class);

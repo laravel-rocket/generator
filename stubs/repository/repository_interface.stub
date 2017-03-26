@@ -19,4 +19,8 @@ use LaravelRocket\Foundation\Repositories\SingleKeyModelRepositoryInterface;
 
 interface %%CLASS%% extends SingleKeyModelRepositoryInterface
 {
+    /**
+     * @return \App\Models\%%MODEL%%
+     */
+    public function getBlankModel();
 }

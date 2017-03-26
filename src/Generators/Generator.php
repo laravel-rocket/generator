@@ -70,7 +70,7 @@ abstract class Generator
         $stub = $this->files->get($stubPath);
 
         foreach ($data as $key => $value) {
-            $templateKey = '%%'.strtoupper($key).'%%';
+            $templateKey = '%%'.$key.'%%';
             $stub = str_replace($templateKey, $value, $stub);
         }
 

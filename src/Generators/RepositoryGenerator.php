@@ -88,7 +88,7 @@ class RepositoryGenerator extends Generator
      */
     protected function generateRepositoryUnitTest($modelName)
     {
-        $classPath = base_path('/../tests/Repositories/'.$modelName.'RepositoryTest.php');
+        $classPath = base_path('/tests/Repositories/'.$modelName.'RepositoryTest.php');
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
