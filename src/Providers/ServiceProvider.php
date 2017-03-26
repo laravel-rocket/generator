@@ -23,38 +23,38 @@ class ServiceProvider extends BaseServiceProvider
     public function register()
     {
         $this->app->singleton(
-            'command.rocket.generate.repository',
+            'command.rocket.make.repository',
             function ($app) {
                 return new RepositoryGeneratorCommand($app['config'], $app['files'], $app['view']);
             }
         );
 
         $this->app->singleton(
-            'command.rocket.generate.service',
+            'command.rocket.make.service',
             function ($app) {
                 return new ServiceGeneratorCommand($app['config'], $app['files'], $app['view']);
             }
         );
 
         $this->app->singleton(
-            'command.rocket.generate.model',
+            'command.model.make',
             function ($app) {
                 return new ServiceGeneratorCommand($app['config'], $app['files'], $app['view']);
             }
         );
 
         $this->app->singleton(
-            'command.rocket.generate.helper',
+            'command.rocket.make.helper',
             function ($app) {
                 return new HelperGeneratorCommand($app['config'], $app['files'], $app['view']);
             }
         );
 
         $this->commands(
-            'command.rocket.generate.repository',
-            'command.rocket.generate.service',
-            'command.rocket.generate.model',
-            'command.rocket.generate.helper'
+            'command.rocket.make.repository',
+            'command.rocket.make.service',
+            'command.model.make',
+            'command.rocket.make.helper'
         );
     }
 
