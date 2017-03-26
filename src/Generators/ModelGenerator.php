@@ -9,6 +9,7 @@ class ModelGenerator extends Generator
     {
         $modelName = $this->getModelName($name);
         $this->generateModel($modelName);
+        $this->generatePresenter($modelName);
         $this->generateModelUnitTest($modelName);
         $this->generateModelFactory($modelName);
     }
@@ -72,12 +73,26 @@ class ModelGenerator extends Generator
                 }
                 $columnName = $column->getName();
                 if (!in_array($columnName, ['created_at', 'updated_at', 'deleted_at'])) {
-                    $ret[] = $columnName;
+                    $ret[] = $column;
                 }
             }
         }
 
         return $ret;
+    }
+
+    /**
+     * @param  \Doctrine\DBAL\Schema\Column $columns
+     * @return string[]
+     */
+    protected function getColumnNames($columns)
+    {
+        $result = [];
+        foreach ($columns as $column) {
+            $result[] = $column->getName();
+        }
+
+        return $result;
     }
 
     /**
@@ -173,19 +188,20 @@ class ModelGenerator extends Generator
         $className = $this->getModelClass($modelName);
         $classPath = $this->convertClassToPath($className);
 
-        $stubFilePath = __DIR__.'../stubs/repository/model.stub';
-
+        $stubFilePath = __DIR__.'/../../stubs/model/model.stub';
         $tableName = $this->getTableName($modelName);
         $columns = $this->getFillableColumns($tableName);
-        $fillables = count($columns) > 0 ? "'".implode("',".PHP_EOL."        '", $columns)."'," : '';
+
+        $fillables = count($columns) > 0 ? "'".implode("',".PHP_EOL."        '",
+                $this->getColumnNames($columns))."'," : '';
 
         return $this->generateFile($modelName, $classPath, $stubFilePath, [
-            'TABLE'                  => $tableName,
-            'FILLABLES'              => $fillables,
-            'SOFT_DELETE_CLASS_USE%' => '',
-            'SOFT_DELETE_USE'        => '',
-            'DATETIMES'              => '',
-            'RELATIONS'              => '',
+            'TABLE'                 => $tableName,
+            'FILLABLES'             => $fillables,
+            'SOFT_DELETE_CLASS_USE' => '',
+            'SOFT_DELETE_USE'       => '',
+            'DATETIMES'             => '',
+            'RELATIONS'             => '',
         ]);
     }
 
@@ -220,16 +236,46 @@ class ModelGenerator extends Generator
      * @param  string $modelName
      * @return bool
      */
+    protected function generatePresenter($modelName)
+    {
+        $className = '\\App\\Presenters\\'.$modelName.'Presenter';
+        $classPath = $this->convertClassToPath($className);
+        $stubFilePath = __DIR__.'../stubs/model/presenter.stub';
+
+        $tableName = $this->getTableName($modelName);
+        $columns = $this->getFillableColumns($tableName);
+        $multilingualKeys = [];
+        foreach ($columns as $column) {
+            if (preg_match('/^(.*)_en$/', $column->getName(), $matches)) {
+                $multilingualKeys[] = $matches[1];
+            }
+        }
+        $multilingualKeyString = count($multilingualKeys) > 0 ? "'".join("','",
+                array_unique($multilingualKeys))."'" : '';
+
+        $imageFields = [];
+        foreach ($columns as $column) {
+            if (preg_match('/^(.*_image)_id$/', $column->getName(), $matches)) {
+                $imageFields[] = $matches[1];
+            }
+        }
+        $imageFieldString = count($imageFields) > 0 ? "'".join("','", array_unique($imageFields))."'" : '';
+
+        return $this->generateFile($modelName, $classPath, $stubFilePath, [
+                'MULTILINGUAL_COLUMNS' => $multilingualKeyString,
+                'IMAGE_COLUMNS'        => $imageFieldString,
+            ]);
+    }
+
+    /**
+     * @param  string $modelName
+     * @return bool
+     */
     protected function generateModelUnitTest($modelName)
     {
-        $classPath = base_path('/../tests/Repositories/'.$modelName.'RepositoryTest.php');
-        $modelClass = $this->getModelClass($modelName);
-        $instance = new $modelClass();
+        $classPath = base_path('/tests/Models/'.$modelName.'Test.php');
 
-        $stubFilePath = __DIR__.'../stubs/repository/repository_unittest.stub';
-        if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
-            $stubFilePath = __DIR__.'../stubs/repository/repository_unittest.stub';
-        }
+        $stubFilePath = __DIR__.'/../../stubs/model/model_unittest.stub';
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
     }
@@ -245,19 +291,41 @@ class ModelGenerator extends Generator
 
         $columns = $this->getFillableColumns($tableName);
 
-        $factoryPath = base_path('/../database/factories/ModelFactory.php');
+        $factoryPath = base_path('/database/factories/ModelFactory.php');
         $key = '/* NEW MODEL FACTORY */';
 
-        $data = '$factory->define(App\Models\\'.$className.'::class, function (Faker\Generator $faker) {'.PHP_EOL.'    return ['.PHP_EOL;
+        $data = '$factory->define('.$className.'::class, function (Faker\Generator $faker) {'.PHP_EOL.'    return ['.PHP_EOL;
         foreach ($columns as $column) {
-            if (preg_match('/_id$/', $column->getName())) {
-                $defaultValue = 0;
-            } else {
-                $defaultValue = "''";
+            $defaultValue = "''";
+            switch ($column->getType()->getName()) {
+                case "bigint":
+                case "integer":
+                case "smallint":
+                    $defaultValue = 0;
+                    break;
+                case "string":
+                case "text":
+                case "binary":
+                    $defaultValue = "''";
+                    break;
+                case "datetime":
+                    $defaultValue = '$faker->datetime';
+                    break;
+            }
+            switch ($column->getName()) {
+                case "name":
+                    $defaultValue = '$faker->name';
+                    break;
+                case "email":
+                    $defaultValue = '$faker->unique()->safeEmail';
+                    break;
+                case "password":
+                    $defaultValue = 'bcrypt(\'secret\')';
+                    break;
             }
             $data .= "        '".$column->getName()."' => ".$defaultValue.",".PHP_EOL;
         }
-        $data .= '    ];'.PHP_EOL.'});'.PHP_EOL.PHP_EOL.$key;
+        $data .= '    ];'.PHP_EOL.'});'.PHP_EOL.PHP_EOL;
 
         $this->replaceFile([
             $key => $data,

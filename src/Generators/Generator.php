@@ -74,7 +74,7 @@ abstract class Generator
             $stub = str_replace($templateKey, $value, $stub);
         }
 
-        return $data;
+        return $stub;
     }
 
     /**
@@ -110,7 +110,8 @@ abstract class Generator
 
     protected function getClassName($name)
     {
-        return array_slice(explode('\\', $name), 0, -1);
+        $names = array_slice(explode('\\', $name), -1, 1);
+        return count($names) ? $names[0] : $name;
     }
 
     /**
@@ -176,9 +177,9 @@ abstract class Generator
         $this->makeDirectory($classPath);
 
         $content = $this->replace([
-            'MODEL' => $modelName,
-            'model' => strtolower($modelName),
-        ] + $additionalData, $stabFilePath);
+                'MODEL' => $modelName,
+                'model' => strtolower($modelName),
+            ] + $additionalData, $stabFilePath);
 
         if ( empty($content) ) {
             return false;
