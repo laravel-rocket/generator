@@ -4,6 +4,7 @@ namespace LaravelRocket\Generator\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use LaravelRocket\Generator\Console\Commands\HelperGeneratorCommand;
+use LaravelRocket\Generator\Console\Commands\ModelGeneratorCommand;
 use LaravelRocket\Generator\Console\Commands\RepositoryGeneratorCommand;
 use LaravelRocket\Generator\Console\Commands\ServiceGeneratorCommand;
 
@@ -39,7 +40,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->app->singleton(
             'command.model.make',
             function ($app) {
-                return new ServiceGeneratorCommand($app['config'], $app['files'], $app['view']);
+                return new ModelGeneratorCommand($app['config'], $app['files'], $app['view']);
             }
         );
 
