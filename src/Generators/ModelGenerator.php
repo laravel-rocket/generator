@@ -277,9 +277,7 @@ class ModelGenerator extends Generator
 
         $stubFilePath = __DIR__.'/../../stubs/model/model_unittest.stub';
 
-        return $this->generateFile($modelName, $classPath, $stubFilePath, [
-                'model' => lcfirst($modelName),
-            ]);
+        return $this->generateFile($modelName, $classPath, $stubFilePath);
     }
 
     /**

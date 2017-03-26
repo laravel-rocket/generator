@@ -3,7 +3,7 @@
 namespace Tests\Models;
 
 use App\Models\%%MODEL%%;
-use Tests\TestCase;
+use LaravelRocket\Foundation\Tests\TestCase;
 
 class %%MODEL%%Test extends TestCase
 {

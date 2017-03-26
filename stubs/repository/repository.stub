@@ -2,8 +2,9 @@
 
 namespace App\Repositories\Eloquent;
 
-use \App\Repositories\%%MODEL%%RepositoryInterface;
-use \App\Models\%%MODEL%%;
+use LaravelRocket\Foundation\Repositories\Eloquent\SingleKeyModelRepository;
+use App\Repositories\%%MODEL%%RepositoryInterface;
+use App\Models\%%MODEL%%;
 
 class %%MODEL%%Repository extends SingleKeyModelRepository implements %%MODEL%%RepositoryInterface
 {
