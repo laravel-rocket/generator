@@ -3,12 +3,12 @@
 namespace LaravelRocket\Generator\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use LaravelRocket\Generator\Console\Commands\AlterMigrationGeneratorCommand;
+use LaravelRocket\Generator\Console\Commands\CreateMigrationGeneratorCommand;
 use LaravelRocket\Generator\Console\Commands\HelperGeneratorCommand;
 use LaravelRocket\Generator\Console\Commands\ModelGeneratorCommand;
 use LaravelRocket\Generator\Console\Commands\RepositoryGeneratorCommand;
 use LaravelRocket\Generator\Console\Commands\ServiceGeneratorCommand;
-use LaravelRocket\Generator\Generators\AlterMigrationGenerator;
-use LaravelRocket\Generator\Generators\CreateMigrationGenerator;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -56,14 +56,14 @@ class ServiceProvider extends BaseServiceProvider
         $this->app->singleton(
             'command.rocket.make.migration.create',
             function ($app) {
-                return new CreateMigrationGenerator($app['config'], $app['files'], $app['view']);
+                return new CreateMigrationGeneratorCommand($app['config'], $app['files'], $app['view']);
             }
         );
 
         $this->app->singleton(
             'command.rocket.make.migration.alter',
             function ($app) {
-                return new AlterMigrationGenerator($app['config'], $app['files'], $app['view']);
+                return new AlterMigrationGeneratorCommand($app['config'], $app['files'], $app['view']);
             }
         );
 
