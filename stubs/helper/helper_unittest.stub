@@ -4,13 +4,13 @@ namespace Tests\Helpers;
 
 use LaravelRocket\Foundation\Tests\TestCase;
 
-class %%MODEL%%HelperTest extends TestCase
+class %%MODEL%%Test extends TestCase
 {
 
     public function testGetInstance()
     {
-        /** @var  \App\Helpers\%%MODEL%%HelperInterface $helper */
-        $helper = \App::make(\App\Helpers\%%MODEL%%helperInterface::class);
+        /** @var  \App\Helpers\%%MODEL%%Interface $helper */
+        $helper = \App::make(\App\Helpers\%%MODEL%%Interface::class);
         $this->assertNotNull($helper);
     }
 

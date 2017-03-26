@@ -55,9 +55,9 @@ class ServiceGenerator extends Generator
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
-        $stubFilePath = __DIR__.'/../../stubs/service/service.stub';
+        $stubFilePath = $this->getStabPath('/service/service.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
-            $stubFilePath = __DIR__.'/../../stubs/service/service.stub';
+            $stubFilePath = $this->getStabPath('/service/service.stub');
         }
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
@@ -74,9 +74,9 @@ class ServiceGenerator extends Generator
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
-        $stubFilePath = __DIR__.'/../../stubs/service/service_interface.stub';
+        $stubFilePath = $this->getStabPath('/service/service_interface.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
-            $stubFilePath = __DIR__.'/../../stubs/service/service_interface.stub';
+            $stubFilePath = $this->getStabPath('/service/service_interface.stub');
         }
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
@@ -92,9 +92,9 @@ class ServiceGenerator extends Generator
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
-        $stubFilePath = __DIR__.'/../../stubs/service/service_unittest.stub';
+        $stubFilePath = $this->getStabPath('/service/service_unittest.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
-            $stubFilePath = __DIR__.'/../../stubs/service/service_unittest.stub';
+            $stubFilePath = $this->getStabPath('/service/service_unittest.stub');
         }
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
@@ -111,7 +111,7 @@ class ServiceGenerator extends Generator
 
         $key = '/* NEW BINDING */';
         $bind = '$this->app->singleton('.PHP_EOL."            \\App\\Services\\".$name."ServiceInterface::class,"
-            .PHP_EOL."            \\App\\Services\\Eloquent\\".$name."Service::class".PHP_EOL.'        );'
+            .PHP_EOL."            \\App\\Services\\Production\\".$name."Service::class".PHP_EOL.'        );'
             .PHP_EOL.PHP_EOL.'        ';
         $this->replaceFile([
             $key => $bind,

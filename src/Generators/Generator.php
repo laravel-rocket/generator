@@ -196,4 +196,11 @@ abstract class Generator
         return true;
     }
 
+    protected function getStabPath($path)
+    {
+        $stubFilePath = __DIR__.'/../../stubs' . $path;
+
+        return $stubFilePath;
+    }
+
 }

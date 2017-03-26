@@ -25,7 +25,7 @@ class HelperGenerator extends Generator
         $className = $this->getClassName($name);
         $rootName = str_replace('Helper', '', $className);
 
-        return $rootName;
+        return $rootName . 'Helper';
     }
 
     protected function getHelperClass($name)
@@ -44,7 +44,7 @@ class HelperGenerator extends Generator
         $className = $this->getHelperClass($helperName);
         $classPath = $this->convertClassToPath($className);
 
-        $stubFilePath = __DIR__.'/../../stubs/helper/helper.stub';
+        $stubFilePath = $this->getStabPath('/helper/helper.stub');
 
         return $this->generateFile($className, $classPath, $stubFilePath);
     }
@@ -58,7 +58,7 @@ class HelperGenerator extends Generator
         $className = '\\App\\Helpers\\'.$helperName.'Interface';
         $classPath = $this->convertClassToPath($className);
 
-        $stubFilePath = __DIR__.'/../../stubs/helper/helper_interface.stub';
+        $stubFilePath = $this->getStabPath('/helper/helper_interface.stub');
 
         return $this->generateFile($className, $classPath, $stubFilePath);
     }
@@ -72,7 +72,7 @@ class HelperGenerator extends Generator
         $className = '\\App\\Facades\\'.$helperName;
         $classPath = $this->convertClassToPath($className);
 
-        $stubFilePath = __DIR__.'/../../stubs/helper/facade.stub';
+        $stubFilePath = $this->getStabPath('/helper/facade.stub');
 
         return $this->generateFile($className, $classPath, $stubFilePath);
     }

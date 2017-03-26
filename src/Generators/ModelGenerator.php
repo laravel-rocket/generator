@@ -188,7 +188,8 @@ class ModelGenerator extends Generator
         $className = $this->getModelClass($modelName);
         $classPath = $this->convertClassToPath($className);
 
-        $stubFilePath = __DIR__.'/../../stubs/model/model.stub';
+        $stubFilePath = $this->getStabPath('/model/model.stub');
+
         $tableName = $this->getTableName($modelName);
         $columns = $this->getFillableColumns($tableName);
 
@@ -274,8 +275,7 @@ class ModelGenerator extends Generator
     protected function generateModelUnitTest($modelName)
     {
         $classPath = base_path('/tests/Models/'.$modelName.'Test.php');
-
-        $stubFilePath = __DIR__.'/../../stubs/model/model_unittest.stub';
+        $stubFilePath = $this->getStabPath('/model/model_unittest.stub');
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
     }

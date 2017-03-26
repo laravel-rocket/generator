@@ -7,7 +7,7 @@ use LaravelRocket\Generator\Generators\HelperGenerator;
 class HelperGeneratorCommand extends GeneratorCommand
 {
 
-    protected $name        = 'rocket:helper';
+    protected $name        = 'rocket:make:helper';
 
     protected $description = 'Create a new helper class';
 

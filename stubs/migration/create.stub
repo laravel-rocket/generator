@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use LaravelRocket\Foundation\Database\Migration;
+
+class %%CLASS%% extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('%%TABLE%%', function (Blueprint $table) {
+            $table->bigIncrements('id');
+
+            // Add some more columns
+
+            $table->timestamps();
+        });
+
+        $this->updateTimestampDefaultValue('%%TABLE%%', ['updated_at'], ['created_at']);
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('%%TABLE%%');
+    }
+}

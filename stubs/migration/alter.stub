@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Schema\Blueprint;
+use LaravelRocket\Foundation\Database\Migration;
+
+class %%CLASS%% extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('%%TABLE%%', function($table) {
+            /** @var $table \Illuminate\Database\Schema\Blueprint */
+        });
+
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('%%TABLE%%', function($table) {
+            /** @var $table \Illuminate\Database\Schema\Blueprint */
+        });
+    }
+}
