@@ -7,7 +7,7 @@ use LaravelRocket\Generator\Generators\RepositoryGenerator;
 class RepositoryGeneratorCommand extends GeneratorCommand
 {
 
-    protected $name        = 'make:repository';
+    protected $name        = 'rocket:repository';
 
     protected $description = 'Create a new repository class';
 

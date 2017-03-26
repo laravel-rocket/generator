@@ -5,10 +5,6 @@ namespace LaravelRocket\Generator\Generators;
 class HelperGenerator extends Generator
 {
 
-    protected $name        = 'rocket:helper';
-
-    protected $description = 'Create a new helper class';
-
     public function generate($name, $overwrite = false, $baseDirectory = null)
     {
         $helperName = $this->getName($name);

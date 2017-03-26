@@ -7,7 +7,7 @@ use LaravelRocket\Generator\Generators\ModelGenerator;
 class ModelGeneratorCommand extends GeneratorCommand
 {
 
-    protected $name        = 'make:model';
+    protected $name        = 'rocket:model';
 
     protected $description = 'Create a new model class';
 

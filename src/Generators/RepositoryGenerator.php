@@ -5,10 +5,6 @@ namespace LaravelRocket\Generator\Generators;
 class RepositoryGenerator extends Generator
 {
 
-    protected $name        = 'rocket:repository';
-
-    protected $description = 'Create a new repository class';
-
     public function generate($name, $overwrite = false, $baseDirectory = null)
     {
         $modelName = $this->getModelName($name);

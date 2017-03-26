@@ -5,10 +5,6 @@ namespace LaravelRocket\Generator\Generators;
 class ModelGenerator extends Generator
 {
 
-    protected $name        = 'rocket:model';
-
-    protected $description = 'Create a new model class';
-
     public function generate($name, $overwrite = false, $baseDirectory = null)
     {
         $modelName = $this->getModelName($name);

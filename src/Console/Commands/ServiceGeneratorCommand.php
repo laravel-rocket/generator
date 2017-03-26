@@ -7,7 +7,7 @@ use LaravelRocket\Generator\Generators\ServiceGenerator;
 class ServiceGeneratorCommand extends GeneratorCommand
 {
 
-    protected $name        = 'make:service';
+    protected $name        = 'rocket:service';
 
     protected $description = 'Create a new service class';
 
