@@ -6,10 +6,10 @@ use LaravelRocket\Foundation\Presenters\BasePresenter;
 
 /**
  *
- * @property \App\Models\%%CLASS%% $entity
+ * @property \App\Models\%%MODEL%% $entity
  */
 
-class %%CLASS%%Presenter extends BasePresenter
+class %%MODEL%%Presenter extends BasePresenter
 {
     protected $multilingualFields = [%%MULTILINGUAL_COLUMNS%%];
 

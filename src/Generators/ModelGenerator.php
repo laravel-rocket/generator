@@ -240,7 +240,7 @@ class ModelGenerator extends Generator
     {
         $className = '\\App\\Presenters\\'.$modelName.'Presenter';
         $classPath = $this->convertClassToPath($className);
-        $stubFilePath = __DIR__.'../stubs/model/presenter.stub';
+        $stubFilePath = __DIR__.'/../../stubs/model/presenter.stub';
 
         $tableName = $this->getTableName($modelName);
         $columns = $this->getFillableColumns($tableName);
