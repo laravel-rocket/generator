@@ -35,7 +35,7 @@ class AlterMigrationGenerator extends Generator
 
     protected function getClassName($name)
     {
-        return 'Create'. ucfirst(\StringHelper::snake2Camel($name)).'Table';
+        return 'Alter'. ucfirst(\StringHelper::snake2Camel($name)).'Table';
     }
 
     protected function getPath($name)
