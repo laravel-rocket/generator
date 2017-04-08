@@ -252,7 +252,8 @@ class AdminCRUDGenerator extends Generator
      */
     protected function generateEditForm($name)
     {
-        $tableName = $this->getTableName($name);
+        $modelName = $this->getModelName($name);
+        $tableName = $this->getTableName($modelName);
         $columns = $this->getFillableColumns($tableName);
         $result = '';
         foreach ($columns as $column) {
@@ -289,7 +290,9 @@ class AdminCRUDGenerator extends Generator
             }
             $result .= $this->replace([
                 'column' => $name,
-            ], $stubPath);
+                'models-spinal'  => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
+                'models'         => \StringHelper::pluralize($modelName),
+            ], $stubPath) . PHP_EOL;
 
         }
 
