@@ -22,6 +22,12 @@
 @stop
 
 @section('content')
+    <div class="c-admincrud__controll">
+        <a href="{!! action('Admin\%%MODEL%%Controller@create') !!}" class="button">@lang('admin.pages.common.buttons.create')</a>
+    </div>
+    <div class="c-admincrud__pagination">
+        {!! \PaginationHelper::render($offset, $limit, $count, $baseUrl, [], 5, 'shared.admin.pagination') !!}
+    </div>
     <div class="c-admincrud__list">
         <table class="c-admincrud__table">
             <tr>
