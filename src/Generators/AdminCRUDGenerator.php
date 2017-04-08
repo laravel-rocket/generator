@@ -183,7 +183,7 @@ class AdminCRUDGenerator extends Generator
         $classPath = base_path('/tests/Controllers/Admin/'.$modelName.'ControllerTest.php');
         $stubFilePath = $this->getStubPath('/admin-crud/unittest.stub');
 
-        return $this->generateFile($modelName, $classPath, $stubFilePath);
+        return $this->saveFile($modelName, $classPath, $stubFilePath);
     }
 
     /**
@@ -215,7 +215,8 @@ class AdminCRUDGenerator extends Generator
 
         $key = '/* NEW PAGE STRINGS */';
 
-        $columns = $this->getFillableColumns($modelName);
+        $tableName = $this->getTableName($modelName);
+        $columns = $this->getFillableColumns($tableName);
         $bind = "'".$directoryName."'   => [".PHP_EOL."            'columns'  => [".PHP_EOL;
         foreach ($columns as $column) {
             $name = $column->getName();
