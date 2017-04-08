@@ -39,7 +39,7 @@ class AdminCRUDGenerator extends Generator
     {
         $modelName = $this->getModelName($name);
 
-        return '\\App\\Http\\Controller\\Admin\\'.$modelName.'Request';
+        return '\\App\\Http\\Controller\\Admin\\'.$modelName.'Controller';
     }
 
     /**
@@ -50,7 +50,7 @@ class AdminCRUDGenerator extends Generator
     {
         $modelName = $this->getModelName($name);
 
-        return '\\App\\Http\\Requests\\Admin\\'.$modelName.'Controller';
+        return '\\App\\Http\\Requests\\Admin\\'.$modelName.'Request';
     }
 
     /**
@@ -152,7 +152,7 @@ class AdminCRUDGenerator extends Generator
         $className = $this->getRequestClass($modelName);
         $classPath = $this->convertClassToPath($className);
 
-        $stubFilePath = $this->getStubPath('/admin-crud/controller.stub');
+        $stubFilePath = $this->getStubPath('/admin-crud/request.stub');
 
         return $this->saveFile($modelName, $classPath, $stubFilePath);
     }
