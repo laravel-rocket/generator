@@ -291,13 +291,18 @@ class AdminCRUDGenerator extends Generator
                     }
                 }
             }
+
+            $fieldName = strlen($name) > 3 ? substr($name, 0, strlen($name) - 3) : $name;
+            $relationName = lcfirst(\StringHelper::snake2Camel($fieldName));
+
             $result .= $this->replace([
                     'column'        => $name,
                     'models-spinal' => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
-                    'models'        => \StringHelper::pluralize($modelName),
-                    'model'         => $modelName,
+                    'models'        => \StringHelper::pluralize(lcfirst($modelName)),
+                    'MODEL'         => $modelName,
+                    'model'         => lcfirst($modelName),
+                    'relation'      => $relationName,
                 ], $stubPath).PHP_EOL;
-
         }
 
         return $result;
