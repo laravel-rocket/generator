@@ -92,6 +92,7 @@ class GeneratorCommand extends Command
         }
 
         $names = array_slice(explode('\\', $name), -1, 1);
+
         return count($names) ? $names[0] : $name;
     }
 

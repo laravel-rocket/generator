@@ -26,9 +26,9 @@ abstract class Generator
 
     /**
      *
-     * @param \Illuminate\Config\Repository $config
+     * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
-     * @param \Illuminate\View\Factory $view
+     * @param \Illuminate\View\Factory          $view
      */
     public function __construct(
         ConfigRepository $config,
@@ -42,7 +42,7 @@ abstract class Generator
     }
 
     /**
-     * @param string $name
+     * @param string      $name
      * @param string|null $baseDirectory
      */
     abstract public function generate($name, $baseDirectory = null);
@@ -61,7 +61,7 @@ abstract class Generator
     }
 
     /**
-     * @param  array $data
+     * @param  array  $data
      * @param  string $stubPath
      * @return string
      */
@@ -78,7 +78,7 @@ abstract class Generator
     }
 
     /**
-     * @param  array $data
+     * @param  array  $data
      * @param  string $filePath
      * @return bool
      */
@@ -116,7 +116,7 @@ abstract class Generator
     }
 
     /**
-     * @param  string $tableName
+     * @param  string                         $tableName
      * @return \Doctrine\DBAL\Schema\Column[]
      */
     protected function getFillableColumns($tableName)
@@ -242,7 +242,7 @@ abstract class Generator
      * @param  string $modelName
      * @param  string $classPath
      * @param  string $stubFilePath
-     * @param  array $additionalData
+     * @param  array  $additionalData
      * @return bool
      */
     protected function generateFile($modelName, $classPath, $stubFilePath, $additionalData = [])
@@ -291,7 +291,7 @@ abstract class Generator
     {
         $stubFilePath = resource_path('stubs'.$path);
 
-        if( $this->files->exists($stubFilePath) ) {
+        if ( $this->files->exists($stubFilePath) ) {
             return $stubFilePath;
         }
 

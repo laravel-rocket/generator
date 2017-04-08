@@ -101,9 +101,9 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param string $modelName
-     * @param string $classPath
-     * @param string $stubFilePath
+     * @param  string $modelName
+     * @param  string $classPath
+     * @param  string $stubFilePath
      * @return bool
      */
     protected function saveFile($modelName, $classPath, $stubFilePath)
@@ -442,7 +442,7 @@ class AdminCRUDGenerator extends Generator
                 }
             }
         }
-        $result = implode(',', array_map(function($name) {
+        $result = implode(',', array_map(function ($name) {
             return "'".$name."'";
         }, $params));
 
@@ -457,10 +457,10 @@ class AdminCRUDGenerator extends Generator
         foreach ($columns as $column) {
             $name = $column->getName();
             $type = $column->getType();
-            if( $type == 'string' || $type == 'text' ) {
+            if ($type == 'string' || $type == 'text') {
                 return $name;
             }
-            if( $type == 'integer' ) {
+            if ($type == 'integer') {
                 $candidate = $name;
             }
         }
