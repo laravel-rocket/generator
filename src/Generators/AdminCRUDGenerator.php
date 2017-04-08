@@ -258,7 +258,7 @@ class AdminCRUDGenerator extends Generator
         $result = '';
         foreach ($columns as $column) {
             $name = $column->getName();
-            $type = $column->getType();
+            $type = $column->getType()->getName();
 
             if ($name == 'id') {
                 continue;
@@ -283,6 +283,8 @@ class AdminCRUDGenerator extends Generator
                             break;
                         case 'string':
                         case 'integer':
+                        case "bigint":
+                        case "smallint":
                             $stubPath = $this->getStubPath('/admin-crud/form/text.stub');
                             break;
                     }
@@ -292,6 +294,7 @@ class AdminCRUDGenerator extends Generator
                     'column'        => $name,
                     'models-spinal' => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
                     'models'        => \StringHelper::pluralize($modelName),
+                    'model'         => $modelName,
                 ], $stubPath).PHP_EOL;
 
         }
@@ -312,7 +315,7 @@ class AdminCRUDGenerator extends Generator
         $result = '';
         foreach ($columns as $column) {
             $name = $column->getName();
-            $type = $column->getType();
+            $type = $column->getType()->getName();
 
             if (\StringHelper::endsWith($name, 'image_id')) {
                 continue;
@@ -347,7 +350,7 @@ class AdminCRUDGenerator extends Generator
         $result = '';
         foreach ($columns as $column) {
             $name = $column->getName();
-            $type = $column->getType();
+            $type = $column->getType()->getName();
 
             if (\StringHelper::endsWith($name, 'image_id')) {
                 continue;
@@ -385,7 +388,7 @@ class AdminCRUDGenerator extends Generator
         $result = '';
         foreach ($columns as $column) {
             $name = $column->getName();
-            $type = $column->getType();
+            $type = $column->getType()->getName();
 
             if (\StringHelper::endsWith($name, 'image_id')) {
                 continue;
@@ -422,7 +425,7 @@ class AdminCRUDGenerator extends Generator
         $params = [];
         foreach ($columns as $column) {
             $name = $column->getName();
-            $type = $column->getType();
+            $type = $column->getType()->getName();
 
             if (\StringHelper::endsWith($name, 'image_id')) {
                 continue;
@@ -457,7 +460,7 @@ class AdminCRUDGenerator extends Generator
         $candidate = "NONAME";
         foreach ($columns as $column) {
             $name = $column->getName();
-            $type = $column->getType();
+            $type = $column->getType()->getName();
             if ($type == 'string' || $type == 'text') {
                 return $name;
             }

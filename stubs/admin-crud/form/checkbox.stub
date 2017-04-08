@@ -2,4 +2,5 @@
   <label for="%%column%%">
   <input type="checkbox" name="%%column%%" value="1"' @if( $%%model%%->%%column%%) checked @endif >
   @lang('admin.pages.%%models-spinal%%.columns.%%column%%')
+  </label>
 </div>
