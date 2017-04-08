@@ -1,0 +1,5 @@
+<div class="c-admincrud__form @if ($errors->has(\'%%column%%\')) c-admincrud__form--is-error @endif">
+  <label for="%%column%%">
+  <input type="checkbox" name="%%column%%" value="1"' @if( $%%model%%->%%column%%) checked @endif >
+  @lang(\'admin.pages.%%models-spinal%%.columns.%%column%%\')
+</div>

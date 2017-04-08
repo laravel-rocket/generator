@@ -20,7 +20,7 @@ class AlterMigrationGenerator extends Generator
         }
 
         $path = $this->getPath($name);
-        $stubFilePath = $this->getStabPath('/migration/alter.stub');
+        $stubFilePath = $this->getStubPath('/migration/alter.stub');
 
         return $this->generateFile($className, $path, $stubFilePath, [
             'CLASS' => $className,

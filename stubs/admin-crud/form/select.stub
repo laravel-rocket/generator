@@ -1,0 +1,6 @@
+<div class="c-admincrud__form @if ($errors->has(\'%%column%%\')) c-admincrud__form--is-error @endif">
+  <label for="%%column%%">@lang(\'admin.pages.%%models-spinal%%.columns.%%column%%\')
+  <select name="%%column%%">
+    <option value="">-</option>
+  </select>
+</div>

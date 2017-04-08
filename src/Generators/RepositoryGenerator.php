@@ -55,9 +55,9 @@ class RepositoryGenerator extends Generator
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
-        $stubFilePath = $this->getStabPath('/repository/repository.stub');
+        $stubFilePath = $this->getStubPath('/repository/repository.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
-            $stubFilePath = $this->getStabPath('/repository/repository.stub');
+            $stubFilePath = $this->getStubPath('/repository/repository.stub');
         }
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
@@ -74,9 +74,9 @@ class RepositoryGenerator extends Generator
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
-        $stubFilePath = $this->getStabPath('/repository/repository_interface.stub');
+        $stubFilePath = $this->getStubPath('/repository/repository_interface.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
-            $stubFilePath = $this->getStabPath('/repository/repository_interface.stub');
+            $stubFilePath = $this->getStubPath('/repository/repository_interface.stub');
         }
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
@@ -92,9 +92,9 @@ class RepositoryGenerator extends Generator
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
-        $stubFilePath = $this->getStabPath('/repository/repository_unittest.stub');
+        $stubFilePath = $this->getStubPath('/repository/repository_unittest.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
-            $stubFilePath = $this->getStabPath('/repository/repository_unittest.stub');
+            $stubFilePath = $this->getStubPath('/repository/repository_unittest.stub');
         }
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);

@@ -116,6 +116,88 @@ abstract class Generator
     }
 
     /**
+     * @param  string $tableName
+     * @return \Doctrine\DBAL\Schema\Column[]
+     */
+    protected function getFillableColumns($tableName)
+    {
+        $ret = [];
+        $columns = $this->getTableColumns($tableName);
+        if ($columns) {
+            foreach ($columns as $column) {
+                if ($column->getAutoincrement()) {
+                    continue;
+                }
+                $columnName = $column->getName();
+                if (!in_array($columnName, ['created_at', 'updated_at', 'deleted_at'])) {
+                    $ret[] = $column;
+                }
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @param  string $modelName
+     * @return string
+     */
+    protected function getTableName($modelName)
+    {
+        $modelName = $this->getModelName($modelName);
+
+        $name = \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
+        $columns = $this->getTableColumns($name);
+        if (count($columns)) {
+            return $name;
+        }
+
+        $name = \StringHelper::singularize(\StringHelper::camel2Snake($modelName));
+        $columns = $this->getTableColumns($name);
+        if (count($columns)) {
+            return $name;
+        }
+
+        return \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
+    }
+
+    /**
+     * @param string $tableName
+     *
+     * @return \Doctrine\DBAL\Schema\Column[]
+     */
+    protected function getTableColumns($tableName)
+    {
+        $hasDoctrine = interface_exists('Doctrine\DBAL\Driver');
+        if (!$hasDoctrine) {
+            return [];
+        }
+
+        $platform = \DB::getDoctrineConnection()->getDatabasePlatform();
+        $platform->registerDoctrineTypeMapping('json', 'string');
+
+        $schema = \DB::getDoctrineSchemaManager();
+
+        $columns = $schema->listTableColumns($tableName);
+
+        return $columns;
+    }
+
+    /**
+     * @param  \Doctrine\DBAL\Schema\Column $columns
+     * @return string[]
+     */
+    protected function getColumnNames($columns)
+    {
+        $result = [];
+        foreach ($columns as $column) {
+            $result[] = $column->getName();
+        }
+
+        return $result;
+    }
+
+    /**
      * @param  string $path
      * @return bool
      */
@@ -159,11 +241,11 @@ abstract class Generator
     /**
      * @param  string $modelName
      * @param  string $classPath
-     * @param  string $stabFilePath
+     * @param  string $stubFilePath
      * @param  array $additionalData
      * @return bool
      */
-    protected function generateFile($modelName, $classPath, $stabFilePath, $additionalData = [])
+    protected function generateFile($modelName, $classPath, $stubFilePath, $additionalData = [])
     {
         if ($this->alreadyExists($classPath)) {
             if ($this->shouldOverwrite()) {
@@ -181,20 +263,20 @@ abstract class Generator
         $this->makeDirectory($classPath);
 
         $defaultData = [
-                'MODEL' => $modelName,
-                'model' => lcfirst($modelName),
-                'CLASS' => $className,
-                'class' => lcfirst($className),
+            'MODEL' => $modelName,
+            'model' => lcfirst($modelName),
+            'CLASS' => $className,
+            'class' => lcfirst($className),
 
-            ];
+        ];
         $data = $additionalData;
-        foreach( $defaultData as $key => $value ) {
+        foreach ($defaultData as $key => $value) {
             if (!key_exists($key, $data)) {
                 $data[$key] = $value;
             }
         }
 
-        $content = $this->replace($data, $stabFilePath);
+        $content = $this->replace($data, $stubFilePath);
 
         if (empty($content)) {
             return false;
@@ -205,9 +287,15 @@ abstract class Generator
         return true;
     }
 
-    protected function getStabPath($path)
+    protected function getStubPath($path)
     {
-        $stubFilePath = __DIR__.'/../../stubs' . $path;
+        $stubFilePath = resource_path('stubs'.$path);
+
+        if( $this->files->exists($stubFilePath) ) {
+            return $stubFilePath;
+        }
+
+        $stubFilePath = __DIR__.'/../../stubs'.$path;
 
         return $stubFilePath;
     }

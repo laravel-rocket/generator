@@ -37,65 +37,6 @@ class ModelGenerator extends Generator
     }
 
     /**
-     * @param string $tableName
-     *
-     * @return \Doctrine\DBAL\Schema\Column[]
-     */
-    protected function getTableColumns($tableName)
-    {
-        $hasDoctrine = interface_exists('Doctrine\DBAL\Driver');
-        if (!$hasDoctrine) {
-            return [];
-        }
-
-        $platform = \DB::getDoctrineConnection()->getDatabasePlatform();
-        $platform->registerDoctrineTypeMapping('json', 'string');
-
-        $schema = \DB::getDoctrineSchemaManager();
-
-        $columns = $schema->listTableColumns($tableName);
-
-        return $columns;
-    }
-
-    /**
-     * @param  string $tableName
-     * @return array
-     */
-    protected function getFillableColumns($tableName)
-    {
-        $ret = [];
-        $columns = $this->getTableColumns($tableName);
-        if ($columns) {
-            foreach ($columns as $column) {
-                if ($column->getAutoincrement()) {
-                    continue;
-                }
-                $columnName = $column->getName();
-                if (!in_array($columnName, ['created_at', 'updated_at', 'deleted_at'])) {
-                    $ret[] = $column;
-                }
-            }
-        }
-
-        return $ret;
-    }
-
-    /**
-     * @param  \Doctrine\DBAL\Schema\Column $columns
-     * @return string[]
-     */
-    protected function getColumnNames($columns)
-    {
-        $result = [];
-        foreach ($columns as $column) {
-            $result[] = $column->getName();
-        }
-
-        return $result;
-    }
-
-    /**
      * @param  string $tableName
      * @return array
      */
@@ -138,29 +79,6 @@ class ModelGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
-     * @return string
-     */
-    protected function getTableName($modelName)
-    {
-        $modelName = $this->getModelName($modelName);
-
-        $name = \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
-        $columns = $this->getTableColumns($name);
-        if (count($columns)) {
-            return $name;
-        }
-
-        $name = \StringHelper::singularize(\StringHelper::camel2Snake($modelName));
-        $columns = $this->getTableColumns($name);
-        if (count($columns)) {
-            return $name;
-        }
-
-        return \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
-    }
-
-    /**
      * @return string[]
      */
     protected function getTableList()
@@ -188,7 +106,7 @@ class ModelGenerator extends Generator
         $className = $this->getModelClass($modelName);
         $classPath = $this->convertClassToPath($className);
 
-        $stubFilePath = $this->getStabPath('/model/model.stub');
+        $stubFilePath = $this->getStubPath('/model/model.stub');
 
         $tableName = $this->getTableName($modelName);
         $columns = $this->getFillableColumns($tableName);
@@ -275,7 +193,7 @@ class ModelGenerator extends Generator
     protected function generateModelUnitTest($modelName)
     {
         $classPath = base_path('/tests/Models/'.$modelName.'Test.php');
-        $stubFilePath = $this->getStabPath('/model/model_unittest.stub');
+        $stubFilePath = $this->getStubPath('/model/model_unittest.stub');
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
     }

@@ -1,0 +1,40 @@
+@extends('layouts.admin.application', ['menu' => '%%classes-snake%%'] )
+
+@section('metadata')
+@stop
+
+@section('styles')
+@stop
+
+@section('scripts')
+@stop
+
+@section('title')
+$%%model%%->id | %%MODELS%% | Admin
+@stop
+
+@section('header')
+%%MODELS%%
+@stop
+
+@section('breadcrumb')
+    <li><a href="{!! action('Admin\%%MODEL%%Controller@index') !!}"><i class="fa fa-files-o"></i> %%MODELS%%</a></li>
+    @if( $isNew )
+    <li class="c-admin__breadcrumb c-admin__breadcrumb--is-active">New</li>
+    @else
+    <li class="c-admin__breadcrumb c-admin__breadcrumb--is-active">{{ $%%model%%->id }}</li>
+    @endif
+@stop
+
+@section('content')
+    @if( $isNew )
+    <form action="{!! action('Admin\%%MODEL%%Controller@store') !!}" method="POST" enctype="multipart/form-data">
+    @else
+    <form action="{!! action('Admin\%%MODEL%%Controller@update', [$%%model%%->id]) !!}" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_method" value="PUT">
+    @endif
+        {!! csrf_field() !!}
+        %%FORM%%
+        <button type="submit" class="button">@lang('admin.pages.common.buttons.save')</button>
+    </form>
+@stop

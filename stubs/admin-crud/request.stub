@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use LaravelRocket\Foundation\Http\Requests\Request;
+use App\Repositories\%%MODEL%%RepositoryInterface;
+
+model %%MODEL%%Request extends Request
+{
+
+    /** @var \App\Repositories\%%MODEL%%RepositoryInterface */
+    protected $%%model%%Repository;
+
+    public function __construct(%%MODEL%%RepositoryInterface $%%model%%Repository)
+    {
+        $this->%%model%%Repository = $%%model%%Repository;
+    }
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return $this->%%model%%Repository->rules();
+    }
+
+    public function messages()
+    {
+        return $this->%%model%%Repository->messages();
+    }
+
+}

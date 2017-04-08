@@ -1,0 +1,8 @@
+                    $template =  '                    <div class="row">'
+                        .PHP_EOL.'                        <div class="col-md-12">'
+                        .PHP_EOL.'                            <div class="form-group @if ($errors->has(\'%%column%%\')) has-error @endif">'
+                        .PHP_EOL.'                                <label for="%%column%%">@lang(\'admin.pages.%%classes-spinal%%.columns.%%column%%\')</label>'
+                        .PHP_EOL.'                                <textarea name="%%column%%" class="form-control" rows="5" placeholder="@lang(\'admin.pages.%%classes-spinal%%.columns.%%column%%\')">{{ old(\'%%column%%\') ? old(\'%%column%%\') : $%%class%%->%%column%% }}</textarea>'
+                        .PHP_EOL.'                            </div>'
+                        .PHP_EOL.'                        </div>'
+                        .PHP_EOL.'                    </div>';

@@ -55,9 +55,9 @@ class ServiceGenerator extends Generator
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
-        $stubFilePath = $this->getStabPath('/service/service.stub');
+        $stubFilePath = $this->getStubPath('/service/service.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
-            $stubFilePath = $this->getStabPath('/service/service.stub');
+            $stubFilePath = $this->getStubPath('/service/service.stub');
         }
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
@@ -74,9 +74,9 @@ class ServiceGenerator extends Generator
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
-        $stubFilePath = $this->getStabPath('/service/service_interface.stub');
+        $stubFilePath = $this->getStubPath('/service/service_interface.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
-            $stubFilePath = $this->getStabPath('/service/service_interface.stub');
+            $stubFilePath = $this->getStubPath('/service/service_interface.stub');
         }
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
@@ -92,9 +92,9 @@ class ServiceGenerator extends Generator
         $modelClass = $this->getModelClass($modelName);
         $instance = new $modelClass();
 
-        $stubFilePath = $this->getStabPath('/service/service_unittest.stub');
+        $stubFilePath = $this->getStubPath('/service/service_unittest.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
-            $stubFilePath = $this->getStabPath('/service/service_unittest.stub');
+            $stubFilePath = $this->getStubPath('/service/service_unittest.stub');
         }
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);

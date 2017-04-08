@@ -20,7 +20,7 @@ class CreateMigrationGenerator extends Generator
         }
 
         $path = $this->getPath($name);
-        $stubFilePath = $this->getStabPath('/migration/create.stub');
+        $stubFilePath = $this->getStubPath('/migration/create.stub');
 
         return $this->generateFile($className, $path, $stubFilePath, [
             'CLASS' => $className,
