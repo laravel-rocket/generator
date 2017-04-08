@@ -289,10 +289,10 @@ class AdminCRUDGenerator extends Generator
                 }
             }
             $result .= $this->replace([
-                'column' => $name,
-                'models-spinal'  => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
-                'models'         => \StringHelper::pluralize($modelName),
-            ], $stubPath) . PHP_EOL;
+                    'column'        => $name,
+                    'models-spinal' => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
+                    'models'        => \StringHelper::pluralize($modelName),
+                ], $stubPath).PHP_EOL;
 
         }
 
@@ -305,7 +305,9 @@ class AdminCRUDGenerator extends Generator
      */
     protected function generateListHeader($name)
     {
-        $tableName = $this->getTableName($name);
+        $modelName = $this->getModelName($name);
+        $spinalName = \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName));
+        $tableName = $this->getTableName($modelName);
         $columns = $this->getFillableColumns($tableName);
         $result = '';
         foreach ($columns as $column) {
@@ -314,20 +316,18 @@ class AdminCRUDGenerator extends Generator
 
             if (\StringHelper::endsWith($name, 'image_id')) {
                 continue;
+            } elseif (\StringHelper::endsWith($name, '_id')) {
+                continue;
             } else {
-                if (\StringHelper::endsWith($name, '_id')) {
-                    continue;
-                } else {
-                    switch ($type) {
-                        case 'text':
-                            break;
-                        case 'datetime':
-                        case 'string':
-                        case 'integer':
-                        case 'boolean':
-                            $result .= '                <th>@lang(\'admin.pages.%%classes-spinal%%.columns.'.$name.'\')</th>'.PHP_EOL;
-                            break;
-                    }
+                switch ($type) {
+                    case 'text':
+                        break;
+                    case 'datetime':
+                    case 'string':
+                    case 'integer':
+                    case 'boolean':
+                        $result .= '                <th>@lang(\'admin.pages.'.$spinalName.'.columns.'.$name.'\')</th>'.PHP_EOL;
+                        break;
                 }
             }
         }
@@ -341,6 +341,7 @@ class AdminCRUDGenerator extends Generator
      */
     protected function generateListRow($name)
     {
+        $modelName = $this->getModelName($name);
         $tableName = $this->getTableName($name);
         $columns = $this->getFillableColumns($tableName);
         $result = '';
@@ -358,12 +359,12 @@ class AdminCRUDGenerator extends Generator
                         case 'text':
                             break;
                         case 'boolean':
-                            $result .= '                <td>{{ ($%%model%%->'.$name.') ?  \'ON\' : \'OFF\' }}<\/td>'.PHP_EOL;
+                            $result .= '                <td>{{ ($'.$modelName.'->'.$name.') ?  \'ON\' : \'OFF\' }}<\/td>'.PHP_EOL;
                             break;
                         case 'datetime':
                         case 'string':
                         case 'integer':
-                            $result .= '                <td>{{ $%%model%%->'.$name.' }}</td>'.PHP_EOL;
+                            $result .= '                <td>{{ $'.$modelName.'->'.$name.' }}</td>'.PHP_EOL;
                             break;
                     }
                 }
@@ -442,7 +443,7 @@ class AdminCRUDGenerator extends Generator
                 }
             }
         }
-        $result = implode(',', array_map(function ($name) {
+        $result = implode(',', array_map(function($name) {
             return "'".$name."'";
         }, $params));
 
