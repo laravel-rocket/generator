@@ -15,7 +15,6 @@ class AdminCRUDGenerator extends Generator
         $this->generateUnittest($modelName);
         $this->addItemToSubMenu($modelName);
         $this->addItemToLanguageFile($modelName);
-        $this->addItemToSubMenu($modelName);
         $this->addItemToRoute($modelName);
     }
 
@@ -39,7 +38,7 @@ class AdminCRUDGenerator extends Generator
     {
         $modelName = $this->getModelName($name);
 
-        return '\\App\\Http\\Controller\\Admin\\'.$modelName.'Controller';
+        return '\\App\\Http\\Controllers\\Admin\\'.$modelName.'Controller';
     }
 
     /**
@@ -241,7 +240,7 @@ class AdminCRUDGenerator extends Generator
         $directoryName = \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName));
 
         $key = '/* NEW ADMIN RESOURCE ROUTE */';
-        $bind = '\\Route::resource(\''.$directoryName.'\', \'Admin\\'.$modelName.'Controller\');'.PHP_EOL.'                ';
+        $bind = '\\Route::resource(\''.$directoryName.'\', \'Admin\\'.$modelName.'Controller\');'.PHP_EOL.'        ';
 
         return $this->replaceFile([
             $key => $bind,

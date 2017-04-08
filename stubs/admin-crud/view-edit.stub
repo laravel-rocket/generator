@@ -18,7 +18,7 @@ $%%model%%->id | %%MODELS%% | Admin
 @stop
 
 @section('breadcrumb')
-    <li><a href="{!! action('Admin\%%MODEL%%Controller@index') !!}"><i class="fa fa-files-o"></i> %%MODELS%%</a></li>
+    <li class="c-admin__breadcrumb"><a href="{!! action('Admin\%%MODEL%%Controller@index') !!}"><i class="fa fa-files-o"></i> %%MODELS%%</a></li>
     @if( $isNew )
     <li class="c-admin__breadcrumb c-admin__breadcrumb--is-active">New</li>
     @else
@@ -27,10 +27,11 @@ $%%model%%->id | %%MODELS%% | Admin
 @stop
 
 @section('content')
+    <form
     @if( $isNew )
-    <form action="{!! action('Admin\%%MODEL%%Controller@store') !!}" method="POST" enctype="multipart/form-data">
+    action="{!! action('Admin\%%MODEL%%Controller@store') !!}" method="POST" enctype="multipart/form-data">
     @else
-    <form action="{!! action('Admin\%%MODEL%%Controller@update', [$%%model%%->id]) !!}" method="POST" enctype="multipart/form-data">
+    action="{!! action('Admin\%%MODEL%%Controller@update', [$%%model%%->id]) !!}" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="_method" value="PUT">
     @endif
         {!! csrf_field() !!}
