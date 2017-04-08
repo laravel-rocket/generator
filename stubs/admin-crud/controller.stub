@@ -67,10 +67,10 @@ class %%MODEL%%Controller extends Controller
     {
         $input = $request->only([%%COLUMNS%%]);
         %%COLUMN_UPDATES%%
-        $input['is_enabled'] = $request->get('is_enabled', 0);
-        $model = $this->%%model%%Repository->create($input);
 
-        if (empty( $model )) {
+        $%%model%% = $this->%%model%%Repository->create($input);
+
+        if (empty( $%%model%% )) {
             return redirect()->back()->withErrors(trans('admin.errors.general.save_failed'));
         }
 
@@ -86,14 +86,14 @@ class %%MODEL%%Controller extends Controller
      */
     public function show($id)
     {
-        $model = $this->%%model%%Repository->find($id);
-        if (empty( $model )) {
+        $%%model%% = $this->%%model%%Repository->find($id);
+        if (empty( $%%model%% )) {
             abort(404);
         }
 
         return view('pages.admin.%%models-spinal%%.edit', [
             'isNew' => false,
-            '%%model%%' => $model,
+            '%%model%%' => $%%model%%,
         ]);
     }
 
@@ -117,15 +117,15 @@ class %%MODEL%%Controller extends Controller
      */
     public function update($id, %%MODEL%%Request $request)
     {
-        /** @var \App\Models\%%MODEL%% $model */
-        $model = $this->%%model%%Repository->find($id);
-        if (empty( $model )) {
+        /** @var \App\Models\%%MODEL%% $%%model%% */
+        $%%model%% = $this->%%model%%Repository->find($id);
+        if (empty( $%%model%% )) {
             abort(404);
         }
         $input = $request->only([%%COLUMNS%%]);
         %%COLUMN_UPDATES%%
-        $input['is_enabled'] = $request->get('is_enabled', 0);
-        $this->%%model%%Repository->update($model, $input);
+
+        $this->%%model%%Repository->update($%%model%%, $input);
 
         return redirect()->action('Admin\%%MODEL%%Controller@show', [$id])
                     ->with('message-success', trans('admin.messages.general.update_success'));
@@ -139,12 +139,12 @@ class %%MODEL%%Controller extends Controller
      */
     public function destroy($id)
     {
-        /** @var \App\Models\%%MODEL%% $model */
-        $model = $this->%%model%%Repository->find($id);
-        if (empty( $model )) {
+        /** @var \App\Models\%%MODEL%% $%%model%% */
+        $%%model%% = $this->%%model%%Repository->find($id);
+        if (empty( $%%model%% )) {
             abort(404);
         }
-        $this->%%model%%Repository->delete($model);
+        $this->%%model%%Repository->delete($%%model%%);
 
         return redirect()->action('Admin\%%MODEL%%Controller@index')
                     ->with('message-success', trans('admin.messages.general.delete_success'));

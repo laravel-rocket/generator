@@ -113,6 +113,7 @@ class AdminCRUDGenerator extends Generator
         $tableHeader = $this->generateListHeader($modelName);
         $tableContent = $this->generateListRow($modelName);
         $formContent = $this->generateEditForm($modelName);
+        $testColumn = $this->generateTestColumn($modelName);
 
         return $this->generateFile($modelName, $classPath, $stubFilePath, [
             'models-spinal'  => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
@@ -122,6 +123,7 @@ class AdminCRUDGenerator extends Generator
             'TABLE_HEADER'   => $tableHeader,
             'TABLE_CONTENT'  => $tableContent,
             'FORM'           => $formContent,
+            'test_column'    => $testColumn,
         ]);
     }
 
@@ -442,5 +444,24 @@ class AdminCRUDGenerator extends Generator
         }, $params));
 
         return $result;
+    }
+
+    protected function generateTestColumn($name)
+    {
+        $tableName = $this->getTableName($name);
+        $columns = $this->getFillableColumns($tableName);
+        $candidate = "NONAME";
+        foreach ($columns as $column) {
+            $name = $column->getName();
+            $type = $column->getType();
+            if( $type == 'string' || $type == 'text' ) {
+                return $name;
+            }
+            if( $type == 'integer' ) {
+                $candidate = $name;
+            }
+        }
+
+        return $candidate;
     }
 }

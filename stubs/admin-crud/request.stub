@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admin;
 use LaravelRocket\Foundation\Http\Requests\Request;
 use App\Repositories\%%MODEL%%RepositoryInterface;
 
-model %%MODEL%%Request extends Request
+class %%MODEL%%Request extends Request
 {
 
     /** @var \App\Repositories\%%MODEL%%RepositoryInterface */
@@ -13,6 +13,7 @@ model %%MODEL%%Request extends Request
 
     public function __construct(%%MODEL%%RepositoryInterface $%%model%%Repository)
     {
+        parent::__construct();
         $this->%%model%%Repository = $%%model%%Repository;
     }
 

@@ -57,10 +57,10 @@ class %%MODEL%%ControllerTest extends TestCase
 
         $%%model%% = factory(\App\Models\%%MODEL%%::class)->create();
 
-        $name = $faker->name;
+        $testData = $faker->name;
         $id = $%%model%%->id;
 
-        $%%model%%->name = $name;
+        $%%model%%->%%test_column%% = $testData;
 
         $this->action('PUT', 'Admin\%%MODEL%%Controller@update', [$id], [
                 '_token' => csrf_token(),
@@ -68,7 +68,7 @@ class %%MODEL%%ControllerTest extends TestCase
         $this->assertResponseStatus(302);
 
         $new%%MODEL%% = \App\Models\%%MODEL%%::find($id);
-        $this->assertEquals($name, $new%%MODEL%%->name);
+        $this->assertEquals($testData, $new%%MODEL%%->%%test_column%%);
     }
 
     public function testDeleteModel()
