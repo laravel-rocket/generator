@@ -10,7 +10,7 @@
 @stop
 
 @section('title')
-$%%model%%->id | %%MODELS%% | Admin
+{{ $%%model%%->id }} | %%MODELS%% | Admin
 @stop
 
 @section('header')

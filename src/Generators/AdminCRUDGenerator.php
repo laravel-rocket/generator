@@ -284,7 +284,16 @@ class AdminCRUDGenerator extends Generator
                         case 'integer':
                         case "bigint":
                         case "smallint":
-                            $stubPath = $this->getStubPath('/admin-crud/form/text.stub');
+                            switch ( $name ) {
+                                case "password":
+                                    $stubPath = $this->getStubPath('/admin-crud/form/password.stub');
+                                    break;
+                                case "email":
+                                    $stubPath = $this->getStubPath('/admin-crud/form/email.stub');
+                                    break;
+                                default:
+                                    $stubPath = $this->getStubPath('/admin-crud/form/text.stub');
+                            }
                             break;
                     }
                 }
