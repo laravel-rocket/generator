@@ -118,6 +118,7 @@ class AdminCRUDGenerator extends Generator
         return $this->generateFile($modelName, $classPath, $stubFilePath, [
             'models-spinal'  => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
             'models'         => \StringHelper::pluralize($modelName),
+            'MODELS'         => \StringHelper::pluralize($modelName),
             'COLUMN_UPDATES' => $updates,
             'COLUMNS'        => $list,
             'TABLE_HEADER'   => $tableHeader,
@@ -195,7 +196,7 @@ class AdminCRUDGenerator extends Generator
         $sideMenuPath = $this->getSideBarViewPath();
 
         $key = '<!-- %%SIDEMENU%% -->';
-        $bind = '<li class="c-admin__sidemenuitem @if( $menu==\''.\StringHelper::camel2Snake($modelName).'\') c-admin__sidemenu-item--is-active @endif "><a href="{!! action(\'Admin\\'.$modelName.'Controller@index\') !!}"><i class="fa fa-users"></i> <span>'.\StringHelper::pluralize($modelName).'</span></a></li>'.PHP_EOL.'            '.$key;
+        $bind = '<li class="c-admin__sidemenuitem @if( $menu==\''.\StringHelper::camel2Snake($modelName).'\') c-admin__sidemenu-item--is-active @endif "><a href="{!! action(\'Admin\\'.$modelName.'Controller@index\') !!}"><i class="fa fa-users"></i> <span>'.\StringHelper::pluralize($modelName).'</span></a></li>'.PHP_EOL.'            ';
 
         return $this->replaceFile([
             $key => $bind,
@@ -220,7 +221,7 @@ class AdminCRUDGenerator extends Generator
             $name = $column->getName();
             $bind .= "                '".$name."' => '".ucfirst($name)."',".PHP_EOL;
         }
-        $bind .= '            ],'.PHP_EOL.'        ],'.PHP_EOL.'        '.$key;
+        $bind .= '            ],'.PHP_EOL.'        ],'.PHP_EOL.'        ';
 
         return $this->replaceFile([
             $key => $bind,
@@ -239,7 +240,7 @@ class AdminCRUDGenerator extends Generator
         $directoryName = \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName));
 
         $key = '/* NEW ADMIN RESOURCE ROUTE */';
-        $bind = '\\Route::resource(\''.$directoryName.'\', \'Admin\\'.$modelName.'Controller\');'.PHP_EOL.'                '.$key;
+        $bind = '\\Route::resource(\''.$directoryName.'\', \'Admin\\'.$modelName.'Controller\');'.PHP_EOL.'                ';
 
         return $this->replaceFile([
             $key => $bind,

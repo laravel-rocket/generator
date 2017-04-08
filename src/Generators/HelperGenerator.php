@@ -111,7 +111,7 @@ class HelperGenerator extends Generator
     {
         $appConfigPath = base_path('/config/app.php');
         $key = '/* NEW FACADE */';
-        $facade = "'".$helperName."'  => \\App\\Facades\\".$helperName.'::class,'.PHP_EOL.'        '.$key;
+        $facade = "'".$helperName."'  => \\App\\Facades\\".$helperName.'::class,'.PHP_EOL.'        ';
 
         $this->replaceFile([
             $key => $facade,
