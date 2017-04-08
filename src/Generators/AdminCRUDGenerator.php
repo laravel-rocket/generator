@@ -193,7 +193,7 @@ class AdminCRUDGenerator extends Generator
         $sideMenuPath = $this->getSideBarViewPath();
 
         $key = '<!-- %%SIDEMENU%% -->';
-        $bind = '<li @if( $menu==\''.\StringHelper::camel2Snake($modelName).'\') class="c-admin__menu--is-active" @endif ><a href="{!! action(\'Admin\\'.$modelName.'Controller@index\') !!}"><i class="fa fa-users"></i> <span>'.\StringHelper::pluralize($modelName).'</span></a></li>'.PHP_EOL.'            '.$key;
+        $bind = '<li class="c-admin__sidemenuitem @if( $menu==\''.\StringHelper::camel2Snake($modelName).'\') c-admin__sidemenu-item--is-active @endif "><a href="{!! action(\'Admin\\'.$modelName.'Controller@index\') !!}"><i class="fa fa-users"></i> <span>'.\StringHelper::pluralize($modelName).'</span></a></li>'.PHP_EOL.'            '.$key;
 
         return $this->replaceFile([
             $key => $bind,
