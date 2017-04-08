@@ -19,7 +19,11 @@ class %%MODEL%%ControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $authUser = \App\Models\AdminUser::first();
+        $authUser = factory(\App\Models\AdminUser::class)->create();
+        $authUserRole = factory(\App\Models\AdminUserRole::class)->create([
+            'admin_user_id' => $authUser->id,
+            'role' => \App\Models\AdminUserRole::ROLE_SUPER_USER,
+        ]);
         $this->be($authUser, 'admins');
     }
 
