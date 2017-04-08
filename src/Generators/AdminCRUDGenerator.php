@@ -214,8 +214,7 @@ class AdminCRUDGenerator extends Generator
 
         $key = '/* NEW PAGE STRINGS */';
 
-        $tableName = $this->getTableName($modelName);
-        $columns = $this->getFillableColumns($tableName);
+        $columns = $this->getFillableColumns($modelName);
         $bind = "'".$directoryName."'   => [".PHP_EOL."            'columns'  => [".PHP_EOL;
         foreach ($columns as $column) {
             $name = $column->getName();
@@ -254,8 +253,7 @@ class AdminCRUDGenerator extends Generator
     protected function generateEditForm($name)
     {
         $modelName = $this->getModelName($name);
-        $tableName = $this->getTableName($modelName);
-        $columns = $this->getFillableColumns($tableName);
+        $columns = $this->getFillableColumns($modelName);
         $result = '';
         foreach ($columns as $column) {
             $name = $column->getName();
@@ -316,8 +314,7 @@ class AdminCRUDGenerator extends Generator
     {
         $modelName = $this->getModelName($name);
         $spinalName = \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName));
-        $tableName = $this->getTableName($modelName);
-        $columns = $this->getFillableColumns($tableName);
+        $columns = $this->getFillableColumns($modelName);
         $result = '';
         foreach ($columns as $column) {
             $name = $column->getName();
@@ -351,8 +348,7 @@ class AdminCRUDGenerator extends Generator
     protected function generateListRow($name)
     {
         $modelName = $this->getModelName($name);
-        $tableName = $this->getTableName($name);
-        $columns = $this->getFillableColumns($tableName);
+        $columns = $this->getFillableColumns($modelName);
         $result = '';
         foreach ($columns as $column) {
             $name = $column->getName();
@@ -389,8 +385,8 @@ class AdminCRUDGenerator extends Generator
      */
     protected function generateUpdate($name)
     {
-        $tableName = $this->getTableName($name);
-        $columns = $this->getFillableColumns($tableName);
+        $modelName = $this->getModelName($name);
+        $columns = $this->getFillableColumns($modelName);
         $result = '';
         foreach ($columns as $column) {
             $name = $column->getName();
@@ -426,8 +422,8 @@ class AdminCRUDGenerator extends Generator
      */
     protected function generateParams($name)
     {
-        $tableName = $this->getTableName($name);
-        $columns = $this->getFillableColumns($tableName);
+        $modelName = $this->getModelName($name);
+        $columns = $this->getFillableColumns($modelName);
         $params = [];
         foreach ($columns as $column) {
             $name = $column->getName();
@@ -461,8 +457,8 @@ class AdminCRUDGenerator extends Generator
 
     protected function generateTestColumn($name)
     {
-        $tableName = $this->getTableName($name);
-        $columns = $this->getFillableColumns($tableName);
+        $modelName = $this->getModelName($name);
+        $columns = $this->getFillableColumns($modelName);
         $candidate = "NONAME";
         foreach ($columns as $column) {
             $name = $column->getName();

@@ -109,7 +109,7 @@ class ModelGenerator extends Generator
         $stubFilePath = $this->getStubPath('/model/model.stub');
 
         $tableName = $this->getTableName($modelName);
-        $columns = $this->getFillableColumns($tableName);
+        $columns = $this->getFillableColumns($modelName);
 
         $fillables = count($columns) > 0 ? "'".implode("',".PHP_EOL."        '",
                 $this->getColumnNames($columns))."'," : '';

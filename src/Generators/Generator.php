@@ -116,12 +116,22 @@ abstract class Generator
     }
 
     /**
-     * @param  string                         $tableName
+     * @param  string                         $modelName
      * @return \Doctrine\DBAL\Schema\Column[]
      */
-    protected function getFillableColumns($tableName)
+    protected function getFillableColumns($modelName)
     {
         $ret = [];
+        $tableName = $this->getTableName($modelName);
+
+        $modelFullName = '\\App\\Models\\' . $modelName;
+        /** @var \LaravelRocket\Foundation\Models\Base $modelObject */
+        $modelObject = new $modelFullName();
+        $fillableNames = [];
+        if( !empty($modelObject) ) {
+            $fillableNames = $modelObject->getFillableColumns();
+        }
+
         $columns = $this->getTableColumns($tableName);
         if ($columns) {
             foreach ($columns as $column) {
@@ -129,7 +139,7 @@ abstract class Generator
                     continue;
                 }
                 $columnName = $column->getName();
-                if (!in_array($columnName, ['created_at', 'updated_at', 'deleted_at'])) {
+                if (in_array($columnName, $fillableNames)) {
                     $ret[] = $column;
                 }
             }
@@ -184,7 +194,7 @@ abstract class Generator
     }
 
     /**
-     * @param  \Doctrine\DBAL\Schema\Column $columns
+     * @param  \Doctrine\DBAL\Schema\Column[] $columns
      * @return string[]
      */
     protected function getColumnNames($columns)
