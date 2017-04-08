@@ -304,6 +304,7 @@ class AdminCRUDGenerator extends Generator
 
             $result .= $this->replace([
                     'column'        => $name,
+                    'column-spinal' => \StringHelper::camel2Spinal(\StringHelper::snake2Camel($name)),
                     'models-spinal' => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
                     'models'        => \StringHelper::pluralize(lcfirst($modelName)),
                     'MODEL'         => $modelName,
