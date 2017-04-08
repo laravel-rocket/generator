@@ -116,7 +116,7 @@ class AdminCRUDGenerator extends Generator
 
         return $this->generateFile($modelName, $classPath, $stubFilePath, [
             'models-spinal'  => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
-            'models'         => \StringHelper::pluralize($modelName),
+            'models'         => lcfirst(\StringHelper::pluralize($modelName)),
             'MODELS'         => \StringHelper::pluralize($modelName),
             'COLUMN_UPDATES' => $updates,
             'COLUMNS'        => $list,
@@ -316,6 +316,7 @@ class AdminCRUDGenerator extends Generator
         $spinalName = \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName));
         $columns = $this->getFillableColumns($modelName);
         $result = '';
+
         foreach ($columns as $column) {
             $name = $column->getName();
             $type = $column->getType()->getName();
@@ -348,6 +349,8 @@ class AdminCRUDGenerator extends Generator
     protected function generateListRow($name)
     {
         $modelName = $this->getModelName($name);
+        $lcName = lcfirst($modelName);
+
         $columns = $this->getFillableColumns($modelName);
         $result = '';
         foreach ($columns as $column) {
@@ -364,12 +367,12 @@ class AdminCRUDGenerator extends Generator
                         case 'text':
                             break;
                         case 'boolean':
-                            $result .= '                <td>{{ ($'.$modelName.'->'.$name.') ?  \'ON\' : \'OFF\' }}<\/td>'.PHP_EOL;
+                            $result .= '                <td>{{ ($'.$lcName.'->'.$name.') ?  \'ON\' : \'OFF\' }}<\/td>'.PHP_EOL;
                             break;
                         case 'datetime':
                         case 'string':
                         case 'integer':
-                            $result .= '                <td>{{ $'.$modelName.'->'.$name.' }}</td>'.PHP_EOL;
+                            $result .= '                <td>{{ $'.$lcName.'->'.$name.' }}</td>'.PHP_EOL;
                             break;
                     }
                 }
