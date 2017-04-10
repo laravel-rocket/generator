@@ -1,10 +1,8 @@
 <?php
-
 namespace LaravelRocket\Generator\Generators;
 
 class RepositoryGenerator extends Generator
 {
-
     public function generate($name, $overwrite = false, $baseDirectory = null)
     {
         $modelName = $this->getModelName($name);
@@ -15,7 +13,8 @@ class RepositoryGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getModelName($name)
@@ -27,7 +26,8 @@ class RepositoryGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getModelClass($name)
@@ -45,15 +45,16 @@ class RepositoryGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return bool
      */
     protected function generateRepository($modelName)
     {
-        $className = $this->getRepositoryClass($modelName);
-        $classPath = $this->convertClassToPath($className);
+        $className  = $this->getRepositoryClass($modelName);
+        $classPath  = $this->convertClassToPath($className);
         $modelClass = $this->getModelClass($modelName);
-        $instance = new $modelClass();
+        $instance   = new $modelClass();
 
         $stubFilePath = $this->getStubPath('/repository/repository.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
@@ -64,15 +65,16 @@ class RepositoryGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return bool
      */
     protected function generateRepositoryInterface($modelName)
     {
-        $className = '\\App\\Repositories\\'.$modelName.'RepositoryInterface';
-        $classPath = $this->convertClassToPath($className);
+        $className  = '\\App\\Repositories\\'.$modelName.'RepositoryInterface';
+        $classPath  = $this->convertClassToPath($className);
         $modelClass = $this->getModelClass($modelName);
-        $instance = new $modelClass();
+        $instance   = new $modelClass();
 
         $stubFilePath = $this->getStubPath('/repository/repository_interface.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
@@ -83,14 +85,15 @@ class RepositoryGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return bool
      */
     protected function generateRepositoryUnitTest($modelName)
     {
-        $classPath = base_path('/tests/Repositories/'.$modelName.'RepositoryTest.php');
+        $classPath  = base_path('/tests/Repositories/'.$modelName.'RepositoryTest.php');
         $modelClass = $this->getModelClass($modelName);
-        $instance = new $modelClass();
+        $instance   = new $modelClass();
 
         $stubFilePath = $this->getStubPath('/repository/repository_unittest.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
@@ -101,16 +104,17 @@ class RepositoryGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return bool
      */
     protected function bindInterface($name)
     {
         $bindingPath = base_path('/app/Providers/RepositoryServiceProvider.php');
 
-        $key = '/* NEW BINDING */';
-        $bind = '$this->app->singleton('.PHP_EOL."            \\App\\Repositories\\".$name."RepositoryInterface::class,"
-            .PHP_EOL."            \\App\\Repositories\\Eloquent\\".$name."Repository::class".PHP_EOL.'        );'
+        $key  = '/* NEW BINDING */';
+        $bind = '$this->app->singleton('.PHP_EOL.'            \\App\\Repositories\\'.$name.'RepositoryInterface::class,'
+            .PHP_EOL.'            \\App\\Repositories\\Eloquent\\'.$name.'Repository::class'.PHP_EOL.'        );'
             .PHP_EOL.PHP_EOL.'        ';
         $this->replaceFile([
             $key => $bind,

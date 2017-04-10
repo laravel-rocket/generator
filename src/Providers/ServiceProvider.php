@@ -1,5 +1,4 @@
 <?php
-
 namespace LaravelRocket\Generator\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
@@ -18,7 +17,6 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        //
     }
 
     /**
@@ -58,5 +56,4 @@ class ServiceProvider extends BaseServiceProvider
             'command.rocket.make.helper', 'command.rocket.make.migration.create', 'command.rocket.make.migration.alter',
             'command.rocket.make.admin.crud');
     }
-
 }

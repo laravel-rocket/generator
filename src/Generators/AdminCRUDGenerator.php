@@ -1,10 +1,8 @@
 <?php
-
 namespace LaravelRocket\Generator\Generators;
 
 class AdminCRUDGenerator extends Generator
 {
-
     public function generate($name, $overwrite = false, $baseDirectory = null)
     {
         $modelName = $this->getModelName($name);
@@ -19,7 +17,8 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getModelName($name)
@@ -31,7 +30,8 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getControllerClass($name)
@@ -42,7 +42,8 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getRequestClass($name)
@@ -100,19 +101,20 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
-     * @param  string $classPath
-     * @param  string $stubFilePath
+     * @param string $modelName
+     * @param string $classPath
+     * @param string $stubFilePath
+     *
      * @return bool
      */
     protected function saveFile($modelName, $classPath, $stubFilePath)
     {
-        $list = $this->generateParams($modelName);
-        $updates = $this->generateUpdate($modelName);
-        $tableHeader = $this->generateListHeader($modelName);
+        $list         = $this->generateParams($modelName);
+        $updates      = $this->generateUpdate($modelName);
+        $tableHeader  = $this->generateListHeader($modelName);
         $tableContent = $this->generateListRow($modelName);
-        $formContent = $this->generateEditForm($modelName);
-        $testColumn = $this->generateTestColumn($modelName);
+        $formContent  = $this->generateEditForm($modelName);
+        $testColumn   = $this->generateTestColumn($modelName);
 
         return $this->generateFile($modelName, $classPath, $stubFilePath, [
             'models-spinal'  => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
@@ -160,41 +162,44 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return bool
      */
     protected function generateView($name, $type)
     {
         $modelName = $this->getModelName($name);
-        $path = $this->getViewPath($name, $type);
-        $stubPath = $this->getStubForView($type);
+        $path      = $this->getViewPath($name, $type);
+        $stubPath  = $this->getStubForView($type);
 
         return $this->saveFile($modelName, $path, $stubPath);
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return bool
      */
     protected function generateUnitTest($name)
     {
-        $modelName = $this->getModelName($name);
-        $classPath = base_path('/tests/Controllers/Admin/'.$modelName.'ControllerTest.php');
+        $modelName    = $this->getModelName($name);
+        $classPath    = base_path('/tests/Controllers/Admin/'.$modelName.'ControllerTest.php');
         $stubFilePath = $this->getStubPath('/admin-crud/unittest.stub');
 
         return $this->saveFile($modelName, $classPath, $stubFilePath);
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return bool
      */
     protected function addItemToSubMenu($name)
     {
-        $modelName = $this->getModelName($name);
+        $modelName    = $this->getModelName($name);
         $sideMenuPath = $this->getSideBarViewPath();
 
-        $key = '<!-- %%SIDEMENU%% -->';
+        $key  = '<!-- %%SIDEMENU%% -->';
         $bind = '<li class="c-admin__sidemenuitem @if( $menu==\''.\StringHelper::camel2Snake($modelName).'\') c-admin__sidemenu-item--is-active @endif "><a href="{!! action(\'Admin\\'.$modelName.'Controller@index\') !!}"><i class="fa fa-users"></i> <span>'.\StringHelper::pluralize($modelName).'</span></a></li>'.PHP_EOL.'            ';
 
         return $this->replaceFile([
@@ -203,19 +208,20 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return bool
      */
     protected function addItemToLanguageFile($name)
     {
-        $modelName = $this->getModelName($name);
+        $modelName        = $this->getModelName($name);
         $languageFilePath = $this->getLanguageFilePath();
-        $directoryName = \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName));
+        $directoryName    = \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName));
 
         $key = '/* NEW PAGE STRINGS */';
 
         $columns = $this->getFillableColumns($modelName);
-        $bind = "'".$directoryName."'   => [".PHP_EOL."            'columns'  => [".PHP_EOL;
+        $bind    = "'".$directoryName."'   => [".PHP_EOL."            'columns'  => [".PHP_EOL;
         foreach ($columns as $column) {
             $name = $column->getName();
             $bind .= "                '".$name."' => '".ucfirst($name)."',".PHP_EOL;
@@ -228,7 +234,8 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return bool
      */
     protected function addItemToRoute($name)
@@ -238,7 +245,7 @@ class AdminCRUDGenerator extends Generator
 
         $directoryName = \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName));
 
-        $key = '/* NEW ADMIN RESOURCE ROUTE */';
+        $key  = '/* NEW ADMIN RESOURCE ROUTE */';
         $bind = '\\Route::resource(\''.$directoryName.'\', \'Admin\\'.$modelName.'Controller\');'.PHP_EOL.'        ';
 
         return $this->replaceFile([
@@ -247,14 +254,15 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function generateEditForm($name)
     {
         $modelName = $this->getModelName($name);
-        $columns = $this->getFillableColumns($modelName);
-        $result = '';
+        $columns   = $this->getFillableColumns($modelName);
+        $result    = '';
         foreach ($columns as $column) {
             $name = $column->getName();
             $type = $column->getType()->getName();
@@ -282,13 +290,13 @@ class AdminCRUDGenerator extends Generator
                             break;
                         case 'string':
                         case 'integer':
-                        case "bigint":
-                        case "smallint":
-                            switch ( $name ) {
-                                case "password":
+                        case 'bigint':
+                        case 'smallint':
+                            switch ($name) {
+                                case 'password':
                                     $stubPath = $this->getStubPath('/admin-crud/form/password.stub');
                                     break;
-                                case "email":
+                                case 'email':
                                     $stubPath = $this->getStubPath('/admin-crud/form/email.stub');
                                     break;
                                 default:
@@ -299,7 +307,7 @@ class AdminCRUDGenerator extends Generator
                 }
             }
 
-            $fieldName = strlen($name) > 3 ? substr($name, 0, strlen($name) - 3) : $name;
+            $fieldName    = strlen($name) > 3 ? substr($name, 0, strlen($name) - 3) : $name;
             $relationName = lcfirst(\StringHelper::snake2Camel($fieldName));
 
             $result .= $this->replace([
@@ -317,15 +325,16 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function generateListHeader($name)
     {
-        $modelName = $this->getModelName($name);
+        $modelName  = $this->getModelName($name);
         $spinalName = \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName));
-        $columns = $this->getFillableColumns($modelName);
-        $result = '';
+        $columns    = $this->getFillableColumns($modelName);
+        $result     = '';
 
         foreach ($columns as $column) {
             $name = $column->getName();
@@ -353,16 +362,17 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function generateListRow($name)
     {
         $modelName = $this->getModelName($name);
-        $lcName = lcfirst($modelName);
+        $lcName    = lcfirst($modelName);
 
         $columns = $this->getFillableColumns($modelName);
-        $result = '';
+        $result  = '';
         foreach ($columns as $column) {
             $name = $column->getName();
             $type = $column->getType()->getName();
@@ -393,14 +403,15 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function generateUpdate($name)
     {
         $modelName = $this->getModelName($name);
-        $columns = $this->getFillableColumns($modelName);
-        $result = '';
+        $columns   = $this->getFillableColumns($modelName);
+        $result    = '';
         foreach ($columns as $column) {
             $name = $column->getName();
             $type = $column->getType()->getName();
@@ -430,14 +441,15 @@ class AdminCRUDGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function generateParams($name)
     {
         $modelName = $this->getModelName($name);
-        $columns = $this->getFillableColumns($modelName);
-        $params = [];
+        $columns   = $this->getFillableColumns($modelName);
+        $params    = [];
         foreach ($columns as $column) {
             $name = $column->getName();
             $type = $column->getType()->getName();
@@ -461,7 +473,7 @@ class AdminCRUDGenerator extends Generator
                 }
             }
         }
-        $result = implode(',', array_map(function($name) {
+        $result = implode(',', array_map(function ($name) {
             return "'".$name."'";
         }, $params));
 
@@ -471,8 +483,8 @@ class AdminCRUDGenerator extends Generator
     protected function generateTestColumn($name)
     {
         $modelName = $this->getModelName($name);
-        $columns = $this->getFillableColumns($modelName);
-        $candidate = "NONAME";
+        $columns   = $this->getFillableColumns($modelName);
+        $candidate = 'NONAME';
         foreach ($columns as $column) {
             $name = $column->getName();
             $type = $column->getType()->getName();
