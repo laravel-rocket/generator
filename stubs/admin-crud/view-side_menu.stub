@@ -1,0 +1,5 @@
+        <li class="c-admin__sidemenuitem @if( $menu=='%%column-spinal%%') c-admin__sidemenu-item--is-active @endif ">
+            <a href="{!! action('Admin\%%MODEL%%Controller@index') !!}">
+                <i class="fa fa-users"></i> <span>%%models-spinal%%</span>
+            </a>
+        </li>

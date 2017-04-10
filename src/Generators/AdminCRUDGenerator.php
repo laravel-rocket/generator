@@ -3,13 +3,19 @@ namespace LaravelRocket\Generator\Generators;
 
 class AdminCRUDGenerator extends Generator
 {
-    public function generate($name, $overwrite = false, $baseDirectory = null)
+    /**
+     * @param string $name
+     * @param null   $baseDirectory
+     */
+    public function generate($name, $baseDirectory = null)
     {
         $modelName = $this->getModelName($name);
         $this->generateController($modelName);
         $this->generateRequest($modelName);
         $this->generateView($modelName, 'index');
         $this->generateView($modelName, 'edit');
+        $this->generateView($modelName, '_nav');
+        $this->generateView($modelName, '_form');
         $this->generateUnittest($modelName);
         $this->addItemToSubMenu($modelName);
         $this->addItemToLanguageFile($modelName);
@@ -199,8 +205,19 @@ class AdminCRUDGenerator extends Generator
         $modelName    = $this->getModelName($name);
         $sideMenuPath = $this->getSideBarViewPath();
 
+        $stubPath = $this->getStubPath('/admin-crud/view-side_menu.stub');
+
+        $result = $this->replace([
+                'column'        => $name,
+                'column-spinal' => \StringHelper::camel2Spinal(\StringHelper::snake2Camel($name)),
+                'models-spinal' => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
+                'models'        => \StringHelper::pluralize(lcfirst($modelName)),
+                'MODEL'         => $modelName,
+                'model'         => lcfirst($modelName),
+            ], $stubPath).PHP_EOL.'        ';
+
         $key  = '<!-- %%SIDEMENU%% -->';
-        $bind = '<li class="c-admin__sidemenuitem @if( $menu==\''.\StringHelper::camel2Snake($modelName).'\') c-admin__sidemenu-item--is-active @endif "><a href="{!! action(\'Admin\\'.$modelName.'Controller@index\') !!}"><i class="fa fa-users"></i> <span>'.\StringHelper::pluralize($modelName).'</span></a></li>'.PHP_EOL.'            ';
+        $bind = $result;
 
         return $this->replaceFile([
             $key => $bind,
@@ -246,7 +263,7 @@ class AdminCRUDGenerator extends Generator
         $directoryName = \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName));
 
         $key  = '/* NEW ADMIN RESOURCE ROUTE */';
-        $bind = '\\Route::resource(\''.$directoryName.'\', \'Admin\\'.$modelName.'Controller\');'.PHP_EOL.'        ';
+        $bind = 'Route::resource(\''.$directoryName.'\', \'Admin\\'.$modelName.'Controller\');'.PHP_EOL.'        ';
 
         return $this->replaceFile([
             $key => $bind,
@@ -275,7 +292,6 @@ class AdminCRUDGenerator extends Generator
                 $stubPath = $this->getStubPath('/admin-crud/form/image.stub');
             } else {
                 if (\StringHelper::endsWith($name, '_id')) {
-                    $stubPath = $this->getStubPath('/admin-crud/form/select.stub');
                     continue;
                 } else {
                     switch ($type) {
@@ -480,6 +496,11 @@ class AdminCRUDGenerator extends Generator
         return $result;
     }
 
+    /**
+     * @param $name
+     *
+     * @return string
+     */
     protected function generateTestColumn($name)
     {
         $modelName = $this->getModelName($name);
