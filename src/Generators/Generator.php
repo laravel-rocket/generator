@@ -123,22 +123,27 @@ abstract class Generator
         $ret       = [];
         $tableName = $this->getTableName($modelName);
 
-        $modelFullName = '\\App\\Models\\'.$modelName;
-        /** @var \LaravelRocket\Foundation\Models\Base $modelObject */
-        $modelObject   = new $modelFullName();
         $fillableNames = [];
-        if (!empty($modelObject)) {
-            $fillableNames = $modelObject->getFillableColumns();
-        }
+        $modelFullName = '\\App\\Models\\'.$modelName;
+        $classExists   = class_exists($modelFullName);
 
+        if ($classExists) {
+            /** @var \LaravelRocket\Foundation\Models\Base $modelObject */
+            $modelObject = new $modelFullName();
+            if (!empty($modelObject)) {
+                $fillableNames = $modelObject->getFillableColumns();
+            }
+        }
         $columns = $this->getTableColumns($tableName);
+
         if ($columns) {
             foreach ($columns as $column) {
                 if ($column->getAutoincrement()) {
                     continue;
                 }
                 $columnName = $column->getName();
-                if (in_array($columnName, $fillableNames)) {
+
+                if (in_array($columnName, $fillableNames) == $classExists) {
                     $ret[] = $column;
                 }
             }
