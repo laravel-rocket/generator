@@ -1,10 +1,8 @@
 <?php
-
 namespace LaravelRocket\Generator\Generators;
 
 class HelperGenerator extends Generator
 {
-
     public function generate($name, $overwrite = false, $baseDirectory = null)
     {
         $helperName = $this->getName($name);
@@ -17,15 +15,16 @@ class HelperGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getName($name)
     {
         $className = $this->getClassName($name);
-        $rootName = str_replace('Helper', '', $className);
+        $rootName  = str_replace('Helper', '', $className);
 
-        return $rootName . 'Helper';
+        return $rootName.'Helper';
     }
 
     protected function getHelperClass($name)
@@ -36,7 +35,8 @@ class HelperGenerator extends Generator
     }
 
     /**
-     * @param  string $helperName
+     * @param string $helperName
+     *
      * @return bool
      */
     protected function generateHelper($helperName)
@@ -50,7 +50,8 @@ class HelperGenerator extends Generator
     }
 
     /**
-     * @param  string $helperName
+     * @param string $helperName
+     *
      * @return bool
      */
     protected function generateHelperInterface($helperName)
@@ -64,7 +65,8 @@ class HelperGenerator extends Generator
     }
 
     /**
-     * @param  string $helperName
+     * @param string $helperName
+     *
      * @return bool
      */
     protected function generateFacade($helperName)
@@ -78,12 +80,13 @@ class HelperGenerator extends Generator
     }
 
     /**
-     * @param  string $helperName
+     * @param string $helperName
+     *
      * @return bool
      */
     protected function generateHelperUnitTest($helperName)
     {
-        $classPath = base_path('/tests/Helpers/'.$helperName.'Test.php');
+        $classPath    = base_path('/tests/Helpers/'.$helperName.'Test.php');
         $stubFilePath = $this->getStubPath('/helper/helper_unittest.stub');
 
         return $this->generateFile($helperName, $classPath, $stubFilePath);
@@ -98,8 +101,8 @@ class HelperGenerator extends Generator
     {
         $bindingPath = base_path('/app/Providers/HelperServiceProvider.php');
 
-        $key = '/* NEW BINDING */';
-        $bind = '$this->app->singleton('.PHP_EOL."            \\App\\Helpers\\".$helperName."Interface::class,".PHP_EOL."            \\App\\Helpers\\Production\\".$helperName."::class".PHP_EOL.'        );'.PHP_EOL.PHP_EOL.'        ';
+        $key  = '/* NEW BINDING */';
+        $bind = '$this->app->singleton('.PHP_EOL.'            \\App\\Helpers\\'.$helperName.'Interface::class,'.PHP_EOL.'            \\App\\Helpers\\Production\\'.$helperName.'::class'.PHP_EOL.'        );'.PHP_EOL.PHP_EOL.'        ';
         $this->replaceFile([
             $key => $bind,
         ], $bindingPath);
@@ -110,8 +113,8 @@ class HelperGenerator extends Generator
     protected function addFacadeToConfig($helperName)
     {
         $appConfigPath = base_path('/config/app.php');
-        $key = '/* NEW FACADE */';
-        $facade = "'".$helperName."'  => \\App\\Facades\\".$helperName.'::class,'.PHP_EOL.'        ';
+        $key           = '/* NEW FACADE */';
+        $facade        = "'".$helperName."'  => \\App\\Facades\\".$helperName.'::class,'.PHP_EOL.'        ';
 
         $this->replaceFile([
             $key => $facade,

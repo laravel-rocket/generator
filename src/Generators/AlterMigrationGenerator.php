@@ -1,5 +1,4 @@
 <?php
-
 namespace LaravelRocket\Generator\Generators;
 
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -19,7 +18,7 @@ class AlterMigrationGenerator extends Generator
             throw new InvalidArgumentException("A $className migration already exists.");
         }
 
-        $path = $this->getPath($name);
+        $path         = $this->getPath($name);
         $stubFilePath = $this->getStubPath('/migration/alter.stub');
 
         return $this->generateFile($className, $path, $stubFilePath, [
@@ -35,7 +34,7 @@ class AlterMigrationGenerator extends Generator
 
     protected function getClassName($name)
     {
-        return 'Alter'. ucfirst(\StringHelper::snake2Camel($name)).'Table';
+        return 'Alter'.ucfirst(\StringHelper::snake2Camel($name)).'Table';
     }
 
     protected function getPath($name)

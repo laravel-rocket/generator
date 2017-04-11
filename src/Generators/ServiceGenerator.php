@@ -1,10 +1,8 @@
 <?php
-
 namespace LaravelRocket\Generator\Generators;
 
 class ServiceGenerator extends Generator
 {
-
     public function generate($name, $overwrite = false, $baseDirectory = null)
     {
         $modelName = $this->getModelName($name);
@@ -15,7 +13,8 @@ class ServiceGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getModelName($name)
@@ -27,7 +26,8 @@ class ServiceGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getModelClass($name)
@@ -45,15 +45,16 @@ class ServiceGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return bool
      */
     protected function generateService($modelName)
     {
-        $className = $this->getServiceClass($modelName);
-        $classPath = $this->convertClassToPath($className);
+        $className  = $this->getServiceClass($modelName);
+        $classPath  = $this->convertClassToPath($className);
         $modelClass = $this->getModelClass($modelName);
-        $instance = new $modelClass();
+        $instance   = new $modelClass();
 
         $stubFilePath = $this->getStubPath('/service/service.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
@@ -64,15 +65,16 @@ class ServiceGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return bool
      */
     protected function generateServiceInterface($modelName)
     {
-        $className = '\\App\\Services\\'.$modelName.'ServiceInterface';
-        $classPath = $this->convertClassToPath($className);
+        $className  = '\\App\\Services\\'.$modelName.'ServiceInterface';
+        $classPath  = $this->convertClassToPath($className);
         $modelClass = $this->getModelClass($modelName);
-        $instance = new $modelClass();
+        $instance   = new $modelClass();
 
         $stubFilePath = $this->getStubPath('/service/service_interface.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
@@ -83,14 +85,15 @@ class ServiceGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return bool
      */
     protected function generateServiceUnitTest($modelName)
     {
-        $classPath = base_path('/tests/Services/'.$modelName.'ServiceTest.php');
+        $classPath  = base_path('/tests/Services/'.$modelName.'ServiceTest.php');
         $modelClass = $this->getModelClass($modelName);
-        $instance = new $modelClass();
+        $instance   = new $modelClass();
 
         $stubFilePath = $this->getStubPath('/service/service_unittest.stub');
         if ($instance instanceof \LaravelRocket\Foundation\Models\AuthenticatableBase) {
@@ -109,9 +112,9 @@ class ServiceGenerator extends Generator
     {
         $bindingPath = base_path('/app/Providers/ServiceServiceProvider.php');
 
-        $key = '/* NEW BINDING */';
-        $bind = '$this->app->singleton('.PHP_EOL."            \\App\\Services\\".$name."ServiceInterface::class,"
-            .PHP_EOL."            \\App\\Services\\Production\\".$name."Service::class".PHP_EOL.'        );'
+        $key  = '/* NEW BINDING */';
+        $bind = '$this->app->singleton('.PHP_EOL.'            \\App\\Services\\'.$name.'ServiceInterface::class,'
+            .PHP_EOL.'            \\App\\Services\\Production\\'.$name.'Service::class'.PHP_EOL.'        );'
             .PHP_EOL.PHP_EOL.'        ';
         $this->replaceFile([
             $key => $bind,

@@ -1,10 +1,9 @@
 <?php
-
 namespace LaravelRocket\Generator\Tests;
 
+use Illuminate\Events\Dispatcher;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Routing\Router;
-use Illuminate\Events\Dispatcher;
 
 class TestCase extends \Illuminate\Foundation\Testing\TestCase
 {
@@ -31,6 +30,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $this->setUpHttpKernel($app);
         $app->register(\Illuminate\Database\DatabaseServiceProvider::class);
         $app->register(\LaravelRocket\Generator\Providers\ServiceProvider::class);
+
         return $app;
     }
 
@@ -43,13 +43,13 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
         $app->make('Illuminate\Foundation\Http\Kernel', [$app, $this->getRouter()])->bootstrap();
     }
 
-
     /**
      * @return Router
      */
     protected function getRouter()
     {
         $router = new Router(new Dispatcher());
+
         return $router;
     }
 }

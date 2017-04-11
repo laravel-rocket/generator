@@ -1,18 +1,16 @@
 <?php
-
 namespace LaravelRocket\Generator\Console\Commands;
 
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use LaravelRocket\Generator\Generators\Generator;
-use Symfony\Component\Console\Input\InputArgument;
 use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
+use LaravelRocket\Generator\Generators\Generator;
+use Symfony\Component\Console\Input\InputArgument;
 
 class GeneratorCommand extends Command
 {
-
     protected $name        = '';
 
     protected $description = '';
@@ -26,11 +24,10 @@ class GeneratorCommand extends Command
     /** @var \Illuminate\View\Factory */
     protected $view;
 
-    /** @var string  */
+    /** @var string */
     protected $generator = '';
 
     /**
-     *
      * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
      * @param \Illuminate\View\Factory          $view
@@ -39,11 +36,10 @@ class GeneratorCommand extends Command
         ConfigRepository $config,
         Filesystem $files,
         ViewFactory $view
-    )
-    {
+    ) {
         $this->config = $config;
-        $this->files = $files;
-        $this->view = $view;
+        $this->files  = $files;
+        $this->view   = $view;
         parent::__construct();
     }
 
@@ -55,7 +51,7 @@ class GeneratorCommand extends Command
     public function handle()
     {
         $targetName = $this->getTargetName();
-        $name = $this->parseName($targetName);
+        $name       = $this->parseName($targetName);
 
         return $this->generate($name);
     }
@@ -107,5 +103,4 @@ class GeneratorCommand extends Command
             ['name', InputArgument::REQUIRED, 'The name of the class'],
         ];
     }
-
 }

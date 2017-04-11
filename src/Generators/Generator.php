@@ -1,14 +1,12 @@
 <?php
-
 namespace LaravelRocket\Generator\Generators;
 
-use Illuminate\Filesystem\Filesystem;
 use Illuminate\Config\Repository as ConfigRepository;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Factory as ViewFactory;
 
 abstract class Generator
 {
-
     /** @var \Illuminate\Config\Repository */
     protected $config;
 
@@ -18,14 +16,13 @@ abstract class Generator
     /** @var \Illuminate\View\Factory */
     protected $view;
 
-    /** @var  string */
+    /** @var string */
     protected $errorString;
 
-    /** @var  bool */
+    /** @var bool */
     protected $overwrite;
 
     /**
-     *
      * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
      * @param \Illuminate\View\Factory          $view
@@ -34,11 +31,10 @@ abstract class Generator
         ConfigRepository $config,
         Filesystem $files,
         ViewFactory $view
-    )
-    {
+    ) {
         $this->config = $config;
-        $this->files = $files;
-        $this->view = $view;
+        $this->files  = $files;
+        $this->view   = $view;
     }
 
     /**
@@ -61,8 +57,9 @@ abstract class Generator
     }
 
     /**
-     * @param  array  $data
-     * @param  string $stubPath
+     * @param array  $data
+     * @param string $stubPath
+     *
      * @return string
      */
     protected function replace($data, $stubPath)
@@ -71,15 +68,16 @@ abstract class Generator
 
         foreach ($data as $key => $value) {
             $templateKey = '%%'.$key.'%%';
-            $stub = str_replace($templateKey, $value, $stub);
+            $stub        = str_replace($templateKey, $value, $stub);
         }
 
         return $stub;
     }
 
     /**
-     * @param  array  $data
-     * @param  string $filePath
+     * @param array  $data
+     * @param string $filePath
+     *
      * @return bool
      */
     protected function replaceFile($data, $filePath)
@@ -116,30 +114,36 @@ abstract class Generator
     }
 
     /**
-     * @param  string                         $modelName
+     * @param string $modelName
+     *
      * @return \Doctrine\DBAL\Schema\Column[]
      */
     protected function getFillableColumns($modelName)
     {
-        $ret = [];
+        $ret       = [];
         $tableName = $this->getTableName($modelName);
 
-        $modelFullName = '\\App\\Models\\' . $modelName;
-        /** @var \LaravelRocket\Foundation\Models\Base $modelObject */
-        $modelObject = new $modelFullName();
         $fillableNames = [];
-        if( !empty($modelObject) ) {
-            $fillableNames = $modelObject->getFillableColumns();
-        }
+        $modelFullName = '\\App\\Models\\'.$modelName;
+        $classExists   = class_exists($modelFullName);
 
+        if ($classExists) {
+            /** @var \LaravelRocket\Foundation\Models\Base $modelObject */
+            $modelObject = new $modelFullName();
+            if (!empty($modelObject)) {
+                $fillableNames = $modelObject->getFillableColumns();
+            }
+        }
         $columns = $this->getTableColumns($tableName);
+
         if ($columns) {
             foreach ($columns as $column) {
                 if ($column->getAutoincrement()) {
                     continue;
                 }
                 $columnName = $column->getName();
-                if (in_array($columnName, $fillableNames)) {
+
+                if (in_array($columnName, $fillableNames) == $classExists) {
                     $ret[] = $column;
                 }
             }
@@ -149,20 +153,21 @@ abstract class Generator
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return string
      */
     protected function getTableName($modelName)
     {
         $modelName = $this->getModelName($modelName);
 
-        $name = \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
+        $name    = \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
         $columns = $this->getTableColumns($name);
         if (count($columns)) {
             return $name;
         }
 
-        $name = \StringHelper::singularize(\StringHelper::camel2Snake($modelName));
+        $name    = \StringHelper::singularize(\StringHelper::camel2Snake($modelName));
         $columns = $this->getTableColumns($name);
         if (count($columns)) {
             return $name;
@@ -194,7 +199,8 @@ abstract class Generator
     }
 
     /**
-     * @param  \Doctrine\DBAL\Schema\Column[] $columns
+     * @param \Doctrine\DBAL\Schema\Column[] $columns
+     *
      * @return string[]
      */
     protected function getColumnNames($columns)
@@ -208,7 +214,8 @@ abstract class Generator
     }
 
     /**
-     * @param  string $path
+     * @param string $path
+     *
      * @return bool
      */
     protected function alreadyExists($path)
@@ -219,7 +226,8 @@ abstract class Generator
     /**
      * Build the directory for the class if necessary.
      *
-     * @param  string $path
+     * @param string $path
+     *
      * @return string
      */
     protected function makeDirectory($path)
@@ -232,7 +240,8 @@ abstract class Generator
     }
 
     /**
-     * @param  string $class
+     * @param string $class
+     *
      * @return string
      */
     protected function convertClassToPath($class)
@@ -249,10 +258,11 @@ abstract class Generator
     }
 
     /**
-     * @param  string $modelName
-     * @param  string $classPath
-     * @param  string $stubFilePath
-     * @param  array  $additionalData
+     * @param string $modelName
+     * @param string $classPath
+     * @param string $stubFilePath
+     * @param array  $additionalData
+     *
      * @return bool
      */
     protected function generateFile($modelName, $classPath, $stubFilePath, $additionalData = [])
@@ -267,7 +277,7 @@ abstract class Generator
             }
         }
 
-        $pathInfo = pathinfo($classPath);
+        $pathInfo  = pathinfo($classPath);
         $className = $pathInfo['filename'];
 
         $this->makeDirectory($classPath);
@@ -281,7 +291,7 @@ abstract class Generator
         ];
         $data = $additionalData;
         foreach ($defaultData as $key => $value) {
-            if (!key_exists($key, $data)) {
+            if (!array_key_exists($key, $data)) {
                 $data[$key] = $value;
             }
         }
@@ -301,7 +311,7 @@ abstract class Generator
     {
         $stubFilePath = resource_path('stubs'.$path);
 
-        if ( $this->files->exists($stubFilePath) ) {
+        if ($this->files->exists($stubFilePath)) {
             return $stubFilePath;
         }
 
@@ -309,5 +319,4 @@ abstract class Generator
 
         return $stubFilePath;
     }
-
 }

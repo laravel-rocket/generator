@@ -1,10 +1,8 @@
 <?php
-
 namespace LaravelRocket\Generator\Generators;
 
 class ModelGenerator extends Generator
 {
-
     public function generate($name, $overwrite = false, $baseDirectory = null)
     {
         $modelName = $this->getModelName($name);
@@ -15,7 +13,8 @@ class ModelGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getModelName($name)
@@ -26,7 +25,8 @@ class ModelGenerator extends Generator
     }
 
     /**
-     * @param  string $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getModelClass($name)
@@ -37,12 +37,13 @@ class ModelGenerator extends Generator
     }
 
     /**
-     * @param  string $tableName
+     * @param string $tableName
+     *
      * @return array
      */
     protected function getDateTimeColumns($tableName)
     {
-        $ret = [];
+        $ret     = [];
         $columns = $this->getTableColumns($tableName);
         if ($columns) {
             foreach ($columns as $column) {
@@ -60,7 +61,8 @@ class ModelGenerator extends Generator
     }
 
     /**
-     * @param  string $tableName
+     * @param string $tableName
+     *
      * @return bool
      */
     protected function hasSoftDeleteColumn($tableName)
@@ -89,7 +91,7 @@ class ModelGenerator extends Generator
         }
 
         $tables = \DB::getDoctrineSchemaManager()->listTables();
-        $ret = [];
+        $ret    = [];
         foreach ($tables as $table) {
             $ret[] = $table->getName();
         }
@@ -98,7 +100,8 @@ class ModelGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return bool
      */
     protected function generateModel($modelName)
@@ -109,7 +112,7 @@ class ModelGenerator extends Generator
         $stubFilePath = $this->getStubPath('/model/model.stub');
 
         $tableName = $this->getTableName($modelName);
-        $columns = $this->getFillableColumns($modelName);
+        $columns   = $this->getFillableColumns($modelName);
 
         $fillables = count($columns) > 0 ? "'".implode("',".PHP_EOL."        '",
                 $this->getColumnNames($columns))."'," : '';
@@ -126,21 +129,20 @@ class ModelGenerator extends Generator
 
     protected function generateModelRelation($modelName)
     {
-        $relations = "";
-        $tables = $this->getTableList();
+        $relations = '';
+        $tables    = $this->getTableList();
 
         $tableName = $this->getTableName($modelName);
-        $columns = $this->getFillableColumns($tableName);
+        $columns   = $this->getFillableColumns($tableName);
 
         foreach ($columns as $column) {
             $columnName = $column->getName();
             if (preg_match('/^(.*_image)_id$/', $columnName, $matches)) {
-
                 $relationName = \StringHelper::snake2Camel($matches[1]);
                 $relations .= '    public function '.$relationName.'()'.PHP_EOL.'    {'.PHP_EOL.'        return $this->hasOne(\App\Models\Image::class, \'id\', \''.$columnName.'\');'.PHP_EOL.'    }'.PHP_EOL.PHP_EOL;
             } elseif (preg_match('/^(.*)_id$/', $columnName, $matches)) {
                 $relationName = \StringHelper::snake2Camel($matches[1]);
-                $className = ucfirst($relationName);
+                $className    = ucfirst($relationName);
                 if (!$this->getPath($className)) {
                     continue;
                 }
@@ -152,24 +154,25 @@ class ModelGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return bool
      */
     protected function generatePresenter($modelName)
     {
-        $className = '\\App\\Presenters\\'.$modelName.'Presenter';
-        $classPath = $this->convertClassToPath($className);
+        $className    = '\\App\\Presenters\\'.$modelName.'Presenter';
+        $classPath    = $this->convertClassToPath($className);
         $stubFilePath = __DIR__.'/../../stubs/model/presenter.stub';
 
-        $tableName = $this->getTableName($modelName);
-        $columns = $this->getFillableColumns($tableName);
+        $tableName        = $this->getTableName($modelName);
+        $columns          = $this->getFillableColumns($tableName);
         $multilingualKeys = [];
         foreach ($columns as $column) {
             if (preg_match('/^(.*)_en$/', $column->getName(), $matches)) {
                 $multilingualKeys[] = $matches[1];
             }
         }
-        $multilingualKeyString = count($multilingualKeys) > 0 ? "'".join("','",
+        $multilingualKeyString = count($multilingualKeys) > 0 ? "'".implode("','",
                 array_unique($multilingualKeys))."'" : '';
 
         $imageFields = [];
@@ -178,7 +181,7 @@ class ModelGenerator extends Generator
                 $imageFields[] = $matches[1];
             }
         }
-        $imageFieldString = count($imageFields) > 0 ? "'".join("','", array_unique($imageFields))."'" : '';
+        $imageFieldString = count($imageFields) > 0 ? "'".implode("','", array_unique($imageFields))."'" : '';
 
         return $this->generateFile($modelName, $classPath, $stubFilePath, [
             'MULTILINGUAL_COLUMNS' => $multilingualKeyString,
@@ -187,19 +190,21 @@ class ModelGenerator extends Generator
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return bool
      */
     protected function generateModelUnitTest($modelName)
     {
-        $classPath = base_path('/tests/Models/'.$modelName.'Test.php');
+        $classPath    = base_path('/tests/Models/'.$modelName.'Test.php');
         $stubFilePath = $this->getStubPath('/model/model_unittest.stub');
 
         return $this->generateFile($modelName, $classPath, $stubFilePath);
     }
 
     /**
-     * @param  string $modelName
+     * @param string $modelName
+     *
      * @return bool
      */
     protected function generateModelFactory($modelName)
@@ -210,38 +215,38 @@ class ModelGenerator extends Generator
         $columns = $this->getFillableColumns($tableName);
 
         $factoryPath = base_path('/database/factories/ModelFactory.php');
-        $key = '/* NEW MODEL FACTORY */';
+        $key         = '/* NEW MODEL FACTORY */';
 
         $data = '$factory->define('.$className.'::class, function (Faker\Generator $faker) {'.PHP_EOL.'    return ['.PHP_EOL;
         foreach ($columns as $column) {
             $defaultValue = "''";
             switch ($column->getType()->getName()) {
-                case "bigint":
-                case "integer":
-                case "smallint":
+                case 'bigint':
+                case 'integer':
+                case 'smallint':
                     $defaultValue = 0;
                     break;
-                case "string":
-                case "text":
-                case "binary":
+                case 'string':
+                case 'text':
+                case 'binary':
                     $defaultValue = "''";
                     break;
-                case "datetime":
+                case 'datetime':
                     $defaultValue = '$faker->datetime';
                     break;
             }
             switch ($column->getName()) {
-                case "name":
+                case 'name':
                     $defaultValue = '$faker->name';
                     break;
-                case "email":
+                case 'email':
                     $defaultValue = '$faker->unique()->safeEmail';
                     break;
-                case "password":
+                case 'password':
                     $defaultValue = 'bcrypt(\'secret\')';
                     break;
             }
-            $data .= "        '".$column->getName()."' => ".$defaultValue.",".PHP_EOL;
+            $data .= "        '".$column->getName()."' => ".$defaultValue.','.PHP_EOL;
         }
         $data .= '    ];'.PHP_EOL.'});'.PHP_EOL.PHP_EOL;
 
