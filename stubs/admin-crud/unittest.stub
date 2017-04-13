@@ -2,7 +2,7 @@
 
 namespace Tests\Controllers\Admin;
 
-use LaravelRocket\Foundation\Tests\TestCase;
+use Tests\TestCase;
 
 class %%MODEL%%ControllerTest extends TestCase
 {

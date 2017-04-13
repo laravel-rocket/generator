@@ -3,7 +3,7 @@
 namespace Tests\Repositories;
 
 use App\Models\%%MODEL%%;
-use LaravelRocket\Foundation\Tests\TestCase;
+use Tests\TestCase;
 
 class %%MODEL%%RepositoryTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 namespace Tests\Helpers;
 
-use LaravelRocket\Foundation\Tests\TestCase;
+use Tests\TestCase;
 
 class %%MODEL%%Test extends TestCase
 {
