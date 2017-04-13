@@ -3,6 +3,6 @@ namespace App\Services;
 
 use LaravelRocket\Foundation\Services\AuthenticatableServiceInterface;
 
-interface %%CLASS%%Interface extends AuthenticatableServiceInterface
+interface %%CLASS%% extends AuthenticatableServiceInterface
 {
 }
