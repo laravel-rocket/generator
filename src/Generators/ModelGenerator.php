@@ -59,7 +59,7 @@ class ModelGenerator extends Generator
             }
         }
 
-        $datetimes = count($columns) > 0 ? "'".implode("','", $columns)."'" : '';
+        $datetimes = count($ret) > 0 ? "'".implode("','", $ret)."'" : '';
 
         return $datetimes;
     }
