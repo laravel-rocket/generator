@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators;
 
 use Illuminate\Config\Repository as ConfigRepository;
@@ -23,22 +24,23 @@ abstract class Generator
     protected $overwrite;
 
     /**
-     * @param \Illuminate\Config\Repository     $config
+     * @param \Illuminate\Config\Repository $config
      * @param \Illuminate\Filesystem\Filesystem $files
-     * @param \Illuminate\View\Factory          $view
+     * @param \Illuminate\View\Factory $view
      */
     public function __construct(
         ConfigRepository $config,
         Filesystem $files,
         ViewFactory $view
-    ) {
+    )
+    {
         $this->config = $config;
-        $this->files  = $files;
-        $this->view   = $view;
+        $this->files = $files;
+        $this->view = $view;
     }
 
     /**
-     * @param string      $name
+     * @param string $name
      * @param string|null $baseDirectory
      */
     abstract public function generate($name, $baseDirectory = null);
@@ -57,7 +59,7 @@ abstract class Generator
     }
 
     /**
-     * @param array  $data
+     * @param array $data
      * @param string $stubPath
      *
      * @return string
@@ -68,14 +70,14 @@ abstract class Generator
 
         foreach ($data as $key => $value) {
             $templateKey = '%%'.$key.'%%';
-            $stub        = str_replace($templateKey, $value, $stub);
+            $stub = str_replace($templateKey, $value, $stub);
         }
 
         return $stub;
     }
 
     /**
-     * @param array  $data
+     * @param array $data
      * @param string $filePath
      *
      * @return bool
@@ -120,21 +122,30 @@ abstract class Generator
      */
     protected function getFillableColumns($modelName)
     {
-        $ret       = [];
+        $ret = [];
         $tableName = $this->getTableName($modelName);
 
         $fillableNames = [];
         $modelFullName = '\\App\\Models\\'.$modelName;
-        $classExists   = class_exists($modelFullName);
+        $classExists = class_exists($modelFullName);
 
+        $columns = $this->getTableColumns($tableName);
         if ($classExists) {
             /** @var \LaravelRocket\Foundation\Models\Base $modelObject */
             $modelObject = new $modelFullName();
             if (!empty($modelObject)) {
                 $fillableNames = $modelObject->getFillableColumns();
             }
+        } else {
+            if ($columns) {
+                foreach ($columns as $column) {
+                    $columnName = $column->getName();
+                    if (!in_array($columnName, ['id', 'created_at', 'updated_at', 'deleted_at'])) {
+                        $fillableNames[] = $columnName;
+                    }
+                }
+            }
         }
-        $columns = $this->getTableColumns($tableName);
 
         if ($columns) {
             foreach ($columns as $column) {
@@ -160,10 +171,10 @@ abstract class Generator
     protected function getTableName($modelName)
     {
         $modelName = $this->getModelName($modelName);
-        $modelFullName = '\\App\\Models\\' . $modelName;
+        $modelFullName = '\\App\\Models\\'.$modelName;
 
-        $classExists   = class_exists($modelFullName);
-        if( $classExists ) {
+        $classExists = class_exists($modelFullName);
+        if ($classExists) {
             return $modelFullName::getTableName();
         } else {
             $name = \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
@@ -267,7 +278,7 @@ abstract class Generator
      * @param string $modelName
      * @param string $classPath
      * @param string $stubFilePath
-     * @param array  $additionalData
+     * @param array $additionalData
      *
      * @return bool
      */
@@ -283,7 +294,7 @@ abstract class Generator
             }
         }
 
-        $pathInfo  = pathinfo($classPath);
+        $pathInfo = pathinfo($classPath);
         $className = $pathInfo['filename'];
 
         $this->makeDirectory($classPath);
