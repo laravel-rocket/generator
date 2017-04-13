@@ -1,0 +1,19 @@
+<?php
+namespace App\Services\Production;
+
+use App\Repositories\%%MODEL%%RepositoryInterface;
+use App\Services\%%CLASS%%Interface;
+use LaravelRocket\Foundation\Services\Production\BaseService;
+
+class %%CLASS%% extends BaseService implements %%CLASS%%Interface
+{
+    /** @var \App\Repositories\%%MODEL%%RepositoryInterface */
+    protected $%%model%%Repository;
+
+    public function __construct(
+        %%MODEL%%RepositoryInterface $%%model%%Repository
+    ) {
+        $this->%%model%%Repository     = $%%model%%Repository;
+    }
+
+}
