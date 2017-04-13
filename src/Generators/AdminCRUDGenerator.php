@@ -407,7 +407,7 @@ class AdminCRUDGenerator extends Generator
                         case 'text':
                             break;
                         case 'boolean':
-                            $result .= '                <td>{{ ($'.$lcName.'->'.$name.') ?  \'ON\' : \'OFF\' }}<\/td>'.PHP_EOL;
+                            $result .= '                <td>{{ ($'.$lcName.'->'.$name.') ?  \'ON\' : \'OFF\' }}</td>'.PHP_EOL;
                             break;
                         case 'datetime':
                         case 'string':
