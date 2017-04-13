@@ -133,6 +133,13 @@ class ModelGenerator extends Generator
         ]);
     }
 
+    protected function getPath($name)
+    {
+        $className = $this->getClassName($name);
+
+        return app_path('/Models/'.$className.'.php');
+    }
+
     protected function generateModelRelation($modelName)
     {
         $relations = '';
@@ -239,6 +246,9 @@ class ModelGenerator extends Generator
                     break;
                 case 'datetime':
                     $defaultValue = '$faker->datetime';
+                    break;
+                case 'boolean':
+                    $defaultValue = '$faker->boolean';
                     break;
             }
             switch ($column->getName()) {

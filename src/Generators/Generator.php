@@ -152,7 +152,7 @@ abstract class Generator
                 }
                 $columnName = $column->getName();
 
-                if (in_array($columnName, $fillableNames) == $classExists) {
+                if (in_array($columnName, $fillableNames)) {
                     $ret[] = $column;
                 }
             }
