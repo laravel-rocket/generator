@@ -160,20 +160,26 @@ abstract class Generator
     protected function getTableName($modelName)
     {
         $modelName = $this->getModelName($modelName);
+        $modelFullName = '\\App\\Models\\' . $modelName;
 
-        $name    = \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
-        $columns = $this->getTableColumns($name);
-        if (count($columns)) {
-            return $name;
+        $classExists   = class_exists($modelFullName);
+        if( $classExists ) {
+            return $modelFullName::getTableName();
+        } else {
+            $name = \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
+            $columns = $this->getTableColumns($name);
+            if (count($columns)) {
+                return $name;
+            }
+
+            $name = \StringHelper::singularize(\StringHelper::camel2Snake($modelName));
+            $columns = $this->getTableColumns($name);
+            if (count($columns)) {
+                return $name;
+            }
+
+            return \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
         }
-
-        $name    = \StringHelper::singularize(\StringHelper::camel2Snake($modelName));
-        $columns = $this->getTableColumns($name);
-        if (count($columns)) {
-            return $name;
-        }
-
-        return \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
     }
 
     /**

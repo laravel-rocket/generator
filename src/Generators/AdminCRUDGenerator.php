@@ -304,6 +304,9 @@ class AdminCRUDGenerator extends Generator
                         case 'text':
                             $stubPath = $this->getStubPath('/admin-crud/form/textarea.stub');
                             break;
+                        case "date":
+                            $stubPath = $this->getStubPath('/admin-crud/form/date.stub');
+                            break;
                         case 'string':
                         case 'integer':
                         case 'bigint':
@@ -330,6 +333,7 @@ class AdminCRUDGenerator extends Generator
                     'column'        => $name,
                     'column-spinal' => \StringHelper::camel2Spinal(\StringHelper::snake2Camel($name)),
                     'models-spinal' => \StringHelper::camel2Spinal(\StringHelper::pluralize($modelName)),
+                    'models-snake'  => \StringHelper::camel2Snake(\StringHelper::pluralize($modelName)),
                     'models'        => \StringHelper::pluralize(lcfirst($modelName)),
                     'MODEL'         => $modelName,
                     'model'         => lcfirst($modelName),
