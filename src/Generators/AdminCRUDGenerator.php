@@ -304,7 +304,7 @@ class AdminCRUDGenerator extends Generator
                         case 'text':
                             $stubPath = $this->getStubPath('/admin-crud/form/textarea.stub');
                             break;
-                        case "date":
+                        case 'date':
                             $stubPath = $this->getStubPath('/admin-crud/form/date.stub');
                             break;
                         case 'string':
