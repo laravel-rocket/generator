@@ -245,7 +245,7 @@ class ModelGenerator extends Generator
                     $defaultValue = "''";
                     break;
                 case 'datetime':
-                    $defaultValue = '$faker->datetime';
+                    $defaultValue = '$faker->dateTime';
                     break;
                 case 'boolean':
                     $defaultValue = '$faker->boolean';
