@@ -5,6 +5,14 @@ namespace App\Models;
 use LaravelRocket\Foundation\Models\Base;
 
 %%SOFT_DELETE_CLASS_USE%%
+
+/**
+ * App\Models\%%MODEL%%.
+ *
+ * @method \App\Presenters\%%MODEL%%Presenter present()
+ *
+ */
+
 class %%MODEL%% extends Base
 {
 
