@@ -2,7 +2,7 @@
 
 namespace App\Helpers;
 
-interface %%CLASS%%Interface
+interface %%CLASS%%
 {
 
 }
