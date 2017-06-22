@@ -38,7 +38,7 @@ class APIGenerator extends Generator
      */
     protected function getResponseClass($name)
     {
-        return '\\App\\Http\\Response\\'.$this->namespace.'\\'.$name;
+        return '\\App\\Http\\Responses\\'.$this->namespace.'\\'.$name;
     }
 
     /**
@@ -90,8 +90,12 @@ class APIGenerator extends Generator
                 $columns .= PHP_EOL;
                 $columnsFromModel .= PHP_EOL;
             }
-            $columns .= '        \''.$$property->getName().'\'          => '.$default.',';
+            $columns .= '        \''.$property->getName().'\'          => '.$default.',';
             $columnsFromModel .= '                \''.$property->getName().'\'          => $model->'.$property->getName().',';
+        }
+
+        if( $this->files->exists($classPath) ) {
+            return false;
         }
 
         return $this->generateFile($class, $classPath, $stubFilePath, [

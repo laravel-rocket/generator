@@ -10,4 +10,15 @@ class APIGeneratorCommand extends GeneratorCommand
     protected $description = 'Create APIs from Swagger file';
 
     protected $generator   = APIGenerator::class;
+
+    /**
+     * Execute the console command.
+     *
+     * @return bool|null
+     */
+    public function handle()
+    {
+        $targetName = $this->getTargetName();
+        return $this->generate($targetName);
+    }
 }
