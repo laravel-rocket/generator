@@ -3,11 +3,7 @@ namespace LaravelRocket\Generator\Generators;
 
 class AdminCRUDGenerator extends Generator
 {
-    /**
-     * @param string $name
-     * @param null   $baseDirectory
-     */
-    public function generate($name, $baseDirectory = null)
+    public function generate($name, $overwrite = false, $baseDirectory = null)
     {
         $modelName = $this->getModelName($name);
         $this->generateController($modelName);

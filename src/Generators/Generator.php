@@ -39,9 +39,10 @@ abstract class Generator
 
     /**
      * @param string      $name
+     * @param bool        $overwrite
      * @param string|null $baseDirectory
      */
-    abstract public function generate($name, $baseDirectory = null);
+    abstract public function generate($name, $overwrite = false, $baseDirectory = null);
 
     /**
      * @param bool $overwrite

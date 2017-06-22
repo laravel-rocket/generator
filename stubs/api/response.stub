@@ -1,0 +1,27 @@
+<?php
+namespace App\Http\Responses\%%NAMESPACE%%;
+
+class %%NAME%% extends Response
+{
+    protected $columns = [
+        %%COLUMNS%%
+    ];
+
+    /**
+     * @param \App\Models\%%NAME%% $model
+     *
+     * @return static
+     */
+    public static function updateWithModel($model)
+    {
+        $response = new static([], 400);
+        if (!empty($model)) {
+            $modelArray = [
+               %%COLUMNS_FROM_MODEL%%
+            ];
+            $response = new static($modelArray, 200);
+        }
+
+        return $response;
+    }
+}

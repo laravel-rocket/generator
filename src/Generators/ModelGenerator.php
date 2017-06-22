@@ -6,10 +6,33 @@ class ModelGenerator extends Generator
     public function generate($name, $overwrite = false, $baseDirectory = null)
     {
         $modelName = $this->getModelName($name);
+        if (!$this->checkTableExists($name)) {
+            return;
+        }
+
         $this->generateModel($modelName);
         $this->generatePresenter($modelName);
         $this->generateModelUnitTest($modelName);
         $this->generateModelFactory($modelName);
+    }
+
+    /**
+     * @param $name
+     *
+     * @return bool
+     */
+    protected function checkTableExists($name)
+    {
+        $modelName = $this->getModelName($name);
+        $tableName = $this->getTableName($modelName);
+        $columns   = $this->getTableColumns($tableName);
+        if (empty($columns) || count($columns) == 0) {
+            $this->error('table '.$tableName.' could not found in database.');
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -237,7 +260,11 @@ class ModelGenerator extends Generator
                 case 'bigint':
                 case 'integer':
                 case 'smallint':
-                    $defaultValue = 0;
+                    $defaultValue = '0';
+                    break;
+                case 'decimal':
+                case 'float':
+                    $defaultValue = '0.0';
                     break;
                 case 'string':
                 case 'text':
