@@ -262,7 +262,7 @@ abstract class Generator
      */
     protected function convertClassToPath($class)
     {
-        return base_path(str_replace('\\', '/', $class).'.php');
+        return base_path(str_replace('\\', '/', str_replace('App', 'app', $class)).'.php');
     }
 
     /**
