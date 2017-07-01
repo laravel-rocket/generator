@@ -23,23 +23,24 @@ abstract class Generator
     protected $overwrite;
 
     /**
-     * @param \Illuminate\Config\Repository     $config
+     * @param \Illuminate\Config\Repository $config
      * @param \Illuminate\Filesystem\Filesystem $files
-     * @param \Illuminate\View\Factory          $view
+     * @param \Illuminate\View\Factory $view
      */
     public function __construct(
         ConfigRepository $config,
         Filesystem $files,
         ViewFactory $view
-    ) {
+    )
+    {
         $this->config = $config;
-        $this->files  = $files;
-        $this->view   = $view;
+        $this->files = $files;
+        $this->view = $view;
     }
 
     /**
-     * @param string      $name
-     * @param bool        $overwrite
+     * @param string $name
+     * @param bool $overwrite
      * @param string|null $baseDirectory
      */
     abstract public function generate($name, $overwrite = false, $baseDirectory = null);
@@ -58,7 +59,7 @@ abstract class Generator
     }
 
     /**
-     * @param array  $data
+     * @param array $data
      * @param string $stubPath
      *
      * @return string
@@ -67,27 +68,27 @@ abstract class Generator
     {
         $stub = $this->files->get($stubPath);
 
-        foreach ($data as $key => $value) {
+        foreach($data as $key => $value) {
             $templateKey = '%%'.$key.'%%';
-            $stub        = str_replace($templateKey, $value, $stub);
+            $stub = str_replace($templateKey, $value, $stub);
         }
 
         return $stub;
     }
 
     /**
-     * @param array  $data
+     * @param array $data
      * @param string $filePath
      *
      * @return bool
      */
     protected function replaceFile($data, $filePath)
     {
-        if (!$this->files->exists($filePath)) {
+        if(!$this->files->exists($filePath)) {
             return false;
         }
         $content = $this->files->get($filePath);
-        foreach ($data as $key => $value) {
+        foreach($data as $key => $value) {
             $content = str_replace($key, $value.$key, $content);
         }
         $this->files->put($filePath, $content);
@@ -110,8 +111,9 @@ abstract class Generator
     protected function getClassName($name)
     {
         $names = array_slice(explode('\\', $name), -1, 1);
+        $className = count($names) ? $names[0] : $name;
 
-        return count($names) ? $names[0] : $name;
+        return ucfirst($className);
     }
 
     /**
@@ -121,39 +123,39 @@ abstract class Generator
      */
     protected function getFillableColumns($modelName)
     {
-        $ret       = [];
+        $ret = [];
         $tableName = $this->getTableName($modelName);
 
         $fillableNames = [];
         $modelFullName = '\\App\\Models\\'.$modelName;
-        $classExists   = class_exists($modelFullName);
+        $classExists = class_exists($modelFullName);
 
         $columns = $this->getTableColumns($tableName);
-        if ($classExists) {
+        if($classExists) {
             /** @var \LaravelRocket\Foundation\Models\Base $modelObject */
             $modelObject = new $modelFullName();
-            if (!empty($modelObject)) {
+            if(!empty($modelObject)) {
                 $fillableNames = $modelObject->getFillableColumns();
             }
         } else {
-            if ($columns) {
-                foreach ($columns as $column) {
+            if($columns) {
+                foreach($columns as $column) {
                     $columnName = $column->getName();
-                    if (!in_array($columnName, ['id', 'created_at', 'updated_at', 'deleted_at'])) {
+                    if(!in_array($columnName, ['id', 'created_at', 'updated_at', 'deleted_at'])) {
                         $fillableNames[] = $columnName;
                     }
                 }
             }
         }
 
-        if ($columns) {
-            foreach ($columns as $column) {
-                if ($column->getAutoincrement()) {
+        if($columns) {
+            foreach($columns as $column) {
+                if($column->getAutoincrement()) {
                     continue;
                 }
                 $columnName = $column->getName();
 
-                if (in_array($columnName, $fillableNames)) {
+                if(in_array($columnName, $fillableNames)) {
                     $ret[] = $column;
                 }
             }
@@ -169,22 +171,22 @@ abstract class Generator
      */
     protected function getTableName($modelName)
     {
-        $modelName     = $this->getModelName($modelName);
+        $modelName = $this->getModelName($modelName);
         $modelFullName = '\\App\\Models\\'.$modelName;
 
         $classExists = class_exists($modelFullName);
-        if ($classExists) {
+        if($classExists) {
             return $modelFullName::getTableName();
         } else {
-            $name    = \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
+            $name = \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
             $columns = $this->getTableColumns($name);
-            if (count($columns)) {
+            if(count($columns)) {
                 return $name;
             }
 
-            $name    = \StringHelper::singularize(\StringHelper::camel2Snake($modelName));
+            $name = \StringHelper::singularize(\StringHelper::camel2Snake($modelName));
             $columns = $this->getTableColumns($name);
-            if (count($columns)) {
+            if(count($columns)) {
                 return $name;
             }
 
@@ -200,7 +202,7 @@ abstract class Generator
     protected function getTableColumns($tableName)
     {
         $hasDoctrine = interface_exists('Doctrine\DBAL\Driver');
-        if (!$hasDoctrine) {
+        if(!$hasDoctrine) {
             return [];
         }
 
@@ -222,7 +224,7 @@ abstract class Generator
     protected function getColumnNames($columns)
     {
         $result = [];
-        foreach ($columns as $column) {
+        foreach($columns as $column) {
             $result[] = $column->getName();
         }
 
@@ -248,7 +250,7 @@ abstract class Generator
      */
     protected function makeDirectory($path)
     {
-        if (!$this->files->isDirectory(dirname($path))) {
+        if(!$this->files->isDirectory(dirname($path))) {
             $this->files->makeDirectory(dirname($path), 0777, true, true);
         }
 
@@ -277,14 +279,14 @@ abstract class Generator
      * @param string $modelName
      * @param string $classPath
      * @param string $stubFilePath
-     * @param array  $additionalData
+     * @param array $additionalData
      *
      * @return bool
      */
     protected function generateFile($modelName, $classPath, $stubFilePath, $additionalData = [])
     {
-        if ($this->alreadyExists($classPath)) {
-            if ($this->shouldOverwrite()) {
+        if($this->alreadyExists($classPath)) {
+            if($this->shouldOverwrite()) {
                 $this->files->delete($classPath);
             } else {
                 $this->error($classPath.' already exists.');
@@ -293,7 +295,7 @@ abstract class Generator
             }
         }
 
-        $pathInfo  = pathinfo($classPath);
+        $pathInfo = pathinfo($classPath);
         $className = $pathInfo['filename'];
 
         $this->makeDirectory($classPath);
@@ -306,15 +308,15 @@ abstract class Generator
 
         ];
         $data = $additionalData;
-        foreach ($defaultData as $key => $value) {
-            if (!array_key_exists($key, $data)) {
+        foreach($defaultData as $key => $value) {
+            if(!array_key_exists($key, $data)) {
                 $data[$key] = $value;
             }
         }
 
         $content = $this->replace($data, $stubFilePath);
 
-        if (empty($content)) {
+        if(empty($content)) {
             return false;
         }
 
@@ -327,7 +329,7 @@ abstract class Generator
     {
         $stubFilePath = resource_path('stubs'.$path);
 
-        if ($this->files->exists($stubFilePath)) {
+        if($this->files->exists($stubFilePath)) {
             return $stubFilePath;
         }
 
