@@ -19,6 +19,7 @@ class APIGeneratorCommand extends GeneratorCommand
     public function handle()
     {
         $targetName = $this->getTargetName();
+
         return $this->generate($targetName);
     }
 }

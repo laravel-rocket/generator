@@ -94,7 +94,7 @@ class APIGenerator extends Generator
             $columnsFromModel .= '                \''.$property->getName().'\'          => $model->'.$property->getName().',';
         }
 
-        if( $this->files->exists($classPath) ) {
+        if ($this->files->exists($classPath)) {
             return false;
         }
 

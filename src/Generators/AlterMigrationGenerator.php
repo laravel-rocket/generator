@@ -2,6 +2,7 @@
 namespace LaravelRocket\Generator\Generators;
 
 use Symfony\Component\Console\Exception\InvalidArgumentException;
+use function ICanBoogie\pluralize;
 
 class AlterMigrationGenerator extends Generator
 {
@@ -29,18 +30,18 @@ class AlterMigrationGenerator extends Generator
 
     protected function getTableName($name)
     {
-        return \StringHelper::pluralize(\StringHelper::camel2Snake($name));
+        return pluralize(snake_case($name));
     }
 
     protected function getClassName($name)
     {
-        return 'Alter'.ucfirst(\StringHelper::snake2Camel($name)).'Table';
+        return 'Alter'.ucfirst(camel_case($name)).'Table';
     }
 
     protected function getPath($name)
     {
         $basePath = database_path('migrations');
 
-        return $basePath.'/'.date('Y_m_d_His').'_create_'.$name.'_table.php';
+        return $basePath.'/'.date('Y_m_d_His').'_alter_'.$name.'_table.php';
     }
 }
