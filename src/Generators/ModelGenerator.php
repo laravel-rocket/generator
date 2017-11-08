@@ -141,8 +141,10 @@ class ModelGenerator extends Generator
         $tableName = $this->getTableName($modelName);
         $columns   = $this->getFillableColumns($modelName);
 
-        $fillables = count($columns) > 0 ? "'".implode("',".PHP_EOL."        '",
-                $this->getColumnNames($columns))."'," : '';
+        $fillables = count($columns) > 0 ? "'".implode(
+            "',".PHP_EOL."        '",
+                $this->getColumnNames($columns)
+        )."'," : '';
 
         $hasSoftDelete = $this->hasSoftDeleteColumn($tableName);
 
@@ -208,8 +210,10 @@ class ModelGenerator extends Generator
                 $multilingualKeys[] = $matches[1];
             }
         }
-        $multilingualKeyString = count($multilingualKeys) > 0 ? "'".implode("','",
-                array_unique($multilingualKeys))."'" : '';
+        $multilingualKeyString = count($multilingualKeys) > 0 ? "'".implode(
+            "','",
+                array_unique($multilingualKeys)
+        )."'" : '';
 
         $imageFields = [];
         foreach ($columns as $column) {

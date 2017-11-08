@@ -284,11 +284,11 @@ class AdminCRUDGenerator extends Generator
                 continue;
             }
             $stubPath = $this->getStubPath('/admin-crud/form/text.stub');
-            if (\StringHelper::endsWith($name, 'image_id')) {
+            if (ends_with($name, 'image_id')) {
                 $stubPath = $this->getStubPath('/admin-crud/form/image.stub');
             } else {
-                if (\StringHelper::endsWith($name, '_id')) {
-                    continue;
+                if (ends_with($name, '_id') || ends_with($name, 'type')) {
+                    $stubPath = $this->getStubPath('/admin-crud/form/select.stub');
                 } else {
                     switch ($type) {
                         case 'boolean':

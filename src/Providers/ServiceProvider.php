@@ -57,8 +57,15 @@ class ServiceProvider extends BaseServiceProvider
             return new APIGeneratorCommand($app['config'], $app['files'], $app['view']);
         });
 
-        $this->commands('command.rocket.make.repository', 'command.rocket.make.service', 'command.rocket.model.make',
-            'command.rocket.make.helper', 'command.rocket.make.migration.create', 'command.rocket.make.migration.alter',
-            'command.rocket.make.admin.crud', 'command.rocket.make.api');
+        $this->commands(
+            'command.rocket.make.repository',
+            'command.rocket.make.service',
+            'command.rocket.model.make',
+            'command.rocket.make.helper',
+            'command.rocket.make.migration.create',
+            'command.rocket.make.migration.alter',
+            'command.rocket.make.admin.crud',
+            'command.rocket.make.api'
+        );
     }
 }
