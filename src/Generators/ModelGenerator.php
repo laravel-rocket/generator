@@ -254,10 +254,11 @@ class ModelGenerator extends Generator
 
         $columns = $this->getFillableColumns($tableName);
 
-        $factoryPath = base_path('/database/factories/ModelFactory.php');
-        $key         = '/* NEW MODEL FACTORY */';
+        $stubFilePath = __DIR__.'/../../stubs/model/factory.stub';
+        $factoryPath  = base_path('/database/factories/'.$modelName.'Factory.php');
 
-        $data = '$factory->define('.$className.'::class, function (Faker\Generator $faker) {'.PHP_EOL.'    return ['.PHP_EOL;
+        $data = '';
+
         foreach ($columns as $column) {
             $defaultValue = "''";
             switch ($column->getType()->getName()) {
@@ -275,32 +276,53 @@ class ModelGenerator extends Generator
                 case 'binary':
                     $defaultValue = "''";
                     break;
+                case 'date':
+                    $defaultValue = '$faker->date()';
+                    break;
                 case 'datetime':
-                    $defaultValue = '$faker->dateTime';
+                    $defaultValue = '$faker->dateTimeThisDecade';
                     break;
                 case 'boolean':
                     $defaultValue = '$faker->boolean';
                     break;
             }
             switch ($column->getName()) {
-                case 'name':
-                    $defaultValue = '$faker->name';
-                    break;
                 case 'email':
                     $defaultValue = '$faker->unique()->safeEmail';
                     break;
                 case 'password':
                     $defaultValue = 'bcrypt(\'secret\')';
                     break;
+                case 'description':
+                    $defaultValue = 'faker->sentences(3, true)';
+                    break;
+                case 'slug':
+                    $defaultValue = 'strtolower($faker->word)';
+                    break;
+                case 'url':
+                case 'name':
+                case 'first_name':
+                case 'last_name':
+                case 'longitude':
+                case 'latitude':
+                case 'locale':
+                case 'language_code':
+                case 'country_code':
+                case 'currency_code':
+                    $defaultValue = '$faker->'.camel_case($column->getName());
+                    break;
+            }
+            if (ends_with($column->getName(), '_url')) {
+                $defaultValue = '$faker->url';
+            }
+            if (ends_with($column->getName(), '_name')) {
+                $defaultValue = '$faker->name';
             }
             $data .= "        '".$column->getName()."' => ".$defaultValue.','.PHP_EOL;
         }
-        $data .= '    ];'.PHP_EOL.'});'.PHP_EOL.PHP_EOL;
 
-        $this->replaceFile([
-            $key => $data,
-        ], $factoryPath);
-
-        return true;
+        return $this->generateFile($modelName, $factoryPath, $stubFilePath, [
+            'COLUMNS' => $data,
+        ]);
     }
 }
