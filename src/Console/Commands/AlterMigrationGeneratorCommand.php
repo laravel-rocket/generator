@@ -21,7 +21,14 @@ class AlterMigrationGeneratorCommand extends GeneratorCommand
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name of the table'],
-            ['actions', InputArgument::REQUIRED, 'Alter actions'],
+            ['action', InputArgument::REQUIRED, 'Alter action'],
+        ];
+    }
+
+    protected function getAdditionalData()
+    {
+        return [
+            'action' => $this->argument('action'),
         ];
     }
 }

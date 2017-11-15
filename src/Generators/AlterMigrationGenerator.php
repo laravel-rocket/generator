@@ -8,18 +8,19 @@ class AlterMigrationGenerator extends Generator
 {
     public function generate($name, $overwrite = false, $baseDirectory = null, $additionalData = [])
     {
-        $this->generateMigration($name);
+        $action = array_get($additionalData, 'action', 'undefined');
+        $this->generateMigration($name, $action);
     }
 
-    protected function generateMigration($name)
+    protected function generateMigration($name, $action)
     {
         $name = $this->getTableName($name);
 
-        if (class_exists($className = $this->getClassName($name))) {
+        if (class_exists($className = $this->getAlterClassName($name, $action))) {
             throw new InvalidArgumentException("A $className migration already exists.");
         }
 
-        $path         = $this->getPath($name);
+        $path         = $this->getPath($name, $action);
         $stubFilePath = $this->getStubPath('/migration/alter.stub');
 
         return $this->generateFile($className, $path, $stubFilePath, [
@@ -33,15 +34,16 @@ class AlterMigrationGenerator extends Generator
         return pluralize(snake_case($name));
     }
 
-    protected function getClassName($name)
+    protected function getAlterClassName($name, $action)
     {
-        return 'Alter'.ucfirst(camel_case($name)).'Table';
+        return 'Alter'.ucfirst(camel_case($name)).ucfirst(camel_case($action)).'Table';
     }
 
-    protected function getPath($name)
+    protected function getPath($name, $action)
     {
         $basePath = database_path('migrations');
+        $action   = snake_case($action);
 
-        return $basePath.'/'.date('Y_m_d_His').'_alter_'.$name.'_table.php';
+        return $basePath.'/'.date('Y_m_d_His').'_alter_'.$name.'_'.$action.'_table.php';
     }
 }

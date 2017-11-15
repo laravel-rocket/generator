@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 use LaravelRocket\Generator\Generators\Generator;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class GeneratorCommand extends Command
 {
@@ -43,6 +44,11 @@ class GeneratorCommand extends Command
         parent::__construct();
     }
 
+    protected function getAdditionalData()
+    {
+        return [];
+    }
+
     /**
      * Execute the console command.
      *
@@ -53,15 +59,16 @@ class GeneratorCommand extends Command
         $targetName = $this->getTargetName();
         $name       = $this->parseName($targetName);
 
-        return $this->generate($name);
+        return $this->generate($name, $this->getAdditionalData());
     }
 
-    public function generate($name)
+    public function generate($name, $additionalData)
     {
         /** @var Generator $generator */
         $generator = app()->make($this->generator);
+        $overwrite = !empty($this->option('overwrite'));
 
-        return $generator->generate($name);
+        return $generator->generate($name, $overwrite, null, $additionalData);
     }
 
     /**
@@ -101,6 +108,13 @@ class GeneratorCommand extends Command
     {
         return [
             ['name', InputArgument::REQUIRED, 'The name of the class'],
+        ];
+    }
+
+    protected function getOptions()
+    {
+        return [
+            ['overwrite', InputOption::VALUE_NONE, 'Overwrite existing file or not'],
         ];
     }
 }
