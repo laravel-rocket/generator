@@ -31,9 +31,9 @@ class RouteGenerator extends BaseGenerator
                         ];
                     }
                     if ($controllerInfo['isResource']) {
-                        $routes[$controllerInfo['name']]['resource'][] = $route;
+                        $routes[$controllerInfo['name']]['resource'][] = $controllerInfo;
                     } else {
-                        $routes[$controllerInfo['name']]['others'][] = $route;
+                        $routes[$controllerInfo['name']]['others'][] = $controllerInfo;
                     }
                 }
             }
@@ -42,7 +42,7 @@ class RouteGenerator extends BaseGenerator
         foreach ($routes as $name => $route) {
             $model = 'Unknown';
             if (preg_match('/^(.+)Controller$/', $name, $matches)) {
-                $model = $matches[0];
+                $model = $matches[1];
             }
             $class = $this->getControllerClass($name);
             $path  = $this->convertClassToPath($class);
@@ -59,7 +59,7 @@ class RouteGenerator extends BaseGenerator
 
             $fileObject = (new PhpParser())->parse($path);
             if (!empty($fileObject)) {
-                $classes = &$fileObject->getClasses();
+                $classes = $fileObject->getClasses();
                 if (count($classes) > 0) {
                     foreach ($route['resource'] as $action) {
                         $classes[0]->addMethod('', $action['action'], [], ['public'], '');
@@ -79,7 +79,7 @@ class RouteGenerator extends BaseGenerator
                 $actions[] = $action['action'];
             }
             if (count($actions) > 0) {
-                $this->addRoute($route['resource'][0]['path'], $route['resource'][0]['method'], $route['resource'][0]['name'], $route['resource'][0]['action'], true, $actions);
+                $this->addRoute($route['resource'][0]['path'], '', $route['resource'][0]['name'], $route['resource'][0]['action'], true, $actions);
             }
         }
     }
@@ -91,7 +91,7 @@ class RouteGenerator extends BaseGenerator
 
     protected function getControllerClass($name)
     {
-        return '\\App\\Http\\Controller\\'.$this->namespace.'\\'.$name;
+        return '\\App\\Http\\Controllers\\'.$this->namespace.'\\'.$name;
     }
 
     protected function findRoute($path, $method)
@@ -113,10 +113,10 @@ class RouteGenerator extends BaseGenerator
     protected function isValue($fragment)
     {
         if (preg_match('/^{[^}]+}$/', $fragment)) {
-            return false;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -139,9 +139,9 @@ class RouteGenerator extends BaseGenerator
             $action     = $method === 'get' ? 'index' : 'store';
             $isResource = true;
         } elseif (count($fragments) === 2 && $this->isValue($fragments[1]) && in_array(
-            $method,
+                $method,
                 ['get', 'put', 'delete']
-        )) {
+            )) {
             $name       = studly_case(singularize($fragments[0])).'Controller';
             $action     = $method === 'get' ? 'show' : 'put' ? 'update' : 'destroy';
             $isResource = true;
@@ -157,25 +157,28 @@ class RouteGenerator extends BaseGenerator
             $action = $fragments[count($fragments) - 1];
         }
 
-        return ['path' => $path, $method => $method, 'name' => $name, 'action' => $action, 'isResource' => $isResource];
+        return ['path' => $path, 'method' => $method, 'name' => $name, 'action' => $action, 'isResource' => $isResource];
     }
 
     protected function addRoute($path, $method, $controller, $action, $isResource = false, $actions = [])
     {
-        $content = file_get_contents($path);
-        $postfix = str_replace('\\', '_', $this->namespace);
+        $routePath = $this->getRoutesPath();
+
+        $content = file_get_contents($routePath);
+        $postfix = strtoupper(str_replace('\\', '_', $this->namespace));
         $key     = '/* %%ROUTES_'.$postfix.'%% */';
 
         if (!$isResource) {
-            $route = "        Route::$method('$path', '$controller@$action')->name('$path.$action');";
+            $route = "        Route::$method('$path', '$controller@$action')->name('$method.$action');".PHP_EOL;
         } else {
-            $route = "        Route::resource('$path', '$controller@$action'[".PHP_EOL."                'only' => [".PHP_EOL;
+            $route = "        Route::resource('$path', '$controller', [".PHP_EOL."                'only' => [".PHP_EOL;
             foreach ($actions as $resourceAction) {
                 $route .= "                    '$resourceAction',".PHP_EOL;
             }
-            $route .= '                ],'.PHP_EOL.'            ]);';
+            $route .= '                ],'.PHP_EOL.'            ]);'.PHP_EOL;
         }
-        if (substr($key, $content) === false) {
+
+        if (strpos($content, $key) === false) {
             $namespaceFragments = explode('\\', $this->namespace);
             $start              = '';
             $end                = '';
@@ -186,11 +189,11 @@ class RouteGenerator extends BaseGenerator
             }
             $this->replaceFile([
                 '__EOF__' => $start.PHP_EOL.$route.PHP_EOL.$key.PHP_EOL.$end,
-            ], $path);
+            ], $routePath);
         } else {
             $this->replaceFile([
                 $key => $route,
-            ], $path);
+            ], $routePath);
         }
     }
 

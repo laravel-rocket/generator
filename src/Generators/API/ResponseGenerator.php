@@ -49,42 +49,45 @@ class ResponseGenerator extends BaseGenerator
 
         $columns          = '';
         $columnsFromModel = '';
-        foreach ($definition->properties as $name => $property) {
-            if (in_array($name, $this->ignore)) {
-                continue;
-            }
-            $ref   = $property->get('$ref');
-            $class = '';
-            if (!empty($ref)) {
-                $default   = 'null';
-                $fragments = explode('/', $ref);
-                $class     = $fragments[count($fragments) - 1];
-            } else {
-                switch ($property->type) {
-                    case 'string':
-                        $default = '\'\'';
-                        break;
-                    case 'integer':
-                    case 'int':
-                        $default = '0';
-                        break;
-                    case 'array':
-                        $default = '[]';
-                        break;
-                    default:
-                        $default = 'null';
-                        break;
+
+        if (!empty($definition->properties)) {
+            foreach ($definition->properties as $name => $property) {
+                if (in_array($name, $this->ignore)) {
+                    continue;
                 }
-            }
-            if (!empty($columns)) {
-                $columns .= PHP_EOL;
-                $columnsFromModel .= PHP_EOL;
-            }
-            $columns .= "        '$name'          => $default,";
-            if (!empty($ref)) {
-                $columnsFromModel .= "                '$name'          => empty(\$model->$name) ? null : new $class(\$model->$name),";
-            } else {
-                $columnsFromModel .= "                '$name'          => \$model->$name,";
+                $ref   = $property->get('$ref');
+                $class = '';
+                if (!empty($ref)) {
+                    $default   = 'null';
+                    $fragments = explode('/', $ref);
+                    $class     = $fragments[count($fragments) - 1];
+                } else {
+                    switch ($property->type) {
+                        case 'string':
+                            $default = '\'\'';
+                            break;
+                        case 'integer':
+                        case 'int':
+                            $default = '0';
+                            break;
+                        case 'array':
+                            $default = '[]';
+                            break;
+                        default:
+                            $default = 'null';
+                            break;
+                    }
+                }
+                if (!empty($columns)) {
+                    $columns .= PHP_EOL;
+                    $columnsFromModel .= PHP_EOL;
+                }
+                $columns .= "        '$name'          => $default,";
+                if (!empty($ref)) {
+                    $columnsFromModel .= "                '$name'          => empty(\$model->$name) ? null : new $class(\$model->$name),";
+                } else {
+                    $columnsFromModel .= "                '$name'          => \$model->$name,";
+                }
             }
         }
 

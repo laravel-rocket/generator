@@ -22,8 +22,8 @@ class APIGenerator extends Generator
         }
 
         foreach ($this->generators as $generator) {
-            $object = new $generator();
-            $object->generate($name, $overwrite, $baseDirectory, [
+            $generator = app()->make($generator);
+            $generator->generate($name, $overwrite, $baseDirectory, [
                 'document' => $this->document,
             ]);
         }
