@@ -1,39 +1,38 @@
 {
-    "name": "laravel-rocket/generator",
-    "description": "Code Generator For Laravel Rocket",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Takaaki Mizuno",
-            "email": "takaaki.mizuno@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~6.0",
-        "icanboogie/inflector": "^1.4",
-        "laravel/framework": "5.5.*",
-        "laravel-rocket/foundation": "2.0.*",
-        "takaaki-mizuno/php-code-manipulator": "0.*",
-        "justinrainbow/json-schema": "^5.2",
-        "takaaki-mizuno/swagger-parser": "0.*",
-        "symfony/yaml": "~3.3",
-        "friendsofphp/php-cs-fixer": "^2.8",
-        "fzaninotto/faker": "~1.5",
-        "laravel/laravel": "5.5.*",
-        "doctrine/dbal": "~2.5"
-    },
-    "autoload": {
-        "psr-4": {
-            "LaravelRocket\\Generator\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "classmap": [
-            "tests"
-        ]
+  "name": "laravel-rocket/generator",
+  "description": "Code Generator For Laravel Rocket",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Takaaki Mizuno",
+      "email": "takaaki.mizuno@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=7.0",
+    "symfony/yaml": "~3.3",
+    "takaaki-mizuno/php-code-manipulator": "0.*",
+    "takaaki-mizuno/swagger-parser": "0.*",
+    "doctrine/dbal": "~2.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~6.0",
+    "icanboogie/inflector": "^1.4",
+    "laravel/framework": "5.5.*",
+    "laravel-rocket/foundation": "2.0.*",
+    "friendsofphp/php-cs-fixer": "^2.8",
+    "fzaninotto/faker": "~1.5",
+    "laravel/laravel": "5.5.*"
+  },
+  "autoload": {
+    "psr-4": {
+      "LaravelRocket\\Generator\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests"
+    ]
+  }
 }
