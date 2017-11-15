@@ -3,7 +3,7 @@ namespace LaravelRocket\Generator\Generators;
 
 class HelperGenerator extends Generator
 {
-    public function generate($name, $overwrite = false, $baseDirectory = null)
+    public function generate($name, $overwrite = false, $baseDirectory = null, $additionalData = [])
     {
         $helperName = $this->getName($name);
         $this->generateHelper($helperName);

@@ -1,44 +1,24 @@
 <?php
 namespace LaravelRocket\Generator\Services;
 
-use LaravelRocket\Generator\Objects\Swagger\Spec;
-use Symfony\Component\Yaml\Yaml;
+use TakaakiMizuno\SwaggerParser\Parser as SwaggerParser;
 
 class SwaggerService
 {
+    protected $document;
+
+    protected $path;
+
     /**
-     * @param string $path
+     * @param $path
      *
-     * @return Spec
+     * @return null|\TakaakiMizuno\SwaggerParser\Objects\V20\Document
      */
     public function parse($path)
     {
-        $content = file_get_contents($path);
-        if ($this->isJson($path)) {
-            $data = json_decode($content);
-        } else {
-            $data = Yaml::parse($content, Yaml::PARSE_OBJECT_FOR_MAP);
-        }
+        $this->path = $path;
+        $parser     = new SwaggerParser();
 
-        return new Spec($data, $path);
-    }
-
-    protected function getPathExtension($path)
-    {
-        return strtolower(pathinfo($path, PATHINFO_EXTENSION));
-    }
-
-    protected function isJson($path)
-    {
-        $extension = $this->getPathExtension($path);
-
-        return strtolower($extension) === 'json';
-    }
-
-    protected function isYaml($path)
-    {
-        $extension = $this->getPathExtension($path);
-
-        return $extension === 'yml' || $extension === 'yaml';
+        return $parser->parseFile($path);
     }
 }

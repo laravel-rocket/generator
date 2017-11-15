@@ -1,128 +1,49 @@
 <?php
 namespace LaravelRocket\Generator\Generators;
 
-use LaravelRocket\Generator\Objects\Swagger\Definition;
-use LaravelRocket\Generator\Objects\Swagger\Spec;
+use LaravelRocket\Generator\Generators\API\ResponseGenerator;
+use LaravelRocket\Generator\Generators\API\RouteGenerator;
 use LaravelRocket\Generator\Services\SwaggerService;
 
 class APIGenerator extends Generator
 {
-    /** @var Spec */
-    protected $swagger;
+    protected $document;
 
-    protected $namespace;
+    protected $generators = [
+        RouteGenerator::class,
+        ResponseGenerator::class,
+    ];
 
-    public function generate($swaggerPath, $overwrite = false, $baseDirectory = null)
+    public function generate($name, $overwrite = false, $baseDirectory = null, $additionalData = [])
     {
-        $ret = $this->readSwaggerFile($swaggerPath);
+        $ret = $this->readSwaggerFile($name);
         if (!$ret) {
             return;
         }
-        $this->generateRoute();
-        $this->generateResponses();
-    }
 
-    protected function generateRoute()
-    {
-        $routesPath = $this->getRoutesPath();
-        if (!$this->files->exists($routesPath)) {
-            $route = $this->getStubPath('/api/route_file.stub');
-            $this->files->put($routesPath, $route);
+        foreach ($this->generators as $generator) {
+            $object = new $generator();
+            $object->generate($name, $overwrite, $baseDirectory, [
+                'document' => $this->document,
+            ]);
         }
     }
 
     /**
-     * @param string $name
-     *
-     * @return string
-     */
-    protected function getResponseClass($name)
-    {
-        return '\\App\\Http\\Responses\\'.$this->namespace.'\\'.$name;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getRoutesPath()
-    {
-        return base_path('/routes/api.php');
-    }
-
-    protected function generateResponses()
-    {
-        $definitions = $this->swagger->getDefinitions();
-        foreach ($definitions as $definition) {
-            $this->generateResponse($definition);
-        }
-    }
-
-    /**
-     * @param Definition $definition
+     * @param string $swaggerPath
      *
      * @return bool
      */
-    protected function generateResponse($definition)
-    {
-        $name      = $definition->getName();
-        $class     = $this->getResponseClass($name);
-        $classPath = $this->convertClassToPath($class);
-
-        $stubFilePath = $this->getStubForResponse();
-
-        $columns          = '';
-        $columnsFromModel = '';
-        foreach ($definition->getProperties() as $property) {
-            $default = 'null';
-            switch ($property->getType()) {
-                case 'string':
-                    $default = '\'\'';
-                    break;
-                case 'integer':
-                case 'int':
-                    $default = '0';
-                    break;
-                case 'array':
-                    $default = '[]';
-                    break;
-            }
-            if (!empty($columns)) {
-                $columns .= PHP_EOL;
-                $columnsFromModel .= PHP_EOL;
-            }
-            $columns .= '        \''.$property->getName().'\'          => '.$default.',';
-            $columnsFromModel .= '                \''.$property->getName().'\'          => $model->'.$property->getName().',';
-        }
-
-        if ($this->files->exists($classPath)) {
-            return false;
-        }
-
-        return $this->generateFile($class, $classPath, $stubFilePath, [
-            'COLUMNS'            => $columns,
-            'COLUMNS_FROM_MODEL' => $columnsFromModel,
-            'NAMESPACE'          => $this->namespace,
-            'NAME'               => $name,
-        ]);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getStubForResponse()
-    {
-        return $this->getStubPath('/api/response.stub');
-    }
-
     protected function readSwaggerFile($swaggerPath)
     {
-        $service       = new SwaggerService();
-        $this->swagger = $service->parse($swaggerPath);
-        if (empty($this->swagger)) {
-            $this->error('Fail to parse Swagger File');
-        }
+        $swaggerService = new SwaggerService();
+        $this->document = $swaggerService->parse($swaggerPath);
 
-        $this->namespace = $this->swagger->getNamespace();
+        if (empty($this->document)) {
+            print 'Swagger File Parse Error'.PHP_EOL;
+
+            return false;
+        }
 
         return true;
     }

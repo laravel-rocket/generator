@@ -41,8 +41,9 @@ abstract class Generator
      * @param string      $name
      * @param bool        $overwrite
      * @param string|null $baseDirectory
+     * @param array       $additionalData
      */
-    abstract public function generate($name, $overwrite = false, $baseDirectory = null);
+    abstract public function generate($name, $overwrite = false, $baseDirectory = null, $additionalData = []);
 
     /**
      * @param bool $overwrite
@@ -88,7 +89,11 @@ abstract class Generator
         }
         $content = $this->files->get($filePath);
         foreach ($data as $key => $value) {
-            $content = str_replace($key, $value.$key, $content);
+            if ($key === '__EOF__') {
+                $content = $content.$value;
+            } else {
+                $content = str_replace($key, $value.$key, $content);
+            }
         }
         $this->files->put($filePath, $content);
 

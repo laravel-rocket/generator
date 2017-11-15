@@ -3,7 +3,7 @@ namespace LaravelRocket\Generator\Generators;
 
 class ModelGenerator extends Generator
 {
-    public function generate($name, $overwrite = false, $baseDirectory = null)
+    public function generate($name, $overwrite = false, $baseDirectory = null, $additionalData = [])
     {
         $modelName = $this->getModelName($name);
         if (!$this->checkTableExists($name)) {

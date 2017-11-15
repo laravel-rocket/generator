@@ -6,7 +6,7 @@ use function ICanBoogie\pluralize;
 
 class CreateMigrationGenerator extends Generator
 {
-    public function generate($name, $overwrite = false, $baseDirectory = null)
+    public function generate($name, $overwrite = false, $baseDirectory = null, $additionalData = [])
     {
         $this->generateMigration($name);
     }
