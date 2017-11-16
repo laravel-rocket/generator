@@ -194,6 +194,12 @@ abstract class Generator
                 return $name;
             }
 
+            $name    = \StringHelper::singularize(\StringHelper::camel2Snake($modelName)).'s';
+            $columns = $this->getTableColumns($name);
+            if (count($columns)) {
+                return $name;
+            }
+
             return \StringHelper::pluralize(\StringHelper::camel2Snake($modelName));
         }
     }
