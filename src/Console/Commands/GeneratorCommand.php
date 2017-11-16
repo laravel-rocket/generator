@@ -114,7 +114,7 @@ class GeneratorCommand extends Command
     protected function getOptions()
     {
         return [
-            ['overwrite', InputOption::VALUE_NONE, 'Overwrite existing file or not'],
+            ['overwrite', null, InputOption::VALUE_NONE, 'Overwrite existing file or not'],
         ];
     }
 }
