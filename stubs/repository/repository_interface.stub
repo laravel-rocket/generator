@@ -14,6 +14,9 @@ use LaravelRocket\Foundation\Repositories\SingleKeyModelRepositoryInterface;
  * @method \App\Models\%%MODEL%%[]|\Traversable|array getByIds($ids, $order = null, $direction = null, $offset = null, $limit = null);
  * @method \App\Models\%%MODEL%% update($model, $input)
  * @method \App\Models\%%MODEL%% save($model);
+ * @method \App\Models\%%MODEL%% firstByFilter($filter);
+ * @method \App\Models\%%MODEL%%[]|\Traversable|array getByFilter($filter,$order = null, $direction = null, $offset = null, $limit = null);
+ * @method \App\Models\%%MODEL%%[]|\Traversable|array allByFilter($filter,$order = null, $direction = null);
  */
 
 interface %%CLASS%% extends SingleKeyModelRepositoryInterface
