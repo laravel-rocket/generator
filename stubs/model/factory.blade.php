@@ -5,8 +5,8 @@ $factory->define(App\Models\{{ $modelName }}::class, function (Faker\Generator $
 @endif
 
     return [
-@foreach( $columns as $column )
-        '{{ $column['name'] }}' => {!! $column['value'] !!},
+@foreach( $columns as $name => $value )
+        '{{ $name }}' => {!! $value !!},
 @endforeach
     ];
 });

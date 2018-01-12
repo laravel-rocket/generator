@@ -65,22 +65,22 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
     @if( $relation['type'] === 'belongsTo')
     public function {{  $relation['name'] }}()
     {
-        return $this->belongsTo(\App\Models\{{ $relato['referenceModel'] }}::class, '{{ $relato['referenceColumn'] }}', '{{ $relato['column'] }}');
+        return $this->belongsTo(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relaton['referenceColumn'] }}', '{{ $relation['column'] }}');
     }
     @elseif( $relation['type'] === 'hasMany')
     public function {{  $relation['name'] }}()
     {
-        return $this->hasMany(\App\Models\{{ $relato['referenceModel'] }}::class, '{{ $relato['referenceColumn'] }}', '{{ $relato['column'] }}');
+        return $this->hasMany(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relation['referenceColumn'] }}', '{{ $relation['column'] }}');
     }
     @elseif( $relation['type'] === 'hasOne')
     public function {{  $relation['name'] }}()
     {
-        return $this->belongsTo(\App\Models\{{ $relato['referenceModel'] }}::class, '{{ $relato['referenceColumn'] }}', '{{ $relato['column'] }}');
+        return $this->hasOne(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relation['referenceColumn'] }}', '{{ $relation['column'] }}');
     }
     @elseif( $relation['type'] === 'belongsToMany')
     public function {{  $relation['name'] }}()
     {
-        return $this->belongsTo(\App\Models\{{ $relato['referenceModel'] }}::class, '{{ $relato['relationTable'] }}', '{{ $relato['referenceColumn'] }}', '{{ $relato['column'] }}');
+        return $this->belongsToMany(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relation['relationTable'] }}', '{{ $relation['referenceColumn'] }}', '{{ $relation['column'] }}');
     }
     @endif
 @endforeach

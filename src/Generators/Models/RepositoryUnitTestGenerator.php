@@ -10,7 +10,7 @@ class RepositoryUnitTestGenerator extends ModelBaseGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('/Repositories/'.$modelName.'RepositoryInterface.php');
+        return base_path('/tests/Repositories/'.$modelName.'RepositoryTest.php');
     }
 
     /**
@@ -18,7 +18,7 @@ class RepositoryUnitTestGenerator extends ModelBaseGenerator
      */
     protected function getView(): string
     {
-        return 'repository.repository_interface';
+        return 'repository.unittest';
     }
 
     /**

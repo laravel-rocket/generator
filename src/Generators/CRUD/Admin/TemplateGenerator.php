@@ -1,9 +1,10 @@
 <?php
 namespace LaravelRocket\Generator\Generators\CRUD\Admin;
 
-use LaravelRocket\Generator\Generators\CRUD\CRUDBaseGenerator;
+use LaravelRocket\Generator\Generators\CRUD\TemplateGenerator as BaseTemplateGenerator;
+use function ICanBoogie\pluralize;
 
-class TemplateGenerator extends CRUDBaseGenerator
+class TemplateGenerator extends BaseTemplateGenerator
 {
     /**
      * @param string $action
@@ -13,9 +14,9 @@ class TemplateGenerator extends CRUDBaseGenerator
     protected function getActionPath(string $action): string
     {
         $modelName = $this->getModelName();
-        $viewName  = kebab_case($modelName);
+        $viewName  = pluralize(kebab_case($modelName));
 
-        return resource_path('/views/pages/'.$viewName.'/'.$action.'.blade.php');
+        return resource_path('views/pages/'.$viewName.'/'.$action.'.blade.php');
     }
 
     /**

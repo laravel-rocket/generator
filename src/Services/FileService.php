@@ -73,7 +73,14 @@ class FileService
         return base_path(str_replace('\\', '/', str_replace('App', 'app', $class)).'.php');
     }
 
-    public function render(string $view, string $destinationPath, array $variables = [], $addHeader=false)
+    /**
+     * @param string $view
+     * @param string $destinationPath
+     * @param array  $variables
+     * @param bool   $addHeader
+     * @param bool   $isBladeTemplate
+     */
+    public function render(string $view, string $destinationPath, array $variables = [], $addHeader=false, $isBladeTemplate=false)
     {
         \View::addLocation(resource_path('stubs'));
         \View::addLocation(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'stubs']));
@@ -82,6 +89,20 @@ class FileService
         if ($addHeader) {
             $data = '<?PHP'.PHP_EOL.PHP_EOL.$data;
         }
+        if ($isBladeTemplate) {
+            $data = str_replace('＠', '@', $data);
+            $data = str_replace('｛', '{', $data);
+            $data = str_replace('｝', '}', $data);
+        }
+        $this->prepareDirectory($destinationPath);
         $this->files->put($destinationPath, $data);
+    }
+
+    protected function prepareDirectory($path)
+    {
+        $directory = $this->files->dirname($path);
+        if (!file_exists($directory)) {
+            $this->files->makeDirectory($directory);
+        }
     }
 }

@@ -56,7 +56,7 @@ class TableBaseGenerator extends BaseGenerator
      */
     protected function getModelName(): string
     {
-        return camel_case(singularize($this->table->getName()));
+        return title_case(singularize($this->table->getName()));
     }
 
     /**
@@ -101,7 +101,7 @@ class TableBaseGenerator extends BaseGenerator
             }
             $tables[] = $foreignKey->getReferenceTableName();
         }
-        if ($table->getName() === implode('_', [singularize($tables[0]), $tables[1]]) || $table->getName() === implode('_', [singularize($tables[1]), $tables[2]])) {
+        if ($table->getName() === implode('_', [singularize($tables[0]), $tables[1]]) || $table->getName() === implode('_', [singularize($tables[1]), $tables[0]])) {
             return true;
         }
 
@@ -143,6 +143,8 @@ class TableBaseGenerator extends BaseGenerator
             $relationTableName    = '';
             $relationTableColumns = ['', ''];
 
+            $hasRelation = false;
+
             foreach ($table->getForeignKey() as $foreignKey) {
                 $columns          = $foreignKey->getColumns();
                 $referenceColumns = $foreignKey->getReferenceColumns();
@@ -164,13 +166,14 @@ class TableBaseGenerator extends BaseGenerator
                         'referenceModel'  => title_case(singularize($foreignKey->getReferenceTableName())),
                     ];
                     $relationTableColumns[0] = $referenceColumn;
+                    $hasRelation             = true;
                 } else {
                     $relationTableName       = $table->getName();
                     $relationTableColumns[1] = $referenceColumn;
                 }
             }
 
-            if ($this->detectRelationTable($table)) {
+            if ($hasRelation && $this->detectRelationTable($table)) {
                 $relations[] = [
                     'type'            => 'belongsToMany',
                     'relationTable'   => $table->getName(),

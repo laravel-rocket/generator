@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\CRUD;
 
+use function ICanBoogie\pluralize;
+
 class ControllerGenerator extends CRUDBaseGenerator
 {
     /**
@@ -8,13 +10,13 @@ class ControllerGenerator extends CRUDBaseGenerator
      */
     protected function getVariables(): array
     {
-        $modelName                 = $this->getModelName();
-        $variables                 = $this->getFillableColumns();
-        $variables['modelName']    = $modelName;
-        $variables['variableName'] = camel_case($modelName);
-        $variables['className']    = $modelName.'Repository';
-        $variables['tableName']    = $this->table->getName();
-        $variables['baseClass']    = $variables['relationTable'] ? 'RelationModelRepository' : 'SingleKeyModelRepository';
+        $modelName                       = $this->getModelName();
+        $variables                       = $this->getFillableColumns();
+        $variables['modelName']          = $modelName;
+        $variables['variableName']       = camel_case($modelName);
+        $variables['pluralVariableName'] = pluralize(camel_case($modelName));
+        $variables['className']          = $modelName.'Repository';
+        $variables['tableName']          = $this->table->getName();
 
         return $variables;
     }

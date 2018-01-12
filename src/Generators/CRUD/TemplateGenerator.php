@@ -26,13 +26,13 @@ class TemplateGenerator extends CRUDBaseGenerator
                 unlink($path);
             }
             $view = $this->getActionView($action);
-        }
 
-        if (file_exists($path)) {
-            unlink($path);
-        }
+            if (file_exists($path)) {
+                unlink($path);
+            }
 
-        $this->fileService->render($view, $path, $variables, true);
+            $this->fileService->render($view, $path, $variables, true, true);
+        }
 
         return true;
     }
@@ -69,7 +69,6 @@ class TemplateGenerator extends CRUDBaseGenerator
         $variables['viewName']     = kebab_case($modelName);
         $variables['className']    = $modelName.'Repository';
         $variables['tableName']    = $this->table->getName();
-        $variables['baseClass']    = $variables['relationTable'] ? 'RelationModelRepository' : 'SingleKeyModelRepository';
 
         return $variables;
     }

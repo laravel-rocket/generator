@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators;
 
+use Carbon\Carbon;
 use LaravelRocket\Generator\Services\FileService;
 use TakaakiMizuno\MWBParser\Elements\Table;
 
@@ -16,12 +17,14 @@ class MigrationFileGenerator extends BaseGenerator
             unlink($existingPath);
         }
 
+        $dateTime = Carbon::now();
+
         $result              = $this->generateColumns($table);
         $result['tableName'] = $table->getName();
         $result['indexes']   = $this->generateIndexes($table);
-        $result['className'] = $this->getClassName($table->getName());
+        $result['className'] = $this->getClassName($table->getName(), $dateTime);
 
-        $filePath = $this->getPath($table->getName());
+        $filePath = $this->getPath($table->getName(), $dateTime);
         /* @var FileService $fileService */
         $this->fileService->render('migration.create', $filePath, $result, true);
     }
@@ -56,16 +59,28 @@ class MigrationFileGenerator extends BaseGenerator
         return null;
     }
 
-    protected function getClassName($name): string
+    /**
+     * @param string $name
+     * @param Carbon $dateTime
+     *
+     * @return string
+     */
+    protected function getClassName($name, $dateTime): string
     {
-        return 'Create'.ucfirst(camel_case($name)).'Table';
+        return 'Create'.ucfirst(camel_case($name)).$dateTime->format('YmdHis').'Table';
     }
 
-    protected function getPath($name)
+    /**
+     * @param string $name
+     * @param Carbon $dateTime
+     *
+     * @return string
+     */
+    protected function getPath($name, $dateTime)
     {
         $basePath = $this->getMigrationBasePath();
 
-        return $basePath.DIRECTORY_SEPARATOR.date('Y_m_d_His').'_create_'.$name.'_table.php';
+        return $basePath.DIRECTORY_SEPARATOR.$dateTime->format('Y_m_d_His').'_create_'.$name.'_table.php';
     }
 
     /**

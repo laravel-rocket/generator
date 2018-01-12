@@ -1,9 +1,9 @@
 <?php
 namespace LaravelRocket\Generator\Generators\CRUD\Admin;
 
-use LaravelRocket\Generator\Generators\CRUD\CRUDBaseGenerator;
+use LaravelRocket\Generator\Generators\CRUD\UnitTestGenerator as BaseUnitTestGenerator;
 
-class UnitTestGenerator extends CRUDBaseGenerator
+class UnitTestGenerator extends BaseUnitTestGenerator
 {
     /**
      * @return string
@@ -12,7 +12,7 @@ class UnitTestGenerator extends CRUDBaseGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('/Http/Requests/Admin/'.$modelName.'Request.php');
+        return app_path('/tests/Controllers/Admin/'.$modelName.'Controller.php');
     }
 
     /**

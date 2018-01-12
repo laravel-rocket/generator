@@ -1,9 +1,9 @@
 <?php
 namespace LaravelRocket\Generator\Generators\CRUD\Admin;
 
-use LaravelRocket\Generator\Generators\CRUD\CRUDBaseGenerator;
+use LaravelRocket\Generator\Generators\CRUD\RequestGenerator as BaseRequestGenerator;
 
-class RequestGenerator extends CRUDBaseGenerator
+class RequestGenerator extends BaseRequestGenerator
 {
     /**
      * @return string

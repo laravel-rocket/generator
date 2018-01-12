@@ -14,7 +14,6 @@ class UnitTestGenerator extends CRUDBaseGenerator
         $variables['variableName'] = camel_case($modelName);
         $variables['className']    = $modelName.'Repository';
         $variables['tableName']    = $this->table->getName();
-        $variables['baseClass']    = $variables['relationTable'] ? 'RelationModelRepository' : 'SingleKeyModelRepository';
 
         foreach ($this->table->getColumns() as $column) {
             if (in_array($column->getType(), ['varchar', 'text', 'mediumText', 'longText'])) {

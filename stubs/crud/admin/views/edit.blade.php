@@ -60,12 +60,12 @@
 @if( $column['type'] == 'int' || $column['type'] == 'int')
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
                     <label for="{{ $column['name'] }}">＠lang('admin.pages.{{ $viewName }}.columns.{{ $column['name'] }}')</label>
-                    <input type="text" class="form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="{{ old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} }}">
+                    <input type="text" class="form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="｛｛ old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} ｝｝">
                 </div>
 @elseif( $column['type'] == 'text' || $column['type'] == 'mediumText' || $column['type'] == 'longText')
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
                     <label for="{{ $column['name'] }}">＠lang('admin.pages.{{ $viewName }}.columns.{{ $column['name'] }}')</label>
-                    <textarea name="{{ $column['name'] }}" class="form-control" rows="5" placeholder="＠lang('admin.pages.{{ $viewName }}.columns.{{ $column['name'] }}')">{!!  old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} !!}</textarea>
+                    <textarea name="{{ $column['name'] }}" class="form-control" rows="5" placeholder="＠lang('admin.pages.{{ $viewName }}.columns.{{ $column['name'] }}')">｛!!  old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} !!｝</textarea>
                 </div>
 
 @elseif( $column['type'] == 'boolean')
@@ -85,7 +85,7 @@
 @else
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
                     <label for="{{ $column['name'] }}">＠lang('admin.pages.{{ $viewName }}.columns.{{ $column['name'] }}')</label>
-                    <input type="text" class="form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="{{ old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} }}">
+                    <input type="text" class="form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="｛｛ old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} ｝｝">
                 </div>
 @endif
             </div>
