@@ -1,7 +1,0 @@
-<?php
-namespace App\Http\Responses\%%NAMESPACE%%;
-
-class %%NAME%% extends ListBase
-{
-    protected static $itemsResponseModel = %%MODEL%%::class;
-}

@@ -1,3 +1,0 @@
-Route::group(['prefix' => '%%BASE_PATH%%','namespace' => '%%NAMESPACE%%'], function() {
-    %%ROUTES%%
-});

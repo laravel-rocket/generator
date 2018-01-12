@@ -1,9 +1,0 @@
-    <div class="c-admincrud__form @if ($errors->has('%%column%%')) c-admincrud__form--is-error @endif">
-    @if( !empty($%%model%%->%%relation%%) )
-        <img id="%%column-spinal%%-preview" src="{!! $%%model%%->%%relation%%->getThumbnailUrl(480, 300) !!}" alt="" class="c-admincrud__preview-image" />'
-    @else
-        <img id="%%column-spinal%%-preview" src="{!! \URLHelper::asset('img/no_image.jpg', 'common') !!}" alt="" class="c-admincrud__preview-image" />'
-    @endif
-        <label for="%%column%%">@lang('admin.pages.%%models-spinal%%.columns.%%column%%')</label>
-        <input type="file" class="c-admincrud__image-field" id="%%id%%" name="%%column%%">
-    </div>

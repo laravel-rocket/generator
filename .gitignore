@@ -30,3 +30,5 @@ ingore.php
 public/static/swagger-ui
 
 /.php_cs.cache
+/src/Old/
+/stubs/old/

@@ -1,4 +1,0 @@
-    public function %%RELATION_NAME%%()
-    {
-        return $this->belongsTo(\App\Models\%%RELATION_MODEL%%, '%%FOREIGN_KEY%%', '%%OTHER_KEY%%');
-    }
