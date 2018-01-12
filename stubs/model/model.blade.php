@@ -65,22 +65,22 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
     @if( $relation['type'] === 'belongsTo')
     public function {{  $relation['name'] }}()
     {
-        return $this->belongsTo(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relaton['referenceColumn'] }}', '{{ $relation['column'] }}');
+        return $this->belongsTo(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relation['referenceColumn']->getName() }}', '{{ $relation['column']->getName() }}');
     }
     @elseif( $relation['type'] === 'hasMany')
     public function {{  $relation['name'] }}()
     {
-        return $this->hasMany(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relation['referenceColumn'] }}', '{{ $relation['column'] }}');
+        return $this->hasMany(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relation['referenceColumn']->getName() }}', '{{ $relation['column']->getName() }}');
     }
     @elseif( $relation['type'] === 'hasOne')
     public function {{  $relation['name'] }}()
     {
-        return $this->hasOne(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relation['referenceColumn'] }}', '{{ $relation['column'] }}');
+        return $this->hasOne(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relation['referenceColumn']->getName() }}', '{{ $relation['column']->getName() }}');
     }
     @elseif( $relation['type'] === 'belongsToMany')
     public function {{  $relation['name'] }}()
     {
-        return $this->belongsToMany(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relation['relationTable'] }}', '{{ $relation['referenceColumn'] }}', '{{ $relation['column'] }}');
+        return $this->belongsToMany(\App\Models\{{ $relation['referenceModel'] }}::class, '{{ $relation['relationTable'] }}', '{{ $relation['referenceColumn']->getName() }}', '{{ $relation['column']->getName() }}');
     }
     @endif
 @endforeach

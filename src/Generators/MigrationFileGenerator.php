@@ -12,19 +12,20 @@ class MigrationFileGenerator extends BaseGenerator
      */
     public function generate($table)
     {
+        $dateTime = Carbon::now();
+
         $existingPath = $this->findExistingCreateMigrationFile($table);
         if (!empty($existingPath)) {
-            unlink($existingPath);
+            $filePath = $existingPath;
+        } else {
+            $filePath = $this->getPath($table->getName(), $dateTime);
         }
-
-        $dateTime = Carbon::now();
 
         $result              = $this->generateColumns($table);
         $result['tableName'] = $table->getName();
         $result['indexes']   = $this->generateIndexes($table);
         $result['className'] = $this->getClassName($table->getName(), $dateTime);
 
-        $filePath = $this->getPath($table->getName(), $dateTime);
         /* @var FileService $fileService */
         $this->fileService->render('migration.create', $filePath, $result, true);
     }
@@ -67,7 +68,7 @@ class MigrationFileGenerator extends BaseGenerator
      */
     protected function getClassName($name, $dateTime): string
     {
-        return 'Create'.ucfirst(camel_case($name)).$dateTime->format('YmdHis').'Table';
+        return 'Create'.ucfirst(camel_case($name)).'Table';
     }
 
     /**
