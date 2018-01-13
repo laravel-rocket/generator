@@ -58,12 +58,12 @@ class PresenterGenerator extends ModelBaseGenerator
                 switch ($type) {
                     case 'varchar':
                     case 'text':
-                    case 'mediumText':
-                    case 'longText':
+                    case 'mediumtext':
+                    case 'longtext':
                         $value = 'string';
                         break;
                     case 'int':
-                    case 'bigInt':
+                    case 'bigint':
                         $value = 'int';
                         break;
                     case 'decimal':
