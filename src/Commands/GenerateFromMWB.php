@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\RouterFileUpdater;
+use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\SideBarFileUpdater;
 use LaravelRocket\Generator\FileUpdaters\RegisterRepositoryFileUpdater;
 use LaravelRocket\Generator\Generators\CRUD\Admin\ControllerGenerator as AdminCRUDControllerGenerator;
 use LaravelRocket\Generator\Generators\CRUD\Admin\RequestGenerator as AdminCRUDRequestGenerator;
@@ -115,6 +117,8 @@ class GenerateFromMWB extends BaseCommand
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
             new RegisterRepositoryFileUpdater($this->config, $this->files, $this->view),
+            new RouterFileUpdater($this->config, $this->files, $this->view),
+            new SideBarFileUpdater($this->config, $this->files, $this->view),
         ];
 
         foreach ($this->tables as $table) {

@@ -49,9 +49,10 @@ class RegisterRepositoryFileUpdater extends TableBaseFileUpdater
         $modelName = $this->getModelName();
 
         return <<< EOS
+
         \$this->app->singleton(
-            \\App\\Repositories\\{ $modelName }RepositoryInterface::class,
-            \\App\\Repositories\\Eloquent\\{ $modelName }Repository::class
+            \\App\\Repositories\\{$modelName}RepositoryInterface::class,
+            \\App\\Repositories\\Eloquent\\{$modelName}Repository::class
         );
 EOS;
     }
