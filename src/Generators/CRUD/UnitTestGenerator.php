@@ -16,7 +16,7 @@ class UnitTestGenerator extends CRUDBaseGenerator
         $variables['tableName']    = $this->table->getName();
 
         foreach ($this->table->getColumns() as $column) {
-            if (in_array($column->getType(), ['varchar', 'text', 'mediumText', 'longText'])) {
+            if (in_array($column->getType(), ['varchar', 'text', 'mediumtext', 'longtext'])) {
                 $variables['testColumnName'] = $column->getName();
                 $variables['testData']       = 'str_random(10)';
                 continue;

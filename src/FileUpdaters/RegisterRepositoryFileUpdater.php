@@ -13,7 +13,7 @@ class RegisterRepositoryFileUpdater extends TableBaseFileUpdater
      */
     protected function getInsertPosition(): int
     {
-        return $this->getEndOfMethodPosition($this->getTargetFilePath(), 'register') + 1;
+        return $this->getEndOfMethodPosition($this->getTargetFilePath(), 'register');
     }
 
     /**
@@ -54,6 +54,7 @@ class RegisterRepositoryFileUpdater extends TableBaseFileUpdater
             \\App\\Repositories\\{$modelName}RepositoryInterface::class,
             \\App\\Repositories\\Eloquent\\{$modelName}Repository::class
         );
+
 EOS;
     }
 }

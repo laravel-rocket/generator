@@ -12,7 +12,7 @@ class UnitTestGenerator extends BaseUnitTestGenerator
     {
         $modelName = $this->getModelName();
 
-        return base_path('tests/Controllers/Admin/'.$modelName.'Controller.php');
+        return base_path('tests/Controllers/Admin/'.$modelName.'ControllerTest.php');
     }
 
     /**

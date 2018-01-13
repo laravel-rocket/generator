@@ -85,8 +85,8 @@ class ModelFactoryGenerator extends ModelBaseGenerator
                         $value = "''";
                         break;
                     case 'text':
-                    case 'mediumText':
-                    case 'longText':
+                    case 'mediumtext':
+                    case 'longtext':
                         $value = '$faker->sentences(3)';
                         break;
                     case 'int':

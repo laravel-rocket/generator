@@ -82,7 +82,7 @@ class TemplateGenerator extends CRUDBaseGenerator
 
         $uneditables     = ['id', 'remember_token', 'created_at', 'deleted_at', 'updated_at'];
         $unlistables     = ['id', 'created_at', 'updated_at'];
-        $unlistableTypes = ['text', 'mediumText', 'longText'];
+        $unlistableTypes = ['text', 'mediumtext', 'longtext'];
 
         $relations    = $this->getRelations();
         $relationHash = [];
@@ -143,8 +143,8 @@ class TemplateGenerator extends CRUDBaseGenerator
 
                 return $type;
             case 'text':
-            case 'mediumText':
-            case 'longText':
+            case 'mediumtext':
+            case 'longtext':
                 return 'text';
             case 'varchar':
                 return 'string';

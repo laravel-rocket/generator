@@ -114,6 +114,9 @@ class MigrationFileGenerator extends BaseGenerator
             }
             $postfix = '';
             switch ($column->getType()) {
+                case 'tinyint':
+                    $type = 'boolean';
+                    break;
                 case 'bigint':
                     $type = $column->isUnsigned() ? 'unsignedBigInteger' : 'bigInteger';
                     break;
@@ -136,10 +139,10 @@ class MigrationFileGenerator extends BaseGenerator
                     $type = 'text';
                     break;
                 case 'mediumtext':
-                    $type = 'mediumText';
+                    $type = 'mediumtext';
                     break;
                 case 'longtext':
-                    $type = 'longText';
+                    $type = 'longtext';
                     break;
                 case 'decimal':
                     $type    = 'decimal';
@@ -155,6 +158,10 @@ class MigrationFileGenerator extends BaseGenerator
             }
             if (!is_null($column->getDefaultValue())) {
                 switch ($column->getType()) {
+                    case 'tinyint':
+                        $defaultValue = (int) $column->getDefaultValue() == 1 ? 'true' : 'false';
+                        $line .= '->default('.$defaultValue.')';
+                        break;
                     case 'bigint':
                     case 'int':
                         $line .= '->default('.((int) $column->getDefaultValue()).')';

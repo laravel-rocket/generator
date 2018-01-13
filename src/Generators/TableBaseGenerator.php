@@ -37,7 +37,7 @@ class TableBaseGenerator extends BaseGenerator
         $view      = $this->getView();
         $variables = $this->getVariables();
 
-        $this->fileService->render($view, $path, $variables, true);
+        $this->fileService->render($view, $path, $variables, true, true);
 
         return true;
     }

@@ -62,6 +62,9 @@ class PresenterGenerator extends ModelBaseGenerator
                     case 'longtext':
                         $value = 'string';
                         break;
+                    case 'tinyint':
+                        $value = 'bool';
+                        break;
                     case 'int':
                     case 'bigint':
                         $value = 'int';

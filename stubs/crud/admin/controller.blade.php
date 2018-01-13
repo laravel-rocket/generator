@@ -142,7 +142,7 @@ class {{  $modelName }}Controller extends Controller
     */
     public function edit($id)
     {
-        return redirect()->action('Admin\{{  $modelName }}Controller{{ '@show' }}, [$id]);
+        return redirect()->action('Admin\{{  $modelName }}Controller＠show', [$id]);
     }
 
     /**
@@ -201,7 +201,7 @@ class {{  $modelName }}Controller extends Controller
 @endif
         $this->{{  $variableName }}Repository->update(${{  $variableName }}, $input);
 
-        return redirect()->action('Admin\{{  $modelName }}Controller{{ '@show' }}', [$id])
+        return redirect()->action('Admin\{{  $modelName }}Controller＠show', [$id])
             ->with('message-success', trans('admin.messages.general.update_success'));
     }
 
