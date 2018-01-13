@@ -35,7 +35,7 @@ class {{  $modelName }}Controller extends Controller
         ${{  $pluralVariableName }} = $this->{{  $variableName }}Repository->get('id', 'desc', $offset, $limit);
 
         return view('pages.admin.{{ $viewName }}.index', [
-            '{{  $pluralVariableName }}'  => ${{  $pluralVariableName }},
+            'models'  => ${{  $pluralVariableName }},
             'count'   => $count,
             'offset'  => $offset,
             'limit'   => $limit,

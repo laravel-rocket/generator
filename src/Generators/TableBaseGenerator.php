@@ -141,6 +141,7 @@ class TableBaseGenerator extends BaseGenerator
             if (count($referenceColumns) == 0) {
                 continue;
             }
+            $relationName = camel_case(preg_replace('/_id$/', '', $columns[0]->getName()));
 
             $column          = $columns[0];
             $referenceColumn = $referenceColumns[0];
@@ -149,7 +150,7 @@ class TableBaseGenerator extends BaseGenerator
                 'column'          => $referenceColumn,
                 'referenceColumn' => $column,
                 'referenceTable'  => $foreignKey->getReferenceTableName(),
-                'name'            => camel_case(singularize($foreignKey->getReferenceTableName())),
+                'name'            => $relationName,
                 'referenceModel'  => ucfirst(camel_case(singularize($foreignKey->getReferenceTableName()))),
             ];
         }
@@ -200,7 +201,7 @@ class TableBaseGenerator extends BaseGenerator
                     'column'          => $relationTableColumns[0],
                     'referenceColumn' => $relationTableColumns[1],
                     'referenceTable'  => $relationTableNames[1],
-                    'name'            => camel_case(singularize($relationTableNames[1])),
+                    'name'            => camel_case($relationTableNames[1]),
                     'referenceModel'  => ucfirst(camel_case(singularize($relationTableName))),
                 ];
             }

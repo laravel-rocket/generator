@@ -26,10 +26,11 @@ class PresenterGenerator extends ModelBaseGenerator
      */
     protected function getVariables(): array
     {
-        $modelName                 = $this->getModelName();
-        $variables                 = $this->getColumns();
-        $variables['modelName']    = $modelName;
-        $variables['variableName'] = camel_case($modelName);
+        $modelName                  = $this->getModelName();
+        $variables                  = $this->getColumns();
+        $variables['modelName']     = $modelName;
+        $variables['variableName']  = camel_case($modelName);
+        $variables['relations']     = $this->getRelations();
 
         return $variables;
     }

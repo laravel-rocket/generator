@@ -33,7 +33,7 @@ class TemplateGenerator extends CRUDBaseGenerator
                 unlink($path);
             }
 
-            $this->fileService->render($view, $path, $variables, true, true);
+            $this->fileService->render($view, $path, $variables, false, true);
         }
 
         return true;
