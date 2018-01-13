@@ -54,7 +54,7 @@ class ModelFactoryGenerator extends ModelBaseGenerator
             if ($name == 'remember_token') {
                 $columnInfo['authenticatable'] = true;
             }
-            $value  = '';
+            $value  = null;
             $fakers = [
                 'name',
                 'address',
@@ -68,6 +68,8 @@ class ModelFactoryGenerator extends ModelBaseGenerator
                 'language_code',
                 'currency_code',
                 'uuid',
+                'password',
+                'email',
             ];
 
             foreach ($fakers as $faker) {
@@ -89,8 +91,11 @@ class ModelFactoryGenerator extends ModelBaseGenerator
                     case 'longtext':
                         $value = '$faker->sentences(3)';
                         break;
+                    case 'tinyint':
+                        $value = 'true';
+                        break;
                     case 'int':
-                    case 'bigInt':
+                    case 'bigint':
                     case 'decimal':
                         $value = '0';
                         break;
@@ -101,7 +106,7 @@ class ModelFactoryGenerator extends ModelBaseGenerator
                 }
             }
 
-            if (empty($value)) {
+            if (is_null($value)) {
                 $value = "''";
             }
             $columnInfo['columns'][$name] = $value;

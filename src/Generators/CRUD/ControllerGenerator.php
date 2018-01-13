@@ -14,7 +14,7 @@ class ControllerGenerator extends CRUDBaseGenerator
         $variables                       = $this->getFillableColumns();
         $variables['modelName']          = $modelName;
         $variables['variableName']       = camel_case($modelName);
-        $variables['viewName']           = kebab_case($modelName);
+        $variables['viewName']           = pluralize(kebab_case($modelName));
         $variables['pluralVariableName'] = pluralize(camel_case($modelName));
         $variables['className']          = $modelName.'Repository';
         $variables['tableName']          = $this->table->getName();

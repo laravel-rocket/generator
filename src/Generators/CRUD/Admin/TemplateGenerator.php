@@ -16,7 +16,7 @@ class TemplateGenerator extends BaseTemplateGenerator
         $modelName = $this->getModelName();
         $viewName  = pluralize(kebab_case($modelName));
 
-        return resource_path('views/pages/'.$viewName.'/'.$action.'.blade.php');
+        return resource_path('views/pages/admin/'.$viewName.'/'.$action.'.blade.php');
     }
 
     /**
