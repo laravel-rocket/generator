@@ -5,6 +5,8 @@ use function ICanBoogie\singularize;
 
 class TableBaseFileUpdater extends BaseFileUpdater
 {
+    protected $excludePostfixes = ['password_resets'];
+
     /**
      * @var \TakaakiMizuno\MWBParser\Elements\Table
      */
@@ -54,6 +56,12 @@ class TableBaseFileUpdater extends BaseFileUpdater
 
     public function needGenerate()
     {
+        foreach ($this->excludePostfixes as $excludePostfix) {
+            if (ends_with($this->table->getName(), $excludePostfix)) {
+                return false;
+            }
+        }
+
         return true;
     }
 

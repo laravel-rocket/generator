@@ -157,7 +157,7 @@ class MigrationFileGenerator extends BaseGenerator
             if ($column->isNullable()) {
                 $line .= '->nullable()';
             }
-            if (!empty($column->getDefaultValue())) {
+            if (!is_null($column->getDefaultValue()) && $column->getDefaultValue() !== '') {
                 $defaultValue = $column->getDefaultValue();
                 if ($defaultValue == "''") {
                     $defaultValue = '';

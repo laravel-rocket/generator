@@ -88,7 +88,7 @@ class TemplateGenerator extends CRUDBaseGenerator
         $relationHash = [];
         foreach ($relations as $relation) {
             if ($relation['type'] === 'belongsTo') {
-                $relationHash[$relation['column']] = $relation;
+                $relationHash[$relation['column']->getName()] = $relation;
             }
         }
 

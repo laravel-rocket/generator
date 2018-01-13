@@ -8,6 +8,12 @@ class SideBarFileUpdater extends TableBaseFileUpdater
 {
     public function needGenerate()
     {
+        foreach ($this->excludePostfixes as $excludePostfix) {
+            if (ends_with($this->table->getName(), $excludePostfix)) {
+                return false;
+            }
+        }
+
         return !$this->detectRelationTable($this->table);
     }
 

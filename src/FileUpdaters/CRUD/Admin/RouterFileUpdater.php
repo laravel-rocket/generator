@@ -5,11 +5,6 @@ use LaravelRocket\Generator\FileUpdaters\CRUD\RouterFileUpdater as BaseRouterFil
 
 class RouterFileUpdater extends BaseRouterFileUpdater
 {
-    public function needGenerate()
-    {
-        return !$this->detectRelationTable($this->table);
-    }
-
     protected function getTargetFilePath(): string
     {
         return base_path('routes/admin.php');

@@ -6,6 +6,8 @@ use function ICanBoogie\singularize;
 
 class TableBaseGenerator extends BaseGenerator
 {
+    protected $excludePostfixes = ['password_resets'];
+
     /**
      * @var Table
      */
@@ -57,6 +59,12 @@ class TableBaseGenerator extends BaseGenerator
      */
     protected function canGenerate(): bool
     {
+        foreach ($this->excludePostfixes as $excludePostfix) {
+            if (ends_with($this->table->getName(), $excludePostfix)) {
+                return false;
+            }
+        }
+
         return true;
     }
 
