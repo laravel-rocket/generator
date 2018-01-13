@@ -25,7 +25,7 @@ class BaseGenerator
     public function __construct(
         \Illuminate\Config\Repository $config,
         \Illuminate\Filesystem\Filesystem $files,
-        \Illuminate\View\Factory $view
+        \Illuminate\View\Factory $view = null
     ) {
         $this->config = $config;
         $this->files  = $files;

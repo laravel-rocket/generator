@@ -24,8 +24,7 @@ class TableBaseGenerator extends BaseGenerator
      */
     public function generate($table, $tables): bool
     {
-        $this->table  = $table;
-        $this->tables = $tables;
+        $this->setTargetTable($table, $tables);
 
         if (!$this->canGenerate()) {
             return false;
@@ -44,6 +43,16 @@ class TableBaseGenerator extends BaseGenerator
     }
 
     /**
+     * @param Table   $table
+     * @param Table[] $tables
+     */
+    public function setTargetTable($table, $tables)
+    {
+        $this->table  = $table;
+        $this->tables = $tables;
+    }
+
+    /**
      * @return bool
      */
     protected function canGenerate(): bool
@@ -56,7 +65,7 @@ class TableBaseGenerator extends BaseGenerator
      */
     protected function getModelName(): string
     {
-        return title_case(singularize($this->table->getName()));
+        return ucfirst(camel_case(singularize($this->table->getName())));
     }
 
     /**
@@ -111,7 +120,7 @@ class TableBaseGenerator extends BaseGenerator
     /**
      * @return array
      */
-    protected function getRelations(): array
+    public function getRelations(): array
     {
         $relations = [];
 
@@ -133,7 +142,7 @@ class TableBaseGenerator extends BaseGenerator
                 'referenceColumn' => $referenceColumn,
                 'referenceTable'  => $foreignKey->getReferenceTableName(),
                 'name'            => camel_case(singularize($foreignKey->getReferenceTableName())),
-                'referenceModel'  => title_case(singularize($foreignKey->getReferenceTableName())),
+                'referenceModel'  => ucfirst(camel_case(singularize($foreignKey->getReferenceTableName()))),
             ];
         }
         foreach ($this->tables as $table) {
@@ -156,14 +165,14 @@ class TableBaseGenerator extends BaseGenerator
                 }
                 $column          = $columns[0];
                 $referenceColumn = $referenceColumns[0];
-                if ($table->getName() === $foreignKey->getReferenceTableName()) {
+                if ($this->table->getName() === $foreignKey->getReferenceTableName()) {
                     $relations[]             = [
                         'type'            => $foreignKey->hasMany() ? 'hasMany' : 'hasOne',
                         'column'          => $column,
                         'referenceColumn' => $referenceColumn,
                         'referenceTable'  => $foreignKey->getReferenceTableName(),
                         'name'            => $foreignKey->hasMany() ? camel_case($foreignKey->getReferenceTableName()) : camel_case(singularize($foreignKey->getReferenceTableName())),
-                        'referenceModel'  => title_case(singularize($foreignKey->getReferenceTableName())),
+                        'referenceModel'  => ucfirst(camel_case(singularize($foreignKey->getReferenceTableName()))),
                     ];
                     $relationTableColumns[0] = $referenceColumn;
                     $hasRelation             = true;
@@ -181,7 +190,7 @@ class TableBaseGenerator extends BaseGenerator
                     'referenceColumn' => $relationTableColumns[1],
                     'referenceTable'  => $relationTableName,
                     'name'            => camel_case(singularize($relationTableName)),
-                    'referenceModel'  => title_case(singularize($relationTableName)),
+                    'referenceModel'  => ucfirst(camel_case(singularize($relationTableName))),
                 ];
             }
         }

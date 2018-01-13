@@ -30,7 +30,7 @@ class FileService
     public function __construct(
         ConfigRepository $config,
         Filesystem $files,
-        ViewFactory $view
+        ViewFactory $view = null
     ) {
         $this->config = $config;
         $this->files  = $files;
