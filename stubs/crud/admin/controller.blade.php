@@ -34,7 +34,7 @@ class {{  $modelName }}Controller extends Controller
         $count = $this->{{  $variableName }}Repository->count();
         ${{  $pluralVariableName }} = $this->{{  $variableName }}Repository->get('id', 'desc', $offset, $limit);
 
-        return view('pages.admin.<% kebab_case($models) %>.index', [
+        return view('pages.admin.{{ $viewName }}.index', [
             '{{  $pluralVariableName }}'  => ${{  $pluralVariableName }},
             'count'   => $count,
             'offset'  => $offset,
@@ -50,7 +50,7 @@ class {{  $modelName }}Controller extends Controller
     */
     public function create()
     {
-        return view('pages.admin.<% kebab_case($models) %>.edit', [
+        return view('pages.admin.{{ $viewName }}.edit', [
             'isNew'     => true,
             '{{  $variableName }}' => $this->{{  $variableName }}Repository->getBlankModel(),
         ]);
@@ -128,7 +128,7 @@ class {{  $modelName }}Controller extends Controller
             abort(404);
         }
 
-        return view('pages.admin.<% kebab_case($models) %>.edit', [
+        return view('pages.admin.{{ $viewName }}.edit', [
             'isNew' => false,
             '{{  $variableName }}' => ${{  $variableName }},
         ]);
@@ -142,7 +142,7 @@ class {{  $modelName }}Controller extends Controller
     */
     public function edit($id)
     {
-        return redirect()->action('Admin\{{  $modelName }}Controller@@show', [$id]);
+        return redirect()->action('Admin\{{  $modelName }}Controller{{ '@show' }}, [$id]);
     }
 
     /**
@@ -201,7 +201,7 @@ class {{  $modelName }}Controller extends Controller
 @endif
         $this->{{  $variableName }}Repository->update(${{  $variableName }}, $input);
 
-        return redirect()->action('Admin\{{  $modelName }}Controller@@show', [$id])
+        return redirect()->action('Admin\{{  $modelName }}Controller{{ '@show' }}', [$id])
             ->with('message-success', trans('admin.messages.general.update_success'));
     }
 

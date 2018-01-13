@@ -15,13 +15,14 @@ class TableBaseGeneratorTest extends TestCase
     public function testGetRelations()
     {
         $generator = new TableBaseGenerator(new \Illuminate\Config\Repository(), new \Illuminate\Filesystem\Filesystem());
-        $parser = new Parser(__DIR__ . DIRECTORY_SEPARATOR . 'data' .DIRECTORY_SEPARATOR. 'db.mwb');
-        $tables = $parser->getTables();
+        $parser    = new Parser(__DIR__.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'db.mwb');
+        $tables    = $parser->getTables();
 
         $generator->setTargetTable($tables[0], $tables);
         $relations = $generator->getRelations();
 
+        print_r($relations);
+
         $this->assertEquals(count($relations), 2);
     }
-
 }

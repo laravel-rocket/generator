@@ -138,8 +138,8 @@ class TableBaseGenerator extends BaseGenerator
             $referenceColumn = $referenceColumns[0];
             $relations[]     = [
                 'type'            => 'belongsTo',
-                'column'          => $column,
-                'referenceColumn' => $referenceColumn,
+                'column'          => $referenceColumn,
+                'referenceColumn' => $column,
                 'referenceTable'  => $foreignKey->getReferenceTableName(),
                 'name'            => camel_case(singularize($foreignKey->getReferenceTableName())),
                 'referenceModel'  => ucfirst(camel_case(singularize($foreignKey->getReferenceTableName()))),
@@ -151,6 +151,7 @@ class TableBaseGenerator extends BaseGenerator
             }
             $relationTableName    = '';
             $relationTableColumns = ['', ''];
+            $relationTableNames   = ['', ''];
 
             $hasRelation = false;
 
@@ -168,17 +169,19 @@ class TableBaseGenerator extends BaseGenerator
                 if ($this->table->getName() === $foreignKey->getReferenceTableName()) {
                     $relations[]             = [
                         'type'            => $foreignKey->hasMany() ? 'hasMany' : 'hasOne',
-                        'column'          => $column,
-                        'referenceColumn' => $referenceColumn,
-                        'referenceTable'  => $foreignKey->getReferenceTableName(),
-                        'name'            => $foreignKey->hasMany() ? camel_case($foreignKey->getReferenceTableName()) : camel_case(singularize($foreignKey->getReferenceTableName())),
-                        'referenceModel'  => ucfirst(camel_case(singularize($foreignKey->getReferenceTableName()))),
+                        'column'          => $referenceColumn,
+                        'referenceColumn' => $column,
+                        'referenceTable'  => $table->getName(),
+                        'name'            => $foreignKey->hasMany() ? camel_case($table->getName()) : camel_case(singularize($table->getName())),
+                        'referenceModel'  => ucfirst(camel_case(singularize($table->getName()))),
                     ];
-                    $relationTableColumns[0] = $referenceColumn;
+                    $relationTableColumns[0] = $column;
+                    $relationTableNames[0]   = $foreignKey->getReferenceTableName();
                     $hasRelation             = true;
                 } else {
                     $relationTableName       = $table->getName();
-                    $relationTableColumns[1] = $referenceColumn;
+                    $relationTableColumns[1] = $column;
+                    $relationTableNames[1]   = $foreignKey->getReferenceTableName();
                 }
             }
 
@@ -188,8 +191,8 @@ class TableBaseGenerator extends BaseGenerator
                     'relationTable'   => $table->getName(),
                     'column'          => $relationTableColumns[0],
                     'referenceColumn' => $relationTableColumns[1],
-                    'referenceTable'  => $relationTableName,
-                    'name'            => camel_case(singularize($relationTableName)),
+                    'referenceTable'  => $relationTableNames[1],
+                    'name'            => camel_case(singularize($relationTableNames[1])),
                     'referenceModel'  => ucfirst(camel_case(singularize($relationTableName))),
                 ];
             }
