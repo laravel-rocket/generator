@@ -49,7 +49,7 @@ class {{ $modelName }}ControllerTest extends TestCase
     public function testEditModel()
     {
         ${{ $variableName }} = factory(\App\Models\{{ $modelName }}::class)->create();
-        $this->action('GET', 'Admin\{{ $modelName }}Controller@@show', [${{ $variableName }}->id]);
+        $this->action('GET', 'Admin\{{ $modelName }}Controller＠show', [${{ $variableName }}->id]);
         $this->assertResponseOk();
     }
 

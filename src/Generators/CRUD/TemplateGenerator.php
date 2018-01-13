@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\CRUD;
 
+use function ICanBoogie\pluralize;
+
 class TemplateGenerator extends CRUDBaseGenerator
 {
     /**
@@ -66,7 +68,7 @@ class TemplateGenerator extends CRUDBaseGenerator
         $variables                 = $this->getColumns();
         $variables['modelName']    = $modelName;
         $variables['variableName'] = camel_case($modelName);
-        $variables['viewName']     = kebab_case($modelName);
+        $variables['viewName']     = kebab_case(pluralize($modelName));
         $variables['className']    = $modelName.'Repository';
         $variables['tableName']    = $this->table->getName();
 

@@ -88,7 +88,7 @@ class SideBarFileUpdater extends TableBaseFileUpdater
     {
         $controllerName = $this->getModelName().'Controller';
         $title          = ucfirst(pluralize($this->getModelName()));
-        $keyName        = kebab_case(camel_case($this->getModelName()));
+        $keyName        = kebab_case(camel_case(pluralize($this->getModelName())));
         $iconClass      = $this->getFontAwesomeIcon();
 
         return <<< EOS
