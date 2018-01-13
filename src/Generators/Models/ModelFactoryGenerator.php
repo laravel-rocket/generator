@@ -70,6 +70,7 @@ class ModelFactoryGenerator extends ModelBaseGenerator
                 'uuid',
                 'password',
                 'email',
+                'url',
             ];
 
             foreach ($fakers as $faker) {
@@ -84,7 +85,7 @@ class ModelFactoryGenerator extends ModelBaseGenerator
             if (empty($value)) {
                 switch ($type) {
                     case 'varchar':
-                        $value = "''";
+                        $value = 'str_random(10)';
                         break;
                     case 'text':
                     case 'mediumtext':
@@ -107,7 +108,7 @@ class ModelFactoryGenerator extends ModelBaseGenerator
             }
 
             if (is_null($value)) {
-                $value = "''";
+                $value = 'str_random(10)';
             }
             $columnInfo['columns'][$name] = $value;
         }

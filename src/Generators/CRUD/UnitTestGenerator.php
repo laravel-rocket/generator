@@ -16,12 +16,15 @@ class UnitTestGenerator extends CRUDBaseGenerator
         $variables['tableName']    = $this->table->getName();
 
         foreach ($this->table->getColumns() as $column) {
+            if (in_array($column->getName(), ['remember_token', 'id', 'deleted_at', 'created_at', 'updated_at'])) {
+                continue;
+            }
             if (in_array($column->getType(), ['varchar', 'text', 'mediumtext', 'longtext'])) {
                 $variables['testColumnName'] = $column->getName();
                 $variables['testData']       = 'str_random(10)';
-                continue;
+                break;
             }
-            if ($column->getName() != 'id' && in_array($column->getType(), ['int', 'bigInt', 'decimal'])) {
+            if (in_array($column->getType(), ['int', 'bigInt', 'decimal'])) {
                 $variables['testColumnName'] = $column->getName();
                 $variables['testData']       = 'rand(50,100)';
             }

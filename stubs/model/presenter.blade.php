@@ -31,7 +31,7 @@ class {{ $modelName }}Presenter extends BasePresenter
     {
         $model = $this->entity->{{ $relation['name'] }};
         if (!$model) {
-            $model      = new {{ $relation['referenceModel'] }}();
+            $model      = new \App\Models\{{ $relation['referenceModel'] }}();
 @if( ends_with(strtolower($relation['name']), 'image'))
             $model->url = \URLHelper::asset('img/noimage.png', 'common');
 @endif

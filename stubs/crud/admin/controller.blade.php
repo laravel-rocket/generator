@@ -2,23 +2,23 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 
-use App\Repositories\{{  $modelName }}RepositoryInterface;
-use App\Models\{{  $modelName }};
-use App\Http\Requests\Admin\{{  $modelName }}Request;
+use App\Repositories\{{ $modelName }}RepositoryInterface;
+use App\Models\{{ $modelName }};
+use App\Http\Requests\Admin\{{ $modelName }}Request;
 use LaravelRocket\Foundation\Http\Requests\PaginationRequest;
 
-class {{  $modelName }}Controller extends Controller
+class {{ $modelName }}Controller extends Controller
 {
 
-    /** @var \App\Repositories\{{  $modelName }}RepositoryInterface */
-    protected ${{  $variableName }}Repository;
+    /** @var \App\Repositories\{{ $modelName }}RepositoryInterface */
+    protected ${{ $variableName }}Repository;
 
 
     public function __construct(
-        {{  $modelName }}RepositoryInterface ${{  $variableName }}Repository
+        {{ $modelName }}RepositoryInterface ${{ $variableName }}Repository
     )
     {
-        $this->{{  $variableName }}Repository = ${{  $variableName }}Repository;
+        $this->{{ $variableName }}Repository = ${{ $variableName }}Repository;
     }
 
     /**
@@ -31,15 +31,15 @@ class {{  $modelName }}Controller extends Controller
     {
         $offset = $request->offset();
         $limit = $request->limit();
-        $count = $this->{{  $variableName }}Repository->count();
-        ${{  $pluralVariableName }} = $this->{{  $variableName }}Repository->get('id', 'desc', $offset, $limit);
+        $count = $this->{{ $variableName }}Repository->count();
+        ${{ $pluralVariableName }} = $this->{{ $variableName }}Repository->get('id', 'desc', $offset, $limit);
 
         return view('pages.admin.{{ $viewName }}.index', [
-            'models'  => ${{  $pluralVariableName }},
+            'models'  => ${{ $pluralVariableName }},
             'count'   => $count,
             'offset'  => $offset,
             'limit'   => $limit,
-            'baseUrl' => action('Admin\{{  $modelName }}Controller@index'),
+            'baseUrl' => action('Admin\{{ $modelName }}Controller@index'),
         ]);
     }
 
@@ -52,7 +52,7 @@ class {{  $modelName }}Controller extends Controller
     {
         return view('pages.admin.{{ $viewName }}.edit', [
             'isNew'     => true,
-            '{{  $variableName }}' => $this->{{  $variableName }}Repository->getBlankModel(),
+            '{{ $variableName }}' => $this->{{ $variableName }}Repository->getBlankModel(),
         ]);
     }
 
@@ -105,13 +105,13 @@ class {{  $modelName }}Controller extends Controller
         }
 @endif
 
-        ${{  $variableName }} = $this->{{  $variableName }}Repository->create($input);
+        ${{ $variableName }} = $this->{{ $variableName }}Repository->create($input);
 
-        if (empty( ${{  $variableName }} )) {
+        if (empty( ${{ $variableName }} )) {
             return redirect()->back()->withErrors(trans('admin.errors.general.save_failed'));
         }
 
-        return redirect()->action('Admin\{{  $modelName }}Controller@index')
+        return redirect()->action('Admin\{{ $modelName }}Controller@index')
             ->with('message-success', trans('admin.messages.general.create_success'));
     }
 
@@ -123,14 +123,14 @@ class {{  $modelName }}Controller extends Controller
     */
     public function show($id)
     {
-        ${{  $variableName }} = $this->{{  $variableName }}Repository->find($id);
-        if (empty( ${{  $variableName }} )) {
+        ${{ $variableName }} = $this->{{ $variableName }}Repository->find($id);
+        if (empty( ${{ $variableName }} )) {
             abort(404);
         }
 
         return view('pages.admin.{{ $viewName }}.edit', [
             'isNew' => false,
-            '{{  $variableName }}' => ${{  $variableName }},
+            '{{ $variableName }}' => ${{ $variableName }},
         ]);
     }
 
@@ -142,7 +142,7 @@ class {{  $modelName }}Controller extends Controller
     */
     public function edit($id)
     {
-        return redirect()->action('Admin\{{  $modelName }}Controller＠show', [$id]);
+        return redirect()->action('Admin\{{ $modelName }}Controller＠show', [$id]);
     }
 
     /**
@@ -152,10 +152,10 @@ class {{  $modelName }}Controller extends Controller
     * @param      $request
     * @return \Response|\Illuminate\Http\RedirectResponse
     */
-    public function update($id, {{  $modelName }}Request $request)
+    public function update($id, {{ $modelName }}Request $request)
     {
-        ${{  $variableName }} = $this->{{  $variableName }}Repository->find($id);
-        if (empty( ${{  $variableName }} )) {
+        ${{ $variableName }} = $this->{{ $variableName }}Repository->find($id);
+        if (empty( ${{ $variableName }} )) {
             abort(404);
         }
 
@@ -199,9 +199,9 @@ class {{  $modelName }}Controller extends Controller
             }
         }
 @endif
-        $this->{{  $variableName }}Repository->update(${{  $variableName }}, $input);
+        $this->{{ $variableName }}Repository->update(${{ $variableName }}, $input);
 
-        return redirect()->action('Admin\{{  $modelName }}Controller＠show', [$id])
+        return redirect()->action('Admin\{{ $modelName }}Controller＠show', [$id])
             ->with('message-success', trans('admin.messages.general.update_success'));
     }
 
@@ -213,13 +213,13 @@ class {{  $modelName }}Controller extends Controller
     */
     public function destroy($id)
     {
-        ${{  $variableName }} = $this->{{  $variableName }}Repository->find($id);
-        if (empty( ${{  $variableName }} )) {
+        ${{ $variableName }} = $this->{{ $variableName }}Repository->find($id);
+        if (empty( ${{ $variableName }} )) {
             abort(404);
         }
-        $this->{{  $variableName }}Repository->delete(${{  $variableName }});
+        $this->{{ $variableName }}Repository->delete(${{ $variableName }});
 
-        return redirect()->action('Admin\{{  $modelName }}Controller@index')
+        return redirect()->action('Admin\{{ $modelName }}Controller@index')
             ->with('message-success', trans('admin.messages.general.delete_success'));
     }
 
