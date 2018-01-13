@@ -5,9 +5,14 @@ use LaravelRocket\Generator\FileUpdaters\CRUD\RouterFileUpdater as BaseRouterFil
 
 class RouterFileUpdater extends BaseRouterFileUpdater
 {
+    public function needGenerate()
+    {
+        return !$this->detectRelationTable($this->table);
+    }
+
     protected function getTargetFilePath(): string
     {
-        return app_path('routers/admin.php');
+        return base_path('routes/admin.php');
     }
 
     /**
@@ -27,7 +32,7 @@ class RouterFileUpdater extends BaseRouterFileUpdater
                 $start = true;
             }
             if (strpos($line, '});') !== false && $start === true) {
-                return $index;
+                return $index + 1;
             }
         }
 
@@ -39,11 +44,12 @@ class RouterFileUpdater extends BaseRouterFileUpdater
      */
     protected function getInsertData(): string
     {
-        $modelName = $this->getModelName();
-        $viewName  = kebab_case($this->table->getName());
+        $controllerName = $this->getModelName().'Controller';
+        $viewName       = kebab_case(camel_case($this->table->getName()));
 
         return <<< EOS
-        Route::resource('$viewName', 'Admin\{$modelName}Controller');
+        Route::resource('$viewName', 'Admin\\$controllerName');
+
 EOS;
     }
 }

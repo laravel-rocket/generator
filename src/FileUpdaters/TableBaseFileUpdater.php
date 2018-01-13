@@ -64,4 +64,29 @@ class TableBaseFileUpdater extends BaseFileUpdater
     {
         return ucfirst(camel_case(singularize($this->table->getName())));
     }
+
+    /**
+     * @param \TakaakiMizuno\MWBParser\Elements\Table $table
+     *
+     * @return bool
+     */
+    protected function detectRelationTable($table)
+    {
+        $foreignKeys = $table->getForeignKey();
+        if (count($foreignKeys) != 2) {
+            return false;
+        }
+        $tables = [];
+        foreach ($foreignKeys as $foreignKey) {
+            if (!$foreignKey->hasMany()) {
+                return false;
+            }
+            $tables[] = $foreignKey->getReferenceTableName();
+        }
+        if ($table->getName() === implode('_', [singularize($tables[0]), $tables[1]]) || $table->getName() === implode('_', [singularize($tables[1]), $tables[0]])) {
+            return true;
+        }
+
+        return false;
+    }
 }

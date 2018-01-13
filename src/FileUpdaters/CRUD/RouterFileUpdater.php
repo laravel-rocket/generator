@@ -27,7 +27,7 @@ class RouterFileUpdater extends TableBaseFileUpdater
                 $start = true;
             }
             if (strpos($line, '});') !== false && $start === true) {
-                return $index;
+                return $index + 1;
             }
         }
 

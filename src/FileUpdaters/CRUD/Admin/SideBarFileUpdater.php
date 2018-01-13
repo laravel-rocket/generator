@@ -6,6 +6,11 @@ use function ICanBoogie\pluralize;
 
 class SideBarFileUpdater extends TableBaseFileUpdater
 {
+    public function needGenerate()
+    {
+        return !$this->detectRelationTable($this->table);
+    }
+
     protected function getTargetFilePath(): string
     {
         return resource_path('views/shared/admin/side_menu.blade.php');
@@ -23,7 +28,7 @@ class SideBarFileUpdater extends TableBaseFileUpdater
 
         foreach ($lines as $index => $line) {
             if (strpos($line, '</ul>') !== false) {
-                return $index;
+                return $index + 1;
             }
         }
 
@@ -44,11 +49,30 @@ class SideBarFileUpdater extends TableBaseFileUpdater
 
         foreach ($lines as $index => $line) {
             if (strpos($line, $modelName.'Controller') !== false) {
-                return $index;
+                return $index + 1;
             }
         }
 
         return -1;
+    }
+
+    protected function getFontAwesomeIcon()
+    {
+        $mappings = [
+            'users'     => 'fa-users',
+            'images'    => 'fa-images',
+            'companies' => 'fa-building',
+
+        ];
+
+        $name = $this->table->getName();
+        foreach ($mappings as $mapping => $iconClass) {
+            if (ends_with($name, $mapping)) {
+                return $iconClass;
+            }
+        }
+
+        return 'fa-files';
     }
 
     /**
@@ -56,14 +80,15 @@ class SideBarFileUpdater extends TableBaseFileUpdater
      */
     protected function getInsertData(): string
     {
-        $modelName = $this->getModelName();
-        $title     = ucfirst(pluralize($this->getModelName()));
-        $keyName   = kebab_case($this->getModelName());
+        $controllerName = $this->getModelName().'Controller';
+        $title          = ucfirst(pluralize($this->getModelName()));
+        $keyName        = kebab_case(camel_case($this->getModelName()));
+        $iconClass      = $this->getFontAwesomeIcon();
 
         return <<< EOS
             <li @if( \$menu=='$keyName') class="active" @endif >
-                <a href="{!! action('Admin\{$modelName}Controller@index') !!\}">
-                    <i class="fa fa-users"></i>
+                <a href="{!! action('Admin\\$controllerName@index') !!}">
+                    <i class="fa $iconClass"></i>
                     <span>$title</span>
                 </a>
             </li>

@@ -31,7 +31,7 @@ class RegisterRepositoryFileUpdater extends TableBaseFileUpdater
         foreach ($lines as $index => $line) {
             if (strpos($line, $modelName.'RepositoryInterface::class') !== false) {
                 if (strpos($line, 'singleton') !== false) {
-                    return $index;
+                    return $index + 1;
                 }
 
                 return $index - 1;
