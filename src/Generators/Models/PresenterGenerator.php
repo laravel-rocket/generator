@@ -43,8 +43,9 @@ class PresenterGenerator extends ModelBaseGenerator
         ];
 
         foreach ($this->table->getColumns() as $column) {
-            $name = $column->getName();
-            $type = $column->getType();
+            $name  = $column->getName();
+            $type  = $column->getType();
+            $value = '';
 
             if (preg_match('/^(.+)_en$/', $name, $matches)) {
                 $columnInfo['multilingualFields'][] = $matches[1];

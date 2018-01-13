@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use LaravelRocket\Generator\FileUpdaters\RegisterRepositoryFileUpdater;
 use LaravelRocket\Generator\Generators\CRUD\Admin\ControllerGenerator as AdminCRUDControllerGenerator;
 use LaravelRocket\Generator\Generators\CRUD\Admin\RequestGenerator as AdminCRUDRequestGenerator;
 use LaravelRocket\Generator\Generators\CRUD\Admin\TemplateGenerator as AdminCRUDTemplateGenerator;
@@ -97,7 +98,7 @@ class GenerateFromMWB extends BaseCommand
 
     protected function generateModel()
     {
-        /** @var \LaravelRocket\Generator\Generators\Models\ModelBaseGenerator[] $generators */
+        /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
             new ModelGenerator($this->config, $this->files, $this->view),
             new ModelFactoryGenerator($this->config, $this->files, $this->view),
@@ -111,10 +112,18 @@ class GenerateFromMWB extends BaseCommand
             new AdminCRUDTemplateGenerator($this->config, $this->files, $this->view),
         ];
 
+        /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */
+        $fileUpdaters = [
+            new RegisterRepositoryFileUpdater($this->config, $this->files, $this->view),
+        ];
+
         foreach ($this->tables as $table) {
             $this->output('Processing '.$table->getName().'...', 'green');
             foreach ($generators as $generator) {
                 $generator->generate($table, $this->tables);
+            }
+            foreach ($fileUpdaters as $fileUpdater) {
+                $fileUpdater->insert($table, $this->tables);
             }
         }
     }

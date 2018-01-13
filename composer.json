@@ -15,7 +15,8 @@
     "takaaki-mizuno/php-code-manipulator": "0.*",
     "takaaki-mizuno/swagger-parser": "0.*",
     "doctrine/dbal": "~2.5",
-    "takaaki-mizuno/mwb-parser": "0.*"
+    "takaaki-mizuno/mwb-parser": "0.*",
+    "nikic/PHP-Parser": "~3.1"
   },
   "require-dev": {
     "phpunit/phpunit": "~6.0",
@@ -24,8 +25,7 @@
     "laravel-rocket/foundation": "2.0.*",
     "friendsofphp/php-cs-fixer": "^2.8",
     "fzaninotto/faker": "~1.5",
-    "laravel/laravel": "5.5.*",
-    "nikic/PHP-Parser": "~3.1"
+    "laravel/laravel": "5.5.*"
   },
   "autoload": {
     "psr-4": {
