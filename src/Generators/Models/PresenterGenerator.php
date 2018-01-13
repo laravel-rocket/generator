@@ -73,6 +73,7 @@ class PresenterGenerator extends ModelBaseGenerator
                         $value = 'double';
                         break;
                     case 'timestamp':
+                    case 'timestamp_f':
                         $value = '\Carbon\Carbon';
                         break;
                     default:

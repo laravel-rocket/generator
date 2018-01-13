@@ -95,6 +95,7 @@ class ModelFactoryGenerator extends ModelBaseGenerator
                         $value = '0';
                         break;
                     case 'timestamp':
+                    case 'timestamp_f':
                         $value = '$faker->dateTime($max = \'now\')';
                         break;
                 }

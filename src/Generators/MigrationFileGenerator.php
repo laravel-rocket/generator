@@ -101,10 +101,10 @@ class MigrationFileGenerator extends BaseGenerator
             if ($column->getName() === 'id') {
                 continue;
             }
-            if (($column->getName() === 'created_at' || $column->getName() === 'created_at') and $column->getType() === 'timestamp') {
+            if (($column->getName() === 'created_at' || $column->getName() === 'updated_at') and ($column->getType() === 'timestamp' || $column->getType() === 'timestamp_f')) {
                 continue;
             }
-            if ($column->getName() === 'deleted_at' and $column->getType() === 'timestamp') {
+            if ($column->getName() === 'deleted_at' and ($column->getType() === 'timestamp' || $column->getType() === 'timestamp_f')) {
                 $result['hasSoftDelete'] = true;
                 continue;
             }
@@ -124,6 +124,7 @@ class MigrationFileGenerator extends BaseGenerator
                     $type = $column->isUnsigned() ? 'unsignedInteger' : 'integer';
                     break;
                 case 'timestamp':
+                case 'timestamp_f':
                     $type = 'timestamp';
                     break;
                 case 'date':
@@ -156,29 +157,34 @@ class MigrationFileGenerator extends BaseGenerator
             if ($column->isNullable()) {
                 $line .= '->nullable()';
             }
-            if (!is_null($column->getDefaultValue())) {
+            if (!empty($column->getDefaultValue())) {
+                $defaultValue = $column->getDefaultValue();
+                if ($defaultValue == "''") {
+                    $defaultValue = '';
+                }
                 switch ($column->getType()) {
                     case 'tinyint':
-                        $defaultValue = (int) $column->getDefaultValue() == 1 ? 'true' : 'false';
+                        $defaultValue = (int) $defaultValue == 1 ? 'true' : 'false';
                         $line .= '->default('.$defaultValue.')';
                         break;
                     case 'bigint':
                     case 'int':
-                        $line .= '->default('.((int) $column->getDefaultValue()).')';
+                        $line .= '->default('.((int) $defaultValue).')';
                         break;
                     case 'timestamp':
+                    case 'timestamp_f':
                     case 'date':
                     case 'varchar':
                     case 'text':
                     case 'mediumtext':
                     case 'longtext':
-                        $line .= '->default(\''.($column->getDefaultValue()).'\')';
+                        $line .= '->default(\''.$defaultValue.'\')';
                         break;
                     case 'decimal':
-                        $line .= '->default('.((float) $column->getDefaultValue()).')';
+                        $line .= '->default('.((float) $defaultValue).')';
                         break;
                     default:
-                        $line .= '->default(\''.($column->getDefaultValue()).'\')';
+                        $line .= '->default(\''.$defaultValue.'\')';
                         break;
                 }
             }

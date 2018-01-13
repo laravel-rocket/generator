@@ -61,7 +61,7 @@ class ModelGenerator extends ModelBaseGenerator
             if ($name == 'remember_token') {
                 $columnInfo['authenticatable'] = true;
             }
-            if ($type == 'timestamp' && !in_array($name, $timestampExcludes)) {
+            if (($type == 'timestamp' || $type == 'timestamp_f') && !in_array($name, $timestampExcludes)) {
                 $columnInfo['fillables'][] = $name;
             }
         }

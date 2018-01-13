@@ -35,7 +35,7 @@ class RequestGenerator extends CRUDBaseGenerator
             if (in_array($name, $excludes)) {
                 continue;
             }
-            if (ends_with($name, '_at') && $type === 'timestamp') {
+            if (ends_with($name, '_at') && ($type === 'timestamp' || $type === 'timestamp_f')) {
                 $columnInfo['timestampColumns'][] = $name;
                 continue;
             }
