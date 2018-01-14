@@ -27,6 +27,11 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
 @if( $authenticatable )
     use HasApiTokens, Notifiable;
 @endif
+
+@foreach( $constants as $constant )
+    {!! $constant !!}
+@endforeach
+
     /**
      * The database table used by the model.
      *

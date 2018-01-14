@@ -32,13 +32,13 @@ class TableBaseGenerator extends BaseGenerator
             return false;
         }
 
+        $view      = $this->getView();
+        $variables = $this->getVariables();
+
         $path = $this->getPath();
         if (file_exists($path)) {
             unlink($path);
         }
-        $view      = $this->getView();
-        $variables = $this->getVariables();
-
         $this->fileService->render($view, $path, $variables, true, true);
 
         return true;

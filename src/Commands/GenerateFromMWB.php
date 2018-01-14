@@ -9,6 +9,7 @@ use LaravelRocket\Generator\Generators\CRUD\Admin\RequestGenerator as AdminCRUDR
 use LaravelRocket\Generator\Generators\CRUD\Admin\TemplateGenerator as AdminCRUDTemplateGenerator;
 use LaravelRocket\Generator\Generators\CRUD\Admin\UnitTestGenerator as AdminCRUDUnitTestGenerator;
 use LaravelRocket\Generator\Generators\MigrationFileGenerator;
+use LaravelRocket\Generator\Generators\Models\LanguageFileGenerator;
 use LaravelRocket\Generator\Generators\Models\ModelFactoryGenerator;
 use LaravelRocket\Generator\Generators\Models\ModelGenerator;
 use LaravelRocket\Generator\Generators\Models\ModelUnitTestGenerator;
@@ -108,6 +109,7 @@ class GenerateFromMWB extends BaseCommand
             new PresenterGenerator($this->config, $this->files, $this->view),
             new RepositoryGenerator($this->config, $this->files, $this->view),
             new RepositoryInterfaceGenerator($this->config, $this->files, $this->view),
+            new LanguageFileGenerator($this->config, $this->files, $this->view),
             new AdminCRUDControllerGenerator($this->config, $this->files, $this->view),
             new AdminCRUDRequestGenerator($this->config, $this->files, $this->view),
             new AdminCRUDUnitTestGenerator($this->config, $this->files, $this->view),

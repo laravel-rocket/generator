@@ -1,6 +1,10 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use PhpParser\Error;
+use PhpParser\Lexer;
+use PhpParser\ParserFactory;
+
 class ModelGenerator extends ModelBaseGenerator
 {
     /**
@@ -32,8 +36,51 @@ class ModelGenerator extends ModelBaseGenerator
         $variables['tableName']     = $this->table->getName();
         $variables['relationTable'] = $this->detectRelationTable($this->table);
         $variables['relations']     = $this->getRelations();
+        $variables['constants']     = $this->getConstants();
 
         return $variables;
+    }
+
+    protected function getConstants(): array
+    {
+        $constants = [];
+        $filePath  = $this->getPath();
+        if (!file_exists($filePath)) {
+            return $constants;
+        }
+
+        $lexer = new Lexer([
+            'usedAttributes' => [
+                'comments', 'startLine', 'endLine',
+            ],
+        ]);
+
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
+
+        try {
+            $statements = $parser->parse(file_get_contents($filePath));
+        } catch (Error $e) {
+            return null;
+        }
+
+        $this->getAllConstants($statements, $constants);
+
+        return $constants;
+    }
+
+    protected function getAllConstants($statements, &$result)
+    {
+        foreach ($statements as $statement) {
+            if (get_class($statement) === \PhpParser\Node\Stmt\ClassConst::class) {
+                $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+                $result[]      = ltrim($prettyPrinter->prettyPrint([$statement]));
+            } elseif (property_exists($statement, 'stmts')) {
+                $return = $this->getAllConstants($statement->stmts, $result);
+                if (!empty($return)) {
+                    return $return;
+                }
+            }
+        }
     }
 
     protected function getFillableColumns()
