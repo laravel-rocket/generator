@@ -52,7 +52,7 @@ class LanguageFileGenerator extends ModelBaseGenerator
             $viewName = preg_replace('/_id$/', ' ', $viewName);
             $viewName = title_case(preg_replace('/_/', ' ', $viewName));
 
-            $columnInfo['columns'][$name] = $viewName;
+            $columnInfo['columns'][$name] = trim($viewName);
 
             if ($column->getType() === 'tinyint') {
                 if ($name === 'is_enabled') {

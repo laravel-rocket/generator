@@ -21,6 +21,6 @@ class TableBaseGeneratorTest extends TestCase
         $generator->setTargetTable($tables[0], $tables);
         $relations = $generator->getRelations();
 
-        $this->assertEquals(count($relations), 2);
+        $this->assertEquals(count($relations), 3);
     }
 }

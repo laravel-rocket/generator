@@ -25,10 +25,6 @@ class ParseTest extends TestCase
         $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
         print $prettyPrinter->prettyPrint([$const]);
 
-        print_r( $const->consts[0]->name);
-        print_r( $const->consts[0]->value);
-        print $const->value . PHP_EOL;
-
         $this->assertTrue(true);
     }
 
