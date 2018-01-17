@@ -12,6 +12,33 @@
     <script>
         $('.datetime-field').datetimepicker(｛'format': 'YYYY-MM-DD HH:mm:ss'｝);
     </script>
+@foreach( $editableColumns as $column)
+@if( $column['type'] === 'image')
+    <script>
+    $("#{{ $column['name'] }}").fileinput({
+        overwriteInitial: true,
+        maxFileSize: 1500,
+        showClose: false,
+        showCaption: false,
+        browseLabel: '',
+        removeLabel: '',
+        browseIcon: '<i class="glyphicon glyphicon-folder-open"></i>',
+        removeIcon: '<i class="glyphicon glyphicon-remove"></i>',
+        removeTitle: 'Cancel or reset changes',
+        elErrorContainer: '#kv-avatar-errors-{{ $column['name'] }}',
+        msgErrorClass: 'alert alert-block alert-danger',
+        ＠if( !empty($user->{{ $column['relation']  }}) )
+        defaultPreviewContent: '<img src="{!! $user->{{ $column['relation']  }}->getThumbnailUrl(200, 200) !!}" alt="Your Avatar" style="width:100px">',
+        ＠else
+        defaultPreviewContent: '<img src="{!! \URLHelper::asset('img/user.png', 'common') !!}" alt="Your Avatar" style="width:100px">',
+        ＠endif
+        layoutTemplates: {main2: '{preview} {remove} {browse}'},
+        allowedFileExtensions: ["jpg", "png", "gif", "jpeg"]
+    });
+    </script>
+@endif
+@endforeach
+
 ＠stop
 
 ＠section('title')
@@ -75,12 +102,25 @@
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
                     <input type="password" class="form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="">
                 </div>
+@elseif( $column['type'] === 'image')
+
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div id="kv-avatar-errors-{{ $column['name'] }}" class="center-block" style="display:none;"></div>
+                        <div class="kv-avatar center-block" style="width:160px">
+                            <input id="{{ $column['name'] }}" name="{{ $column['name'] }}" type="file" class="file-loading">
+                        </div>
+
+                    </div>
+                </div>
+
 @elseif( $column['type'] === 'select')
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
-                    <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
+                <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
 @foreach($column['options'] as $option)
-                        <option value="{{ array_get($option, 'value') }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')_options.{{ array_get($option, 'value') }}')</option>
+                        <option value="{{ array_get($option, 'value') }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}_options.{{ array_get($option, 'value') }}')</option>
 @endforeach
                     </select>
                 </div>

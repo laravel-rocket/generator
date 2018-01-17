@@ -9,7 +9,7 @@ return [
 @if( count($option) > 0)
     '{{ $column }}_options' => [
 @foreach( $option as $key => $name )
-    '{{ $key }}' => '{{ $name }}',
+        '{{ $key }}' => '{{ $name }}',
 @endforeach
     ],
 @endif

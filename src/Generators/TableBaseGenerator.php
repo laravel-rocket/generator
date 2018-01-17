@@ -243,8 +243,7 @@ class TableBaseGenerator extends BaseGenerator
 
             list($type, $options) = $columnObject->getEditFieldType($relationHash, $columnDefinition);
             if (array_key_exists($name, $relationHash)) {
-                $type     = 'relation';
-                $relation = camel_case($relationHash[$name]['referenceModel']);
+                $relation = camel_case($relationHash[$name]['name']);
             }
 
             if ($columnObject->isListable()) {

@@ -29,7 +29,7 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
 @endif
 
 @foreach( $constants as $constant )
-    {!! $constant !!}
+    const {!! $constant !!};
 @endforeach
 
     /**

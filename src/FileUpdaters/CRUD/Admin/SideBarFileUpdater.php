@@ -68,7 +68,7 @@ class SideBarFileUpdater extends TableBaseFileUpdater
             'users'     => 'fa-users',
             'images'    => 'fa-images',
             'companies' => 'fa-building',
-
+            'schedules' => 'fa-calendar',
         ];
 
         $name = $this->table->getName();
@@ -78,7 +78,7 @@ class SideBarFileUpdater extends TableBaseFileUpdater
             }
         }
 
-        return 'fa-files';
+        return 'fa-file';
     }
 
     /**
@@ -94,7 +94,7 @@ class SideBarFileUpdater extends TableBaseFileUpdater
         return <<< EOS
             <li @if( \$menu=='$keyName') class="active" @endif >
                 <a href="{!! action('Admin\\$controllerName@index') !!}">
-                    <i class="fa $iconClass"></i>
+                    <i class="far $iconClass"></i>
                     <span>$title</span>
                 </a>
             </li>

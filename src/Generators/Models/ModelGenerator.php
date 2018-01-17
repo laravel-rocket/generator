@@ -60,7 +60,7 @@ class ModelGenerator extends ModelBaseGenerator
         try {
             $statements = $parser->parse(file_get_contents($filePath));
         } catch (Error $e) {
-            return null;
+            return [];
         }
 
         $this->getAllConstants($statements, $constants);

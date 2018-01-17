@@ -14,6 +14,8 @@ class TemplateGenerator extends CRUDBaseGenerator
      */
     public function generate($table, $tables, $json): bool
     {
+        $this->json = $json;
+
         $this->table  = $table;
         $this->tables = $tables;
 
