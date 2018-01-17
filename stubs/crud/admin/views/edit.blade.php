@@ -57,18 +57,12 @@
 @foreach( $editableColumns as $column)
             <div class="row">
             <div class="col-md-12 col-sm-12 col-xs-12">
-@if( $column['type'] == 'int' || $column['type'] == 'int')
-                <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
-                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
-                    <input type="text" class="form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="｛｛ old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} ｝｝">
-                </div>
-@elseif( $column['type'] == 'text' || $column['type'] == 'mediumText' || $column['type'] == 'longText')
+@if( $column['type'] == 'textarea')
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
                     <textarea name="{{ $column['name'] }}" class="form-control" rows="5" placeholder="＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')">｛!!  old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} !!｝</textarea>
                 </div>
-
-@elseif( $column['type'] == 'boolean')
+@elseif( $column['type'] === 'boolean')
                 <td>
                     ＠if( $model->{{ $column['name'] }} )
                     <span class="badge bg-green">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')_true')</span>
@@ -76,6 +70,20 @@
                     <span class="badge bg-red">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')_false')</span>
                     ＠endif
                 </td>
+@elseif( $column['type'] === 'password')
+                <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
+                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
+                    <input type="password" class="form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="">
+                </div>
+@elseif( $column['type'] === 'select')
+                <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
+                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
+                    <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
+@foreach($column['options'] as $option)
+                        <option value="{{ array_get($option, 'value') }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')_options.{{ array_get($option, 'value') }}')</option>
+@endforeach
+                    </select>
+                </div>
 @elseif( $column['type'] == 'relation')
                 <div class="form-group @if ($errors->has('type')) has-error @endif">
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>

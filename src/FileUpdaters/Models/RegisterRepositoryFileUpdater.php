@@ -1,5 +1,7 @@
 <?php
-namespace LaravelRocket\Generator\FileUpdaters;
+namespace LaravelRocket\Generator\FileUpdaters\Models;
+
+use LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater;
 
 class RegisterRepositoryFileUpdater extends TableBaseFileUpdater
 {

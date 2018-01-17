@@ -20,10 +20,15 @@ class ParseTest extends TestCase
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
 
         $statements = $parser->parse(file_get_contents(__FILE__));
-        $const = $this->getConst($statements);
+        $const      = $this->getConst($statements);
 
         $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
         print $prettyPrinter->prettyPrint([$const]);
+
+        foreach ($const->consts as $c) {
+            print $prettyPrinter->prettyPrint([$c]).PHP_EOL;
+            print_r($c->name);
+        }
 
         $this->assertTrue(true);
     }
@@ -44,5 +49,4 @@ class ParseTest extends TestCase
 
         return null;
     }
-
 }

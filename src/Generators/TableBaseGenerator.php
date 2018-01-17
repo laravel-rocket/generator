@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators;
 
+use LaravelRocket\Generator\Objects\Column;
 use TakaakiMizuno\MWBParser\Elements\Table;
 use function ICanBoogie\singularize;
 
@@ -19,13 +20,21 @@ class TableBaseGenerator extends BaseGenerator
     protected $tables;
 
     /**
-     * @param Table   $table
-     * @param Table[] $tables
+     * @var \LaravelRocket\Generator\Objects\Definitions
+     */
+    protected $json;
+
+    /**
+     * @param Table                                        $table
+     * @param Table[]                                      $tables
+     * @param \LaravelRocket\Generator\Objects\Definitions $json
      *
      * @return bool
      */
-    public function generate($table, $tables): bool
+    public function generate($table, $tables, $json): bool
     {
+        $this->json = $json;
+
         $this->setTargetTable($table, $tables);
 
         if (!$this->canGenerate()) {
@@ -208,5 +217,62 @@ class TableBaseGenerator extends BaseGenerator
         }
 
         return $relations;
+    }
+
+    protected function getColumns()
+    {
+        $columnInfo = [
+            'editableColumns' => [],
+            'listColumns'     => [],
+        ];
+
+        $relations    = $this->getRelations();
+        $relationHash = [];
+        foreach ($relations as $relation) {
+            if ($relation['type'] === 'belongsTo') {
+                $relationHash[$relation['column']->getName()] = $relation;
+            }
+        }
+
+        foreach ($this->table->getColumns() as $column) {
+            $name             = $column->getName();
+            $relation         = '';
+            $columnDefinition = $this->json->getColumnDefinition($this->table->getName(), $column->getName());
+
+            $columnObject = new Column($column);
+
+            list($type, $options) = $columnObject->getEditFieldType($relationHash, $columnDefinition);
+            if (array_key_exists($name, $relationHash)) {
+                $type     = 'relation';
+                $relation = camel_case($relationHash[$name]['referenceModel']);
+            }
+
+            if ($columnObject->isListable()) {
+                $columnInfo['listColumns'][] = [
+                    'name'     => $name,
+                    'type'     => $type,
+                    'relation' => $relation,
+                    'options'  => $options,
+                ];
+            }
+
+            if ($columnObject->isEditable()) {
+                $columnInfo['editableColumns'][] = [
+                    'name'     => $name,
+                    'type'     => $type,
+                    'relation' => $relation,
+                    'options'  => $options,
+                ];
+            }
+        }
+
+        $relationDefinitions = $this->json->get(['tables', $this->table->getName(), 'relations'], []);
+
+        return $columnInfo;
+    }
+
+    protected function generateConstantName($column, $value)
+    {
+        return strtoupper(implode('_', [$column, $value]));
     }
 }

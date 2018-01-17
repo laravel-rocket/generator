@@ -3,7 +3,7 @@ namespace LaravelRocket\Generator\Commands;
 
 use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\RouterFileUpdater;
 use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\SideBarFileUpdater;
-use LaravelRocket\Generator\FileUpdaters\RegisterRepositoryFileUpdater;
+use LaravelRocket\Generator\FileUpdaters\Models\RegisterRepositoryFileUpdater;
 use LaravelRocket\Generator\Generators\CRUD\Admin\ControllerGenerator as AdminCRUDControllerGenerator;
 use LaravelRocket\Generator\Generators\CRUD\Admin\RequestGenerator as AdminCRUDRequestGenerator;
 use LaravelRocket\Generator\Generators\CRUD\Admin\TemplateGenerator as AdminCRUDTemplateGenerator;
@@ -16,19 +16,23 @@ use LaravelRocket\Generator\Generators\Models\ModelUnitTestGenerator;
 use LaravelRocket\Generator\Generators\Models\PresenterGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryInterfaceGenerator;
+use LaravelRocket\Generator\Objects\Definitions;
 use LaravelRocket\Generator\Services\DatabaseService;
 use TakaakiMizuno\MWBParser\Parser;
 
 class GenerateFromMWB extends BaseCommand
 {
-    protected $name        = 'rocket:generate:from-mwb';
+    protected $name = 'rocket:generate:from-mwb';
 
-    protected $signature   = 'rocket:generate:from-mwb {--file=}';
+    protected $signature = 'rocket:generate:from-mwb {--file=} {--json=}';
 
     protected $description = 'Create Migrations/Models/Repositories';
 
     /** @var \TakaakiMizuno\MWBParser\Elements\Table[] $tables */
     protected $tables;
+
+    /** @var \LaravelRocket\Generator\Objects\Definitions */
+    protected $json;
 
     /** @var DatabaseService $databaseService */
     protected $databaseService;
@@ -44,6 +48,7 @@ class GenerateFromMWB extends BaseCommand
         if ($this->tables === false) {
             return false;
         }
+        $this->getAppJson();
 
         $this->databaseService = new DatabaseService($this->config, $this->files);
         $databaseName          = $this->databaseService->resetDatabase();
@@ -52,6 +57,30 @@ class GenerateFromMWB extends BaseCommand
         $this->generateModel();
 
         $this->databaseService->dropDatabase();
+    }
+
+    protected function getAppJson()
+    {
+        $file    = $this->option('json');
+        $default = false;
+        if (empty($file)) {
+            $default = true;
+            $file    = base_path('documents/app.json');
+        }
+
+        if (!file_exists($file)) {
+            if ($default) {
+                $this->output('JSON file ( '.$file.' ) doesn\'t exist. This is default file path. You can specify file path with --json option.', 'error');
+            } else {
+                $this->output('JSON file  ( '.$file.' ) doesn\'t exist. Please check file path.', 'error');
+            }
+
+            return false;
+        }
+
+        $data = file_get_contents($file);
+
+        $this->json = new Definitions($data);
     }
 
     protected function getTablesFromMWBFile()
@@ -126,10 +155,10 @@ class GenerateFromMWB extends BaseCommand
         foreach ($this->tables as $table) {
             $this->output('Processing '.$table->getName().'...', 'green');
             foreach ($generators as $generator) {
-                $generator->generate($table, $this->tables);
+                $generator->generate($table, $this->tables, $this->json);
             }
             foreach ($fileUpdaters as $fileUpdater) {
-                $fileUpdater->insert($table, $this->tables);
+                $fileUpdater->insert($table, $this->tables, $this->json);
             }
         }
     }

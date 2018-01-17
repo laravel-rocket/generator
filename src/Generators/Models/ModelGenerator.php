@@ -65,15 +65,32 @@ class ModelGenerator extends ModelBaseGenerator
 
         $this->getAllConstants($statements, $constants);
 
+        $columns = $this->json->get(['tables', $this->table->getName().'columns'], []);
+        foreach ($columns as $name => $column) {
+            $type = array_get($column, 'type');
+            if ($type === 'type') {
+                $options = array_get($column, 'options', []);
+                foreach ($options as $option) {
+                    $value            = array_get($option, 'value');
+                    $name             = $this->generateConstantName($name, $value);
+                    $constants[$name] = "$name = '$value'";
+                }
+            }
+        }
+
+        asort($constants);
+
         return $constants;
     }
 
     protected function getAllConstants($statements, &$result)
     {
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
         foreach ($statements as $statement) {
             if (get_class($statement) === \PhpParser\Node\Stmt\ClassConst::class) {
-                $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
-                $result[]      = ltrim($prettyPrinter->prettyPrint([$statement]));
+                foreach ($statement->consts as $constant) {
+                    $result[$constant->name] = ltrim($prettyPrinter->prettyPrint([$constant]));
+                }
             } elseif (property_exists($statement, 'stmts')) {
                 $return = $this->getAllConstants($statement->stmts, $result);
                 if (!empty($return)) {

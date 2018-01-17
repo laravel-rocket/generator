@@ -18,13 +18,21 @@ class TableBaseFileUpdater extends BaseFileUpdater
     protected $tables;
 
     /**
-     * @param \TakaakiMizuno\MWBParser\Elements\Table   $table
-     * @param \TakaakiMizuno\MWBParser\Elements\Table[] $tables
+     * @var \LaravelRocket\Generator\Objects\Definitions
+     */
+    protected $json;
+
+    /**
+     * @param \TakaakiMizuno\MWBParser\Elements\Table      $table
+     * @param \TakaakiMizuno\MWBParser\Elements\Table[]    $tables
+     * @param \LaravelRocket\Generator\Objects\Definitions $json
      *
      * @return bool
      */
-    public function insert($table, $tables): bool
+    public function insert($table, $tables, $json): bool
     {
+        $this->json = $json;
+
         $this->setTargetTable($table, $tables);
 
         if (!$this->needGenerate()) {
