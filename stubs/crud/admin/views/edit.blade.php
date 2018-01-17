@@ -28,9 +28,9 @@
         elErrorContainer: '#kv-avatar-errors-{{ $column['name'] }}',
         msgErrorClass: 'alert alert-block alert-danger',
         ＠if( !empty($user->{{ $column['relation']  }}) )
-        defaultPreviewContent: '<img src="{!! $user->{{ $column['relation']  }}->getThumbnailUrl(200, 200) !!}" alt="Your Avatar" style="width:100px">',
+        defaultPreviewContent: '<img src="｛!! $user->{{ $column['relation']  }}->getThumbnailUrl(200, 200) !!｝" alt="Your Avatar" style="width:100px">',
         ＠else
-        defaultPreviewContent: '<img src="{!! \URLHelper::asset('img/user.png', 'common') !!}" alt="Your Avatar" style="width:100px">',
+        defaultPreviewContent: '<img src="｛!! \URLHelper::asset('img/user.png', 'common') !!｝" alt="Your Avatar" style="width:100px">',
         ＠endif
         layoutTemplates: {main2: '{preview} {remove} {browse}'},
         allowedFileExtensions: ["jpg", "png", "gif", "jpeg"]

@@ -33,7 +33,11 @@ class {{ $modelName }}Presenter extends BasePresenter
         if (!$model) {
             $model      = new \App\Models\{{ $relation['referenceModel'] }}();
 @if( ends_with(strtolower($relation['name']), 'image'))
-            $model->url = \URLHelper::asset('img/noimage.png', 'common');
+@if( $authenticatable )
+            $model->url = \URLHelper::asset('images/user.png', 'common');
+@else
+            $model->url = \URLHelper::asset('images/local.png', 'common');
+@endif
 @endif
         }
         return $model;

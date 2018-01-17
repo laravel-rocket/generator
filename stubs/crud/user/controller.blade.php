@@ -93,7 +93,7 @@ class {{  $modelName }}Controller extends Controller
 @if( count($unixTimestampColumns) > 0)
         $unixTimestampColumns     = [
 @foreach( $unixTimestampColumns as $unixTimestampColumn )
-            '{{ $dateColumn }}',
+            '{{ $unixTimestampColumn }}',
 @endforeach
         ];
         foreach ($unixTimestampColumns as $unixTimestampColumn) {
@@ -188,7 +188,7 @@ class {{  $modelName }}Controller extends Controller
 @if( count($unixTimestampColumns) > 0)
         $unixTimestampColumns     = [
 @foreach( $unixTimestampColumns as $unixTimestampColumn )
-            '{{ $dateColumn }}',
+            '{{ $unixTimestampColumn }}',
 @endforeach
         ];
         foreach ($unixTimestampColumns as $unixTimestampColumn) {
