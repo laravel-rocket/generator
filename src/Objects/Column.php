@@ -4,7 +4,7 @@ namespace LaravelRocket\Generator\Objects;
 class Column
 {
     protected $uneditables     = ['id', 'remember_token', 'created_at', 'deleted_at', 'updated_at'];
-    protected $unlistables     = ['id', 'created_at', 'updated_at'];
+    protected $unlistables     = ['id', 'remember_token', 'created_at', 'updated_at', 'password', 'deleted_at'];
     protected $unlistableTypes = ['text', 'mediumtext', 'longtext'];
 
     /** @var \TakaakiMizuno\MWBParser\Elements\Column */
