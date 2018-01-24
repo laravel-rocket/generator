@@ -33,4 +33,33 @@ class BaseGenerator
 
         $this->fileService = new FileService($this->config, $this->files, $this->view);
     }
+
+    public function copyConfigFile($path)
+    {
+        if (is_array($path)) {
+            $path = implode(DIRECTORY_SEPARATOR, $path);
+        }
+
+        $sourcePath = implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'source', 'config', $path]);
+
+        $destinationPath = config_path($path);
+
+        if (file_exists($sourcePath)) {
+            copy($sourcePath, $destinationPath);
+        }
+    }
+
+    public function copyLanguageFile($path)
+    {
+        if (is_array($path)) {
+            $path = implode(DIRECTORY_SEPARATOR, $path);
+        }
+
+        $sourcePath      = implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'source', 'resource', 'lang', 'en', $path]);
+        $destinationPath = resource_path(implode(DIRECTORY_SEPARATOR, ['lang', 'en', $path]));
+
+        if (file_exists($sourcePath)) {
+            copy($sourcePath, $destinationPath);
+        }
+    }
 }

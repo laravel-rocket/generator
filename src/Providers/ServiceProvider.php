@@ -3,6 +3,9 @@ namespace LaravelRocket\Generator\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use LaravelRocket\Generator\Commands\GenerateFromMWB;
+use LaravelRocket\Generator\Commands\HelperGenerator;
+use LaravelRocket\Generator\Commands\ServiceGenerator;
+use LaravelRocket\Generator\Commands\ValidatorFromMWB;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -22,8 +25,32 @@ class ServiceProvider extends BaseServiceProvider
             return new GenerateFromMWB($app['config'], $app['files'], $app['view']);
         });
 
+        $this->app->singleton('command.rocket.validate.from-mwb', function ($app) {
+            return new ValidatorFromMWB($app['config'], $app['files'], $app['view']);
+        });
+
+        $this->app->singleton('command.rocket.generate.service', function ($app) {
+            return new ServiceGenerator($app['config'], $app['files'], $app['view']);
+        });
+
+        $this->app->singleton('command.rocket.generate.helper', function ($app) {
+            return new HelperGenerator($app['config'], $app['files'], $app['view']);
+        });
+
         $this->commands(
             'command.rocket.generate.from-mwb'
+        );
+
+        $this->commands(
+            'command.rocket.validate.from-mwb'
+        );
+
+        $this->commands(
+            'command.rocket.generate.service'
+        );
+
+        $this->commands(
+            'command.rocket.generate.helper'
         );
     }
 }

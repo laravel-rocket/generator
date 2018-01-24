@@ -18,6 +18,8 @@ use LaravelRocket\Generator\Generators\Models\RepositoryGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryInterfaceGenerator;
 use LaravelRocket\Generator\Objects\Definitions;
 use LaravelRocket\Generator\Services\DatabaseService;
+use LaravelRocket\Generator\Validators\Error;
+use LaravelRocket\Generator\Validators\TableSchemaValidator;
 use TakaakiMizuno\MWBParser\Parser;
 
 class GenerateFromMWB extends BaseCommand
@@ -49,6 +51,11 @@ class GenerateFromMWB extends BaseCommand
             return false;
         }
         $this->getAppJson();
+
+        $success = $this->validateTableSchema();
+        if (!$success) {
+            return false;
+        }
 
         $this->databaseService = new DatabaseService($this->config, $this->files);
         $databaseName          = $this->databaseService->resetDatabase();
@@ -116,6 +123,44 @@ class GenerateFromMWB extends BaseCommand
         }
 
         return $tables;
+    }
+
+    protected function validateTableSchema()
+    {
+        $validator = new TableSchemaValidator($this->config, $this->files, $this->view);
+
+        /** @var bool $success */
+        /** @var \LaravelRocket\Generator\Validators\Error[] $errors */
+        list($success, $errors) = $validator->validate($this->tables, $this->json);
+
+        $this->output('Table Schema Validation Result');
+        if (count($errors) > 0) {
+            foreach ($errors as $error) {
+                $line = $error->getMessage().' : '.$error->getTarget();
+                switch ($error->getLevel()) {
+                    case Error::LEVEL_ERROR:
+                        $this->output($line, 'red');
+                        break;
+                    case Error::LEVEL_WARNING:
+                        $this->output($line, 'yellow');
+                        break;
+                    case Error::LEVEL_INFO:
+                    default:
+                        $this->output('  '.$line);
+                        break;
+                }
+                $suggestions = $error->getSuggestions();
+                if (count($suggestions) > 0) {
+                    foreach ($suggestions as $suggestion) {
+                        $this->output('    '.$suggestion);
+                    }
+                }
+            }
+        } else {
+            $this->output('  > No Problem found.', 'green');
+        }
+
+        return $success;
     }
 
     protected function generateMigration()

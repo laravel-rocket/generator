@@ -10,13 +10,18 @@ class NameBaseGenerator extends BaseGenerator
      */
     protected $name;
 
+    /** @var array */
+    protected $json;
+
     /**
      * @param string $name
+     * @param array  $json
      *
      * @return bool
      */
-    public function generate($name): bool
+    public function generate(string $name, array $json): bool
     {
+        $this->json = $json;
         $this->name = $this->normalizeName($name);
 
         if (!$this->canGenerate()) {

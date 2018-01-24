@@ -82,6 +82,20 @@ class Column
             return ['password', null];
         }
 
+        if (ends_with($name, 'country_code') && $type === 'varchar') {
+            return ['country', null];
+        }
+
+        if (ends_with($name, 'gender') && $type === 'varchar') {
+            return ['select', array_get($definitions, 'options', [[
+                'name'  => 'Male',
+                'value' => 'male',
+            ], [
+                'name'  => 'Female',
+                'value' => 'female',
+            ]])];
+        }
+
         if (in_array($type, ['text', 'mediumtext', 'longtext', 'smalltext', 'tinytext'])) {
             return ['textarea', null];
         }

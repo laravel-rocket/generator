@@ -242,6 +242,8 @@ class TableBaseGenerator extends BaseGenerator
             $columnObject = new Column($column);
 
             list($type, $options) = $columnObject->getEditFieldType($relationHash, $columnDefinition);
+            $this->copyTypeRelatedFiles($type);
+
             if (array_key_exists($name, $relationHash)) {
                 $relation = camel_case($relationHash[$name]['name']);
             }
@@ -266,6 +268,14 @@ class TableBaseGenerator extends BaseGenerator
         }
 
         $relationDefinitions = $this->json->get(['tables', $this->table->getName(), 'relations'], []);
+        foreach ($relationDefinitions as $name => $relationDefinition) {
+            $columnInfo['editableColumns'][] = [
+                'name'         => $name,
+                    'type'     => $type,
+                'relation'     => $relation,
+                'options'      => $options,
+            ];
+        }
 
         return $columnInfo;
     }
@@ -273,5 +283,15 @@ class TableBaseGenerator extends BaseGenerator
     protected function generateConstantName($column, $value)
     {
         return strtoupper(implode('_', [$column, $value]));
+    }
+
+    protected function copyTypeRelatedFiles($type)
+    {
+        switch ($type) {
+            case 'country':
+                $this->copyConfigFile(['data', 'data', 'countries.php']);
+                $this->copyConfigFile(['data', 'data', 'phones.php']);
+                $this->copyLanguageFile(['data', 'countries.php']);
+        }
     }
 }
