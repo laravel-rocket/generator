@@ -41,12 +41,17 @@ class PresenterGenerator extends ModelBaseGenerator
             'columns'            => [],
             'multilingualFields' => [],
             'imageColumns'       => [],
+            'authenticatable'    => false,
         ];
 
         foreach ($this->table->getColumns() as $column) {
             $name  = $column->getName();
             $type  = $column->getType();
             $value = '';
+
+            if ($name == 'remember_token') {
+                $columnInfo['authenticatable'] = true;
+            }
 
             if (preg_match('/^(.+)_en$/', $name, $matches)) {
                 $columnInfo['multilingualFields'][] = $matches[1];
