@@ -105,4 +105,10 @@ class FileService
             $this->files->makeDirectory($directory);
         }
     }
+
+    public function copy(string $sourcePath, string $destinationPath)
+    {
+        $this->prepareDirectory($destinationPath);
+        copy($sourcePath, $destinationPath);
+    }
 }

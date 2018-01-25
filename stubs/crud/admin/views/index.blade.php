@@ -51,7 +51,7 @@
                                     ＠if( $model->{{ $column['name'] }} )
                                     <span class="badge bg-green">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}_true')</span>
                                     ＠else
-                                    <span class="badge bg-red">＠lang('admin.pages.{{ $viewName }}.columns.{{ $column['name'] }}_false')</span>
+                                    <span class="badge bg-red">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}_false')</span>
                                     ＠endif
                                 </td>
 @elseif( $column['type'] == 'relation')

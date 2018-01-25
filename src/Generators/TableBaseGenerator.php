@@ -3,6 +3,7 @@ namespace LaravelRocket\Generator\Generators;
 
 use LaravelRocket\Generator\Objects\Column;
 use TakaakiMizuno\MWBParser\Elements\Table;
+use function ICanBoogie\pluralize;
 use function ICanBoogie\singularize;
 
 class TableBaseGenerator extends BaseGenerator
@@ -184,13 +185,19 @@ class TableBaseGenerator extends BaseGenerator
                 }
                 $column          = $columns[0];
                 $referenceColumn = $referenceColumns[0];
+
+                $relationName = pluralize(preg_replace('/_id$/', '', $columns[0]->getName()));
+                if ($foreignKey->getReferenceTableName() === $relationName) {
+                    $relationName = $table->getName();
+                }
+
                 if ($this->table->getName() === $foreignKey->getReferenceTableName()) {
                     $relations[]             = [
                         'type'            => $foreignKey->hasMany() ? 'hasMany' : 'hasOne',
                         'column'          => $referenceColumn,
                         'referenceColumn' => $column,
                         'referenceTable'  => $table->getName(),
-                        'name'            => $foreignKey->hasMany() ? camel_case($table->getName()) : camel_case(singularize($table->getName())),
+                        'name'            => $foreignKey->hasMany() ? pluralize(camel_case($relationName)) : singularize(camel_case($relationName)),
                         'referenceModel'  => ucfirst(camel_case(singularize($table->getName()))),
                     ];
                     $relationTableColumns[0] = $column;
@@ -230,7 +237,7 @@ class TableBaseGenerator extends BaseGenerator
         $relationHash = [];
         foreach ($relations as $relation) {
             if ($relation['type'] === 'belongsTo') {
-                $relationHash[$relation['column']->getName()] = $relation;
+                $relationHash[$relation['referenceColumn']->getName()] = $relation;
             }
         }
 
@@ -270,10 +277,10 @@ class TableBaseGenerator extends BaseGenerator
         $relationDefinitions = $this->json->get(['tables', $this->table->getName(), 'relations'], []);
         foreach ($relationDefinitions as $name => $relationDefinition) {
             $columnInfo['editableColumns'][] = [
-                'name'         => $name,
-                    'type'     => $type,
-                'relation'     => $relation,
-                'options'      => $options,
+                'name'     => $name,
+                'type'     => $type,
+                'relation' => $relation,
+                'options'  => $options,
             ];
         }
 

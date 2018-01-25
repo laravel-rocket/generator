@@ -40,12 +40,12 @@ class BaseGenerator
             $path = implode(DIRECTORY_SEPARATOR, $path);
         }
 
-        $sourcePath = implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'source', 'config', $path]);
+        $sourcePath = implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'sources', 'config', $path]);
 
         $destinationPath = config_path($path);
 
         if (file_exists($sourcePath)) {
-            copy($sourcePath, $destinationPath);
+            $this->fileService->copy($sourcePath, $destinationPath);
         }
     }
 
@@ -55,11 +55,11 @@ class BaseGenerator
             $path = implode(DIRECTORY_SEPARATOR, $path);
         }
 
-        $sourcePath      = implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'source', 'resource', 'lang', 'en', $path]);
+        $sourcePath      = implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'sources', 'resource', 'lang', 'en', $path]);
         $destinationPath = resource_path(implode(DIRECTORY_SEPARATOR, ['lang', 'en', $path]));
 
         if (file_exists($sourcePath)) {
-            copy($sourcePath, $destinationPath);
+            $this->fileService->copy($sourcePath, $destinationPath);
         }
     }
 }

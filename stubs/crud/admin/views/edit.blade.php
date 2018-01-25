@@ -127,9 +127,9 @@
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
-@foreach(config('data.data.countries.country_codes.2digits') as $code => $key)
-                        <option value="{{ $code }}">＠lang('data/countries.{{ $key }}')</option>
-@endforeach
+＠foreach(config('data.data.countries.country_codes.2digits') as $code => $key)
+                        <option value="｛｛ $code ｝｝">＠lang('data/countries.' . $key )</option>
+＠endforeach
                     </select>
                 </div>
 @elseif( $column['type'] == 'relation')
