@@ -100,8 +100,7 @@ class FileService
 
     protected function prepareDirectory($path)
     {
-        $realPath = realpath($path);
-        $directory = $this->files->dirname($realPath);
+        $directory = $this->files->dirname($path);
         if (!file_exists($directory)) {
             $this->files->makeDirectory($directory, 0755, true);
         }

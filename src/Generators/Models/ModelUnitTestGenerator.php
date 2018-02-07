@@ -10,7 +10,7 @@ class ModelUnitTestGenerator extends ModelBaseGenerator
     {
         $modelName = $this->getModelName();
 
-        return base_path('/tests/Models/'.$modelName.'Test.php');
+        return base_path('tests/Models/'.$modelName.'Test.php');
     }
 
     /**

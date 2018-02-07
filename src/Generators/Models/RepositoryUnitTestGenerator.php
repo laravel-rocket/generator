@@ -10,7 +10,7 @@ class RepositoryUnitTestGenerator extends ModelBaseGenerator
     {
         $modelName = $this->getModelName();
 
-        return base_path('/tests/Repositories/'.$modelName.'RepositoryTest.php');
+        return base_path('tests/Repositories/'.$modelName.'RepositoryTest.php');
     }
 
     /**

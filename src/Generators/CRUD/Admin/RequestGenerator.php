@@ -12,7 +12,7 @@ class RequestGenerator extends BaseRequestGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('/Http/Requests/Admin/'.$modelName.'Request.php');
+        return app_path('Http/Requests/Admin/'.$modelName.'Request.php');
     }
 
     /**

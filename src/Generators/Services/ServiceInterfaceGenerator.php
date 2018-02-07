@@ -8,7 +8,7 @@ class ServiceInterfaceGenerator extends ServiceGenerator
      */
     protected function getPath(): string
     {
-        return app_path('/Services/'.$this->name.'ServiceInterface.php');
+        return app_path('Services/'.$this->name.'ServiceInterface.php');
     }
 
     /**

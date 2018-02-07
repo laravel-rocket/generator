@@ -41,7 +41,7 @@ class HelperGenerator extends NameBaseGenerator
      */
     protected function getPath(): string
     {
-        return app_path('/Helpers/Production/'.$this->name.'Helper.php');
+        return app_path('Helpers/Production/'.$this->name.'Helper.php');
     }
 
     /**

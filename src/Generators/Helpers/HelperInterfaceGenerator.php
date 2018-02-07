@@ -8,7 +8,7 @@ class HelperInterfaceGenerator extends HelperGenerator
      */
     protected function getPath(): string
     {
-        return app_path('/Helpers/'.$this->name.'HelperInterface.php');
+        return app_path('Helpers/'.$this->name.'HelperInterface.php');
     }
 
     /**

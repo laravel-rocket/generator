@@ -10,7 +10,7 @@ class RepositoryGenerator extends ModelBaseGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('/Repositories/Eloquent/'.$modelName.'Repository.php');
+        return app_path('Repositories/Eloquent/'.$modelName.'Repository.php');
     }
 
     /**

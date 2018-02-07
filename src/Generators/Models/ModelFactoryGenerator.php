@@ -10,7 +10,7 @@ class ModelFactoryGenerator extends ModelBaseGenerator
     {
         $modelName = $this->getModelName();
 
-        return database_path('/factories/'.$modelName.'Factory.php');
+        return database_path('factories/'.$modelName.'Factory.php');
     }
 
     /**

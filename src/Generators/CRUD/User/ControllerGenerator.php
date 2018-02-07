@@ -12,7 +12,7 @@ class ControllerGenerator extends BaseControllerGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('/Http/Controllers/User/'.$modelName.'Controller.php');
+        return app_path('Http/Controllers/User/'.$modelName.'Controller.php');
     }
 
     /**

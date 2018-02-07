@@ -8,7 +8,7 @@ class ServiceUnitTestGenerator extends ServiceGenerator
      */
     protected function getPath(): string
     {
-        return base_path('/tests/Services/'.$this->name.'ServiceTest.php');
+        return base_path('tests/Services/'.$this->name.'ServiceTest.php');
     }
 
     /**

@@ -32,7 +32,7 @@ class ResponseGenerator extends APIBaseGenerator
      */
     protected function getPath(): string
     {
-        return app_path('/Http/Response/Api/'.$this->versionNamespace.'/'.$this->name.'.php');
+        return app_path('Http/Response/Api/'.$this->versionNamespace.'/'.$this->name.'.php');
     }
 
     /**

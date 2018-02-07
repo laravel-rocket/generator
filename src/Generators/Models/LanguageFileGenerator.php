@@ -14,7 +14,7 @@ class LanguageFileGenerator extends ModelBaseGenerator
         $modelName = $this->getModelName();
         $viewName  = kebab_case(pluralize($modelName));
 
-        return resource_path('/lang/en/tables/'.$viewName.'/columns.php');
+        return resource_path('lang/en/tables/'.$viewName.'/columns.php');
     }
 
     /**

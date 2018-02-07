@@ -8,7 +8,7 @@ class FacadeGenerator extends HelperGenerator
      */
     protected function getPath(): string
     {
-        return app_path('/Facades/'.$this->name.'Helper.php');
+        return app_path('Facades/'.$this->name.'Helper.php');
     }
 
     /**

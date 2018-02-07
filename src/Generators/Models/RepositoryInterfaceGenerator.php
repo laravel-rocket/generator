@@ -10,7 +10,7 @@ class RepositoryInterfaceGenerator extends ModelBaseGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('/Repositories/'.$modelName.'RepositoryInterface.php');
+        return app_path('Repositories/'.$modelName.'RepositoryInterface.php');
     }
 
     /**

@@ -8,7 +8,7 @@ class HelperUnitTestGenerator extends HelperGenerator
      */
     protected function getPath(): string
     {
-        return base_path('/tests/Helpers/'.$this->name.'HelperTest.php');
+        return base_path('tests/Helpers/'.$this->name.'HelperTest.php');
     }
 
     /**

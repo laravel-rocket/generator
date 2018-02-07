@@ -12,7 +12,7 @@ class PresenterGenerator extends ModelBaseGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('/Presenters/'.$modelName.'Presenter.php');
+        return app_path('Presenters/'.$modelName.'Presenter.php');
     }
 
     /**

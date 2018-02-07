@@ -14,7 +14,7 @@ class ModelGenerator extends ModelBaseGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('/Models/'.$modelName.'.php');
+        return app_path('Models/'.$modelName.'.php');
     }
 
     /**

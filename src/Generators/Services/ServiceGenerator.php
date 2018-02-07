@@ -42,7 +42,7 @@ class ServiceGenerator extends NameBaseGenerator
      */
     protected function getPath(): string
     {
-        return app_path('/Services/Production/'.$this->name.'Service.php');
+        return app_path('Services/Production/'.$this->name.'Service.php');
     }
 
     /**
