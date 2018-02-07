@@ -3,9 +3,9 @@ namespace LaravelRocket\Generator\Commands;
 
 class HelperGenerator extends BaseCommand
 {
-    protected $name = 'rocket:generate:service';
+    protected $name = 'rocket:make:helper';
 
-    protected $signature = 'rocket:generate:service {$name}';
+    protected $signature = 'rocket:make:helper {$name}';
 
     protected $description = 'Create Helper';
 

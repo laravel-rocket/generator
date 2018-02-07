@@ -17,6 +17,9 @@ class BaseCommand extends Command
     /** @var \Illuminate\View\Factory */
     protected $view;
 
+    /** @var \LaravelRocket\Generator\Objects\Definitions */
+    protected $json;
+
     /**
      * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
@@ -31,6 +34,30 @@ class BaseCommand extends Command
         $this->files  = $files;
         $this->view   = $view;
         parent::__construct();
+    }
+
+    protected function getAppJson()
+    {
+        $file    = $this->option('json');
+        $default = false;
+        if (empty($file)) {
+            $default = true;
+            $file    = base_path('documents/app.json');
+        }
+
+        if (!file_exists($file)) {
+            if ($default) {
+                $this->output('JSON file ( '.$file.' ) doesn\'t exist. This is default file path. You can specify file path with --json option.', 'error');
+            } else {
+                $this->output('JSON file  ( '.$file.' ) doesn\'t exist. Please check file path.', 'error');
+            }
+
+            return false;
+        }
+
+        $data = file_get_contents($file);
+
+        $this->json = new Definitions($data);
     }
 
     /**

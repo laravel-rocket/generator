@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use function ICanBoogie\pluralize;
+
 class PresenterGenerator extends ModelBaseGenerator
 {
     /**
@@ -26,23 +28,27 @@ class PresenterGenerator extends ModelBaseGenerator
      */
     protected function getVariables(): array
     {
-        $modelName                  = $this->getModelName();
-        $variables                  = $this->getColumns();
-        $variables['modelName']     = $modelName;
-        $variables['variableName']  = camel_case($modelName);
-        $variables['relations']     = $this->getRelations();
+        $modelName                 = $this->getModelName();
+        $variables                 = $this->getColumnInfo();
+        $variables['modelName']    = $modelName;
+        $variables['variableName'] = camel_case($modelName);
+        $variables['viewName']     = kebab_case(pluralize($modelName));
+        $variables['relations']    = $this->getRelations();
 
         return $variables;
     }
 
-    protected function getColumns()
+    protected function getColumnInfo()
     {
-        $columnInfo = [
+        $columnInfo = $this->getColumns();
+
+        $columnInfo = array_merge($columnInfo, [
             'columns'            => [],
             'multilingualFields' => [],
             'imageColumns'       => [],
+            'methods'            => [],
             'authenticatable'    => false,
-        ];
+        ]);
 
         foreach ($this->table->getColumns() as $column) {
             $name  = $column->getName();

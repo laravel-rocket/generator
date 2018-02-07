@@ -74,6 +74,10 @@ class Column
             return ['image', null];
         }
 
+        if (ends_with($name, 'file_id') && ($type === 'int' || $type === 'bigint')) {
+            return ['file', null];
+        }
+
         if (ends_with($name, 'type') || $type === 'type') {
             return ['select', array_get($definitions, 'options', [])];
         }

@@ -45,4 +45,17 @@ class {{ $modelName }}Presenter extends BasePresenter
 @endif
 @endforeach
 
+@foreach( $editableColumns as $editableColumn)
+@if( $editableColumn['type'] == 'select')
+    public function {{ $editableColumn['name'] }}()
+    {
+        return trans('tables/{{ $viewName }}/columns.{{ $editableColumn['name'] }}_options.'. $this->entity->{{ $editableColumn['name'] }});
+    }
+@elseif( $editableColumn['type'] == 'country')
+    public function {{ $editableColumn['name'] }}()
+    {
+        return trans('data/countries.' . $this->entity->{{ $editableColumn['name'] }});
+    }
+@endif
+@endforeach
 }

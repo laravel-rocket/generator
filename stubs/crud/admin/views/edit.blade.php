@@ -90,11 +90,11 @@
                 </div>
 @elseif( $column['type'] === 'boolean')
                 <td>
-                    ＠if( $model->{{ $column['name'] }} )
-                    <span class="badge bg-green">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')_true')</span>
-                    ＠else
-                    <span class="badge bg-red">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')_false')</span>
-                    ＠endif
+                    <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
+                        <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label><br/>
+                        <input type="radio" name="{{ $column['name'] }}" value="0" ＠if( ${{ $variableName }}->{{ $column['name'] }} == 0 ) checked ＠endif> ＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}_false')
+                        <input type="radio" name="{{ $column['name'] }}" value="1" ＠if( ${{ $variableName }}->{{ $column['name'] }} == 1 ) checked ＠endif> ＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}_true')
+                    </div>
                 </td>
 @elseif( $column['type'] === 'password')
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
@@ -113,7 +113,13 @@
 
                     </div>
                 </div>
-
+@elseif( $column['type'] === 'file')
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label><br/>
+                        <input id="{{ $column['name'] }}" name="{{ $column['name'] }}" type="file">
+                    </div>
+                </div>
 @elseif( $column['type'] === 'select')
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>

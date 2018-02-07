@@ -29,11 +29,11 @@ class ServiceProvider extends BaseServiceProvider
             return new ValidatorFromMWB($app['config'], $app['files'], $app['view']);
         });
 
-        $this->app->singleton('command.rocket.generate.service', function ($app) {
+        $this->app->singleton('command.rocket.make.service', function ($app) {
             return new ServiceGenerator($app['config'], $app['files'], $app['view']);
         });
 
-        $this->app->singleton('command.rocket.generate.helper', function ($app) {
+        $this->app->singleton('command.rocket.make.helper', function ($app) {
             return new HelperGenerator($app['config'], $app['files'], $app['view']);
         });
 
@@ -46,11 +46,11 @@ class ServiceProvider extends BaseServiceProvider
         );
 
         $this->commands(
-            'command.rocket.generate.service'
+            'command.rocket.make.service'
         );
 
         $this->commands(
-            'command.rocket.generate.helper'
+            'command.rocket.make.helper'
         );
     }
 }

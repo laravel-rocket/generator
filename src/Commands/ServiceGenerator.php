@@ -5,9 +5,9 @@ use LaravelRocket\Generator\FileUpdaters\Services\RegisterServiceFileUpdater;
 
 class ServiceGenerator extends BaseCommand
 {
-    protected $name = 'rocket:generate:service';
+    protected $name = 'rocket:make:service';
 
-    protected $signature = 'rocket:generate:service {$name}';
+    protected $signature = 'rocket:make:service {$name}';
 
     protected $description = 'Create Service';
 

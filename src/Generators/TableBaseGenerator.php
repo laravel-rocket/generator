@@ -141,6 +141,7 @@ class TableBaseGenerator extends BaseGenerator
     public function getRelations(): array
     {
         $relations = [];
+        $names     = [];
 
         foreach ($this->table->getForeignKey() as $foreignKey) {
             $columns          = $foreignKey->getColumns();
@@ -153,6 +154,10 @@ class TableBaseGenerator extends BaseGenerator
             }
             $relationName = camel_case(preg_replace('/_id$/', '', $columns[0]->getName()));
 
+            if (in_array($relationName, $names)) {
+                continue;
+            }
+
             $column          = $columns[0];
             $referenceColumn = $referenceColumns[0];
             $relations[]     = [
@@ -163,6 +168,7 @@ class TableBaseGenerator extends BaseGenerator
                 'name'            => $relationName,
                 'referenceModel'  => ucfirst(camel_case(singularize($foreignKey->getReferenceTableName()))),
             ];
+            $names[] = $relationName;
         }
         foreach ($this->tables as $table) {
             if ($this->table->getName() === $table->getName()) {
@@ -190,19 +196,21 @@ class TableBaseGenerator extends BaseGenerator
                 if ($foreignKey->getReferenceTableName() === $relationName) {
                     $relationName = $table->getName();
                 }
+                $relationName = $foreignKey->hasMany() ? pluralize(camel_case($relationName)) : singularize(camel_case($relationName));
 
-                if ($this->table->getName() === $foreignKey->getReferenceTableName()) {
+                if ($this->table->getName() === $foreignKey->getReferenceTableName() && !in_array($relationName, $names)) {
                     $relations[]             = [
                         'type'            => $foreignKey->hasMany() ? 'hasMany' : 'hasOne',
                         'column'          => $referenceColumn,
                         'referenceColumn' => $column,
                         'referenceTable'  => $table->getName(),
-                        'name'            => $foreignKey->hasMany() ? pluralize(camel_case($relationName)) : singularize(camel_case($relationName)),
+                        'name'            => $relationName,
                         'referenceModel'  => ucfirst(camel_case(singularize($table->getName()))),
                     ];
                     $relationTableColumns[0] = $column;
                     $relationTableNames[0]   = $foreignKey->getReferenceTableName();
                     $hasRelation             = true;
+                    $names[]                 = $relationName;
                 } else {
                     $relationTableName       = $table->getName();
                     $relationTableColumns[1] = $column;
@@ -210,16 +218,19 @@ class TableBaseGenerator extends BaseGenerator
                 }
             }
 
-            if ($hasRelation && $this->detectRelationTable($table)) {
+            $relationName = camel_case($relationTableNames[1]);
+
+            if ($hasRelation && $this->detectRelationTable($table) && !in_array($relationName, $names)) {
                 $relations[] = [
                     'type'            => 'belongsToMany',
                     'relationTable'   => $table->getName(),
                     'column'          => $relationTableColumns[0],
                     'referenceColumn' => $relationTableColumns[1],
                     'referenceTable'  => $relationTableNames[1],
-                    'name'            => camel_case($relationTableNames[1]),
+                    'name'            => $relationName,
                     'referenceModel'  => ucfirst(camel_case(singularize($relationTableName))),
                 ];
+                $names[] = $relationName;
             }
         }
 
