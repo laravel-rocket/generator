@@ -39,7 +39,7 @@ class ServiceGenerator extends BaseCommand
 
         $this->output('Processing '.$this->name.'Service...', 'green');
         foreach ($generators as $generator) {
-            $generator->generate($this->name);
+            $generator->generate($this->name, []);
         }
         foreach ($fileUpdaters as $fileUpdater) {
             $fileUpdater->insert($this->name);

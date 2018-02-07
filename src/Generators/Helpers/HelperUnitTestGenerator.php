@@ -1,7 +1,5 @@
 <?php
-namespace LaravelRocket\Generator\Generators\Services;
-
-use LaravelRocket\Generator\Generators\Helpers\HelperGenerator;
+namespace LaravelRocket\Generator\Generators\Helpers;
 
 class HelperUnitTestGenerator extends HelperGenerator
 {

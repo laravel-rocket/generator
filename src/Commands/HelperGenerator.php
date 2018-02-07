@@ -37,7 +37,7 @@ class HelperGenerator extends BaseCommand
 
         $this->output('Processing '.$this->name.'Helper...', 'green');
         foreach ($generators as $generator) {
-            $generator->generate($this->name);
+            $generator->generate($this->name, []);
         }
         foreach ($fileUpdaters as $fileUpdater) {
             $fileUpdater->insert($this->name);
