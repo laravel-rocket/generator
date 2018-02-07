@@ -152,7 +152,7 @@ class MigrationFileGenerator extends BaseGenerator
                 default:
                     $type = 'unknown';
             }
-            $line = '$table->'.$type.'(\''.$column->getName().$postfix.'\')';
+            $line = '$table->'.$type.'(\''.$column->getName().'\''.$postfix.')';
 
             if ($column->isNullable()) {
                 $line .= '->nullable()';
