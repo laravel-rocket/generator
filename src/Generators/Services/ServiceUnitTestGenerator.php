@@ -16,6 +16,6 @@ class ServiceUnitTestGenerator extends ServiceGenerator
      */
     protected function getView(): string
     {
-        return 'service.service_unit_test';
+        return 'service.service_unittest';
     }
 }

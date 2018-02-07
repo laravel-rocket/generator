@@ -16,6 +16,6 @@ class HelperUnitTestGenerator extends HelperGenerator
      */
     protected function getView(): string
     {
-        return 'helper.helper_unit_test';
+        return 'helper.helper_unittest';
     }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use LaravelRocket\Generator\FileUpdaters\Services\RegisterHelperFileUpdater;
+
 class HelperGenerator extends BaseCommand
 {
     protected $name = 'rocket:make:helper';
