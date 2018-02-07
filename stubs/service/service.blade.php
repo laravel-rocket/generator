@@ -1,7 +1,7 @@
 namespace App\Services\Production;
 
 @foreach( $repositories as $repository)
-use App\Repositories\{!! $repository !!}yInterface;
+use App\Repositories\{!! $repository !!}Interface;
 @endforeach
 use App\Services\{!! $serviceName !!}Interface;
 @if($isAuthService)

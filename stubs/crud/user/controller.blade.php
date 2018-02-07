@@ -98,9 +98,9 @@ class {{  $modelName }}Controller extends Controller
         ];
         foreach ($unixTimestampColumns as $unixTimestampColumn) {
             if (array_key_exists($unixTimestampColumn, $input) && !empty($input[$unixTimestampColumn])) {
-                $input[$unixTimestampColumn] = (\DateTimeHelper::convertToStorageDateTime($input[$dateTimeColumn]))->timestamp;
+                $input[$unixTimestampColumn] = (\DateTimeHelper::convertToStorageDateTime($input[$unixTimestampColumn]))->timestamp;
             } else {
-                $input[$dateTimeColumn] = 0;
+                $input[$unixTimestampColumn] = 0;
             }
         }
 @endif
@@ -193,9 +193,9 @@ class {{  $modelName }}Controller extends Controller
         ];
         foreach ($unixTimestampColumns as $unixTimestampColumn) {
             if (array_key_exists($unixTimestampColumn, $input) && !empty($input[$unixTimestampColumn])) {
-                $input[$unixTimestampColumn] = (\DateTimeHelper::convertToStorageDateTime($input[$dateTimeColumn]))->timestamp;
+                $input[$unixTimestampColumn] = (\DateTimeHelper::convertToStorageDateTime($input[$unixTimestampColumn]))->timestamp;
             } else {
-                $input[$dateTimeColumn] = 0;
+                $input[$unixTimestampColumn] = 0;
             }
         }
 @endif
