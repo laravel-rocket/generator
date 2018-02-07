@@ -8,7 +8,7 @@ class ServiceGenerator extends BaseCommand
 {
     protected $name = 'rocket:make:service';
 
-    protected $signature = 'rocket:make:service {$name} {--json=}';
+    protected $signature = 'rocket:make:service {name} {--json=}';
 
     protected $description = 'Create Service';
 

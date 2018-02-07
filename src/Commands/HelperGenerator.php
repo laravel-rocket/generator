@@ -8,7 +8,7 @@ class HelperGenerator extends BaseCommand
 {
     protected $name = 'rocket:make:helper';
 
-    protected $signature = 'rocket:make:helper {$name} {--json=}';
+    protected $signature = 'rocket:make:helper {name} {--json=}';
 
     protected $description = 'Create Helper';
 
