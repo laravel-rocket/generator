@@ -2,6 +2,7 @@
 namespace LaravelRocket\Generator\Commands;
 
 use Illuminate\Console\Command;
+use LaravelRocket\Generator\Objects\Definitions;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;

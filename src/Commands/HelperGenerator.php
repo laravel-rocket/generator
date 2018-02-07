@@ -2,12 +2,13 @@
 namespace LaravelRocket\Generator\Commands;
 
 use LaravelRocket\Generator\FileUpdaters\Services\RegisterHelperFileUpdater;
+use function ICanBoogie\singularize;
 
 class HelperGenerator extends BaseCommand
 {
     protected $name = 'rocket:make:helper';
 
-    protected $signature = 'rocket:make:helper {$name}';
+    protected $signature = 'rocket:make:helper {$name} {--json=}';
 
     protected $description = 'Create Helper';
 
@@ -18,9 +19,19 @@ class HelperGenerator extends BaseCommand
      */
     public function handle()
     {
+        $this->getAppJson();
         $this->generateHelper();
 
         return true;
+    }
+
+    protected function normalizeName(string $name): string
+    {
+        if (ends_with(strtolower($name), 'helper')) {
+            $name = substr($name, 0, strlen($name) - 6);
+        }
+
+        return ucfirst(camel_case(singularize($name)));
     }
 
     protected function generateHelper()
@@ -37,12 +48,14 @@ class HelperGenerator extends BaseCommand
             new RegisterHelperFileUpdater($this->config, $this->files, $this->view),
         ];
 
-        $this->output('Processing '.$this->name.'Helper...', 'green');
+        $name = $this->normalizeName($this->argument('name'));
+
+        $this->output('Processing '.$name.'Helper...', 'green');
         foreach ($generators as $generator) {
-            $generator->generate($this->name, []);
+            $generator->generate($name, $this->json);
         }
         foreach ($fileUpdaters as $fileUpdater) {
-            $fileUpdater->insert($this->name);
+            $fileUpdater->insert($name);
         }
     }
 }

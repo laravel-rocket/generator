@@ -2,12 +2,13 @@
 namespace LaravelRocket\Generator\Commands;
 
 use LaravelRocket\Generator\FileUpdaters\Services\RegisterServiceFileUpdater;
+use function ICanBoogie\singularize;
 
 class ServiceGenerator extends BaseCommand
 {
     protected $name = 'rocket:make:service';
 
-    protected $signature = 'rocket:make:service {$name}';
+    protected $signature = 'rocket:make:service {$name} {--json=}';
 
     protected $description = 'Create Service';
 
@@ -18,9 +19,19 @@ class ServiceGenerator extends BaseCommand
      */
     public function handle()
     {
+        $this->getAppJson();
         $this->generateService();
 
         return true;
+    }
+
+    protected function normalizeName(string $name): string
+    {
+        if (ends_with(strtolower($name), 'service')) {
+            $name = substr($name, 0, strlen($name) - 7);
+        }
+
+        return ucfirst(camel_case(singularize($name)));
     }
 
     protected function generateService()
@@ -37,12 +48,14 @@ class ServiceGenerator extends BaseCommand
             new RegisterServiceFileUpdater($this->config, $this->files, $this->view),
         ];
 
-        $this->output('Processing '.$this->name.'Service...', 'green');
+        $name = $this->normalizeName($this->argument('name'));
+
+        $this->output('Processing '.$name.'Service...', 'green');
         foreach ($generators as $generator) {
-            $generator->generate($this->name, []);
+            $generator->generate($name, $this->json);
         }
         foreach ($fileUpdaters as $fileUpdater) {
-            $fileUpdater->insert($this->name);
+            $fileUpdater->insert($name);
         }
     }
 }

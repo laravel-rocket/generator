@@ -10,16 +10,18 @@ class NameBaseGenerator extends BaseGenerator
      */
     protected $name;
 
-    /** @var array */
+    /**
+     * @var \LaravelRocket\Generator\Objects\Definitions
+     */
     protected $json;
 
     /**
-     * @param string $name
-     * @param array  $json
+     * @param string                                       $name
+     * @param \LaravelRocket\Generator\Objects\Definitions $json
      *
      * @return bool
      */
-    public function generate(string $name, array $json): bool
+    public function generate(string $name, $json): bool
     {
         $this->json = $json;
         $this->name = $this->normalizeName($name);

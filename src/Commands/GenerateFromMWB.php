@@ -16,7 +16,6 @@ use LaravelRocket\Generator\Generators\Models\ModelUnitTestGenerator;
 use LaravelRocket\Generator\Generators\Models\PresenterGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryInterfaceGenerator;
-use LaravelRocket\Generator\Objects\Definitions;
 use LaravelRocket\Generator\Services\DatabaseService;
 use LaravelRocket\Generator\Validators\Error;
 use LaravelRocket\Generator\Validators\TableSchemaValidator;
@@ -64,30 +63,6 @@ class GenerateFromMWB extends BaseCommand
         $this->generateModel();
 
         $this->databaseService->dropDatabase();
-    }
-
-    protected function getAppJson()
-    {
-        $file    = $this->option('json');
-        $default = false;
-        if (empty($file)) {
-            $default = true;
-            $file    = base_path('documents/app.json');
-        }
-
-        if (!file_exists($file)) {
-            if ($default) {
-                $this->output('JSON file ( '.$file.' ) doesn\'t exist. This is default file path. You can specify file path with --json option.', 'error');
-            } else {
-                $this->output('JSON file  ( '.$file.' ) doesn\'t exist. Please check file path.', 'error');
-            }
-
-            return false;
-        }
-
-        $data = file_get_contents($file);
-
-        $this->json = new Definitions($data);
     }
 
     protected function getTablesFromMWBFile()
