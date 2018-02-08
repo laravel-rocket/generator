@@ -65,7 +65,7 @@ class ModelGenerator extends ModelBaseGenerator
 
         $this->getAllConstants($statements, $constants);
 
-        $columns = $this->json->get(['tables', $this->table->getName().'columns'], []);
+        $columns = $this->json->get(['tables', $this->table->getName().'.columns'], []);
         foreach ($columns as $name => $column) {
             $type = array_get($column, 'type');
             if ($type === 'type') {
