@@ -25,7 +25,7 @@ class GenerateFromMWB extends MWBGenerator
 {
     protected $name = 'rocket:generate:from-mwb';
 
-    protected $signature = 'rocket:generate:from-mwb {--use_alter} {--file=} {--json=} ';
+    protected $signature = 'rocket:generate:from-mwb {--rebuild} {--file=} {--json=} ';
 
     protected $description = 'Create Migrations/Models/Repositories';
 
@@ -96,9 +96,12 @@ class GenerateFromMWB extends MWBGenerator
         return $success;
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
     protected function generateMigration()
     {
-        $generateAlterTableMigrationFile = $this->input->hasOption('use_alter');
+        $generateAlterTableMigrationFile = !$this->input->hasOption('rebuild');
         $generator                       = new MigrationFileGenerator($this->config, $this->files, $this->view);
         foreach ($this->tables as $table) {
             $generator->generate($table, $generateAlterTableMigrationFile);

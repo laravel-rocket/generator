@@ -9,12 +9,14 @@ class MigrationGenerator extends MWBGenerator
 {
     protected $name = 'rocket:make:migration';
 
-    protected $signature = 'rocket:make:repository --name={name} {--use_alter} {--json=}';
+    protected $signature = 'rocket:make:migration --name={name} {--rebuild} {--json=}';
 
-    protected $description = 'Create Repository';
+    protected $description = 'Create Migration';
 
     /**
      * Execute the console command.
+     *
+     * @throws \Doctrine\DBAL\DBALException
      *
      * @return bool|null
      */
@@ -41,6 +43,9 @@ class MigrationGenerator extends MWBGenerator
         return snake_case(pluralize($name));
     }
 
+    /**
+     * @throws \Doctrine\DBAL\DBALException
+     */
     protected function generateMigration()
     {
         $name = $this->input->getOption('name');
@@ -48,7 +53,7 @@ class MigrationGenerator extends MWBGenerator
             $name = $this->normalizeName($name);
         }
 
-        $generateAlterTableMigrationFile = $this->input->hasOption('use_alter');
+        $generateAlterTableMigrationFile = !$this->input->hasOption('rebuild');
         $generator                       = new MigrationFileGenerator($this->config, $this->files, $this->view);
         foreach ($this->tables as $table) {
             if (!empty($name) && $name != $table->getName()) {

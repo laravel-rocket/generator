@@ -37,6 +37,10 @@ class ServiceProvider extends BaseServiceProvider
             return new HelperGenerator($app['config'], $app['files'], $app['view']);
         });
 
+        $this->app->singleton('command.rocket.make.migration', function ($app) {
+            return new HelperGenerator($app['config'], $app['files'], $app['view']);
+        });
+
         $this->commands(
             'command.rocket.generate.from-mwb'
         );
@@ -51,6 +55,10 @@ class ServiceProvider extends BaseServiceProvider
 
         $this->commands(
             'command.rocket.make.helper'
+        );
+
+        $this->commands(
+            'command.rocket.make.migration'
         );
     }
 }
