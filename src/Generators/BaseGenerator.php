@@ -1,6 +1,9 @@
 <?php
 namespace LaravelRocket\Generator\Generators;
 
+use Illuminate\Config\Repository;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\View\Factory;
 use LaravelRocket\Generator\Services\FileService;
 
 class BaseGenerator
@@ -23,9 +26,9 @@ class BaseGenerator
      * @param \Illuminate\View\Factory          $view
      */
     public function __construct(
-        \Illuminate\Config\Repository $config,
-        \Illuminate\Filesystem\Filesystem $files,
-        \Illuminate\View\Factory $view = null
+        Repository $config,
+        Filesystem $files,
+        Factory $view = null
     ) {
         $this->config = $config;
         $this->files  = $files;

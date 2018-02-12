@@ -8,7 +8,7 @@ use LaravelRocket\Generator\Generators\CRUD\Admin\ControllerGenerator as AdminCR
 use LaravelRocket\Generator\Generators\CRUD\Admin\RequestGenerator as AdminCRUDRequestGenerator;
 use LaravelRocket\Generator\Generators\CRUD\Admin\TemplateGenerator as AdminCRUDTemplateGenerator;
 use LaravelRocket\Generator\Generators\CRUD\Admin\UnitTestGenerator as AdminCRUDUnitTestGenerator;
-use LaravelRocket\Generator\Generators\MigrationFileGenerator;
+use LaravelRocket\Generator\Generators\Migrations\MigrationFileGenerator;
 use LaravelRocket\Generator\Generators\Models\LanguageFileGenerator;
 use LaravelRocket\Generator\Generators\Models\ModelFactoryGenerator;
 use LaravelRocket\Generator\Generators\Models\ModelGenerator;
@@ -16,27 +16,18 @@ use LaravelRocket\Generator\Generators\Models\ModelUnitTestGenerator;
 use LaravelRocket\Generator\Generators\Models\PresenterGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryInterfaceGenerator;
+use LaravelRocket\Generator\Generators\Models\RepositoryUnitTestGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use LaravelRocket\Generator\Validators\Error;
 use LaravelRocket\Generator\Validators\TableSchemaValidator;
-use TakaakiMizuno\MWBParser\Parser;
 
-class GenerateFromMWB extends BaseCommand
+class GenerateFromMWB extends MWBGenerator
 {
     protected $name = 'rocket:generate:from-mwb';
 
-    protected $signature = 'rocket:generate:from-mwb {--file=} {--json=}';
+    protected $signature = 'rocket:generate:from-mwb {--use_alter} {--file=} {--json=} ';
 
     protected $description = 'Create Migrations/Models/Repositories';
-
-    /** @var \TakaakiMizuno\MWBParser\Elements\Table[] $tables */
-    protected $tables;
-
-    /** @var \LaravelRocket\Generator\Objects\Definitions */
-    protected $json;
-
-    /** @var DatabaseService $databaseService */
-    protected $databaseService;
 
     /**
      * Execute the console command.
@@ -63,41 +54,8 @@ class GenerateFromMWB extends BaseCommand
         $this->generateModel();
 
         $this->databaseService->dropDatabase();
-    }
 
-    protected function getTablesFromMWBFile()
-    {
-        $file    = $this->option('file');
-        $default = false;
-        if (empty($file)) {
-            $default = true;
-            $file    = base_path('documents/db.mwb');
-        }
-
-        if (!file_exists($file)) {
-            if ($default) {
-                $this->output('File ( '.$file.' ) doesn\'t exist. This is default file path. You can specify file path with --file option.', 'error');
-            } else {
-                $this->output('File ( '.$file.' ) doesn\'t exist. Please check file path.', 'error');
-            }
-
-            return false;
-        }
-
-        $parser = new Parser($file);
-        $tables = $parser->getTables();
-        if (is_null($tables)) {
-            $this->output('File ( '.$file.' ) is not MWB format', 'error');
-
-            return false;
-        }
-        if (count($tables) === 0) {
-            $this->output('File ( '.$file.' ) doesn\'t include any table.', 'error');
-
-            return false;
-        }
-
-        return $tables;
+        return true;
     }
 
     protected function validateTableSchema()
@@ -140,9 +98,10 @@ class GenerateFromMWB extends BaseCommand
 
     protected function generateMigration()
     {
-        $generator = new MigrationFileGenerator($this->config, $this->files, $this->view);
+        $generateAlterTableMigrationFile = $this->input->hasOption('use_alter');
+        $generator                       = new MigrationFileGenerator($this->config, $this->files, $this->view);
         foreach ($this->tables as $table) {
-            $generator->generate($table);
+            $generator->generate($table, $generateAlterTableMigrationFile);
         }
 
         $this->databaseService->resetDatabase();
@@ -158,6 +117,7 @@ class GenerateFromMWB extends BaseCommand
             new PresenterGenerator($this->config, $this->files, $this->view),
             new RepositoryGenerator($this->config, $this->files, $this->view),
             new RepositoryInterfaceGenerator($this->config, $this->files, $this->view),
+            new RepositoryUnitTestGenerator($this->config, $this->files, $this->view),
             new LanguageFileGenerator($this->config, $this->files, $this->view),
             new AdminCRUDControllerGenerator($this->config, $this->files, $this->view),
             new AdminCRUDRequestGenerator($this->config, $this->files, $this->view),

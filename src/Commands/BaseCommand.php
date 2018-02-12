@@ -1,7 +1,10 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use Illuminate\Config\Repository;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\View\Factory;
 use LaravelRocket\Generator\Objects\Definitions;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -27,9 +30,9 @@ class BaseCommand extends Command
      * @param \Illuminate\View\Factory          $view
      */
     public function __construct(
-        \Illuminate\Config\Repository $config,
-        \Illuminate\Filesystem\Filesystem $files,
-        \Illuminate\View\Factory $view
+        Repository $config,
+        Filesystem $files,
+        Factory $view
     ) {
         $this->config = $config;
         $this->files  = $files;
@@ -59,6 +62,8 @@ class BaseCommand extends Command
         $data = file_get_contents($file);
 
         $this->json = new Definitions($data);
+
+        return true;
     }
 
     /**

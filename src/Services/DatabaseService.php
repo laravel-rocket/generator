@@ -18,6 +18,9 @@ class DatabaseService
     /** @var \Illuminate\Database\Connection $connection */
     protected $connection;
 
+    /** @var \Doctrine\DBAL\Schema\AbstractSchemaManager $schema */
+    protected $schema;
+
     /**
      * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
@@ -26,15 +29,15 @@ class DatabaseService
         \Illuminate\Config\Repository $config,
         \Illuminate\Filesystem\Filesystem $files
     ) {
-        $this->config                 = $config;
-        $this->files                  = $files;
+        $this->config = $config;
+        $this->files  = $files;
         $this->setPDO(false);
     }
 
     /**
      * @param bool $setDatabase
      */
-    protected function setPDO($setDatabase=true)
+    protected function setPDO($setDatabase = true)
     {
         $setting = 'rocket';
 
@@ -46,9 +49,9 @@ class DatabaseService
         $database = config('database.connections.'.$setting.'.database');
 
         if ($setDatabase) {
-            $this->pdo          = new \PDO("{$driver}:host={$host};port={$port};dbname={$database}", $username, $password);
+            $this->pdo = new \PDO("{$driver}:host={$host};port={$port};dbname={$database}", $username, $password);
         } else {
-            $this->pdo          = new \PDO("{$driver}:host={$host};port={$port}", $username, $password);
+            $this->pdo = new \PDO("{$driver}:host={$host};port={$port}", $username, $password);
         }
         $this->databaseName = $database;
         $this->connection   = \DB::connection($setting);
@@ -100,6 +103,10 @@ class DatabaseService
      */
     protected function getSchema()
     {
+        if ($this->schema) {
+            return $this->schema;
+        }
+
         $hasDoctrine = interface_exists('Doctrine\DBAL\Driver');
         if (!$hasDoctrine) {
             return [];
@@ -109,10 +116,10 @@ class DatabaseService
         $platform = $this->connection->getDoctrineConnection()->getDatabasePlatform();
         $platform->registerDoctrineTypeMapping('json', 'string');
 
-        /** @var \Doctrine\DBAL\Schema\AbstractSchemaManager $schema */
-        $schema = $this->connection->getDoctrineSchemaManager();
+        /* @var \Doctrine\DBAL\Schema\AbstractSchemaManager $schema */
+        $this->schema = $this->connection->getDoctrineSchemaManager();
 
-        return $schema;
+        return $this->schema;
     }
 
     /**
@@ -140,15 +147,30 @@ class DatabaseService
     /**
      * @param string $tableName
      *
-     * @return array
+     * @return \Doctrine\DBAL\Schema\Column[]
      *
      * @throws \Doctrine\DBAL\DBALException
      */
     public function getTableColumns($tableName): array
     {
-        $schema    = $this->getSchema();
-        $columns   = $schema->listTableColumns($tableName);
+        $schema  = $this->getSchema();
+        $columns = $schema->listTableColumns($tableName);
 
         return $columns;
+    }
+
+    /**
+     * @param $tableName
+     *
+     * @return \Doctrine\DBAL\Schema\Index[]
+     *
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getTableIndexes($tableName): array
+    {
+        $schema  = $this->getSchema();
+        $indexes = $schema->listTableIndexes($tableName);
+
+        return $indexes;
     }
 }

@@ -1,9 +1,13 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters;
 
+use Illuminate\Config\Repository;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\View\Factory;
 use LaravelRocket\Generator\Services\FileService;
 use PhpParser\Error;
 use PhpParser\Lexer;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\ParserFactory;
 
 class BaseFileUpdater
@@ -26,9 +30,9 @@ class BaseFileUpdater
      * @param \Illuminate\View\Factory          $view
      */
     public function __construct(
-        \Illuminate\Config\Repository $config,
-        \Illuminate\Filesystem\Filesystem $files,
-        \Illuminate\View\Factory $view = null
+        Repository $config,
+        Filesystem $files,
+        Factory $view = null
     ) {
         $this->config = $config;
         $this->files  = $files;
@@ -141,7 +145,7 @@ class BaseFileUpdater
     protected function getFunction($name, $statements)
     {
         foreach ($statements as $statement) {
-            if (get_class($statement) == \PhpParser\Node\Stmt\ClassMethod::class && $statement->name == $name) {
+            if (get_class($statement) == ClassMethod::class && $statement->name == $name) {
                 return $statement;
             }
             if (property_exists($statement, 'stmts')) {

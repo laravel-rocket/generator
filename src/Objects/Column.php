@@ -7,18 +7,35 @@ class Column
     protected $unlistables     = ['id', 'remember_token', 'created_at', 'updated_at', 'password', 'deleted_at'];
     protected $unlistableTypes = ['text', 'mediumtext', 'longtext'];
 
-    /** @var \TakaakiMizuno\MWBParser\Elements\Column */
+    /** @var \TakaakiMizuno\MWBParser\Elements\Column|\Doctrine\DBAL\Schema\Column */
     protected $column;
 
-    /** @var \TakaakiMizuno\MWBParser\Elements\Column */
+    /** @var \TakaakiMizuno\MWBParser\Elements\Column|\Doctrine\DBAL\Schema\Column */
     public function __construct($column)
     {
         $this->column = $column;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->column->getName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        $type = $this->column->getType();
+
+        if (get_class($this->column) == \Doctrine\DBAL\Schema\Column::class || !is_string($type)) {
+            return $type->getName();
+        }
+
+        return $type;
     }
 
     /**
@@ -34,24 +51,51 @@ class Column
      */
     public function isListable(): bool
     {
-        if (in_array($this->column->getName(), $this->unlistables)) {
+        if (in_array($this->getName(), $this->unlistables)) {
             return false;
         }
 
-        if (in_array($this->column->getType(), $this->unlistableTypes)) {
+        if (in_array($this->getType(), $this->unlistableTypes)) {
             return false;
         }
 
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function isQueryable(): bool
     {
-        if (ends_with($this->column->getName(), 'name')) {
+        if (ends_with($this->getName(), 'name')) {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNullable(): bool
+    {
+        if (get_class($this->column) == \Doctrine\DBAL\Schema\Column::class) {
+            return !$this->column->getNotnull();
+        }
+
+        return $this->column->isNullable();
+    }
+
+    /**
+     * @return mixed|null|string
+     */
+    public function getDefaultValue()
+    {
+        if (get_class($this->column) == \Doctrine\DBAL\Schema\Column::class) {
+            return $this->column->getDefault();
+        }
+
+        return $this->column->getDefaultValue();
     }
 
     /**
@@ -62,9 +106,9 @@ class Column
      */
     public function getEditFieldType($relations, $definitions): array
     {
-        $name = $this->column->getName();
+        $name = $this->getName();
 
-        $type = strtolower(array_get($definitions, 'type', $this->column->getType()));
+        $type = strtolower(array_get($definitions, 'type', $this->getType()));
 
         if (starts_with($type, 'bool') || (starts_with($name, 'is_') || starts_with($name, 'has_')) && ($type === 'int' || $type === 'tinyint')) {
             return ['boolean', []];
@@ -105,5 +149,106 @@ class Column
         }
 
         return ['text', null];
+    }
+
+    /**
+     * @param string|null $previousColumnName
+     *
+     * @return string
+     */
+    public function generateAddMigration($previousColumnName = null)
+    {
+        $column  = $this->column;
+        $postfix = '';
+        switch ($this->getType()) {
+            case 'tinyint':
+                $type = 'boolean';
+                break;
+            case 'bigint':
+                $type = $column->isUnsigned() ? 'unsignedBigInteger' : 'bigInteger';
+                break;
+            case 'int':
+                $type = $column->isUnsigned() ? 'unsignedInteger' : 'integer';
+                break;
+            case 'timestamp':
+            case 'timestamp_f':
+                $type = 'timestamp';
+                break;
+            case 'date':
+                $type = 'date';
+                break;
+            case 'varchar':
+                $type = 'string';
+                if ($column->getLength() != 255) {
+                    $postfix = ', '.$column->getLength();
+                }
+                break;
+            case 'text':
+                $type = 'text';
+                break;
+            case 'mediumtext':
+                $type = 'mediumtext';
+                break;
+            case 'longtext':
+                $type = 'longtext';
+                break;
+            case 'decimal':
+                $type    = 'decimal';
+                $postfix = ', '.$column->getPrecision().', '.$column->getScale();
+                break;
+            default:
+                $type = 'unknown';
+        }
+        $line = '$table->'.$type.'(\''.$this->getName().'\''.$postfix.')';
+
+        if ($this->isNullable()) {
+            $line .= '->nullable()';
+        }
+        if (!is_null($this->getDefaultValue()) && $this->getDefaultValue() !== '') {
+            $defaultValue = $this->getDefaultValue();
+            if ($defaultValue == "''") {
+                $defaultValue = '';
+            }
+            switch ($this->getType()) {
+                case 'tinyint':
+                    $defaultValue = (int) $defaultValue == 1 ? 'true' : 'false';
+                    $line .= '->default('.$defaultValue.')';
+                    break;
+                case 'bigint':
+                case 'int':
+                    $line .= '->default('.((int) $defaultValue).')';
+                    break;
+                case 'timestamp':
+                case 'timestamp_f':
+                case 'date':
+                case 'varchar':
+                case 'text':
+                case 'mediumtext':
+                case 'longtext':
+                    $line .= '->default(\''.$defaultValue.'\')';
+                    break;
+                case 'decimal':
+                    $line .= '->default('.((float) $defaultValue).')';
+                    break;
+                default:
+                    $line .= '->default(\''.$defaultValue.'\')';
+                    break;
+            }
+        }
+        if (!empty($previousColumnName)) {
+            $line .= '->after(\''.$previousColumnName.'\')';
+        }
+
+        return $line;
+    }
+
+    /**
+     * @return string
+     */
+    public function generateDropMigration()
+    {
+        $line = '$table->dropColumn(\''.$this->column->getName().'\')';
+
+        return $line;
     }
 }
