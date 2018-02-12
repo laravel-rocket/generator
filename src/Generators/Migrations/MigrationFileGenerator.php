@@ -21,6 +21,8 @@ class MigrationFileGenerator extends BaseGenerator
      * @param bool  $generateAlterTableMigrationFile
      *
      * @throws \Doctrine\DBAL\DBALException
+     *
+     * @return bool
      */
     public function generate($table, $generateAlterTableMigrationFile = false)
     {
@@ -48,6 +50,9 @@ class MigrationFileGenerator extends BaseGenerator
 
         if ($isAlterMigration) {
             $result              = $this->getAlterTableInfo($table);
+            if ($result) {
+                return false;
+            }
         } else {
             $result              = $this->generateColumns($table);
         }
@@ -59,6 +64,8 @@ class MigrationFileGenerator extends BaseGenerator
 
         /* @var FileService $fileService */
         $this->fileService->render($template, $filePath, $result, true);
+
+        return true;
     }
 
     /**
@@ -187,7 +194,7 @@ class MigrationFileGenerator extends BaseGenerator
      *
      * @throws \Doctrine\DBAL\DBALException
      *
-     * @return array
+     * @return array|bool
      */
     protected function getAlterTableInfo($table)
     {
@@ -217,6 +224,8 @@ class MigrationFileGenerator extends BaseGenerator
             ],
         ];
 
+        $updated = false;
+
         $currentColumns = $databaseService->getTableColumns($name);
         $newColumnNames = array_map(function ($column) {
             return $column->getName();
@@ -235,6 +244,7 @@ class MigrationFileGenerator extends BaseGenerator
 
                 $upMigrations['columns']['add'][]    = $columnObject->generateAddMigration($previousColumnName);
                 $downMigrations['columns']['drop'][] = $columnObject->generateDropMigration();
+                $updated                             = true;
             }
             $previousColumnName = $column->getName();
         }
@@ -246,6 +256,7 @@ class MigrationFileGenerator extends BaseGenerator
 
                 $upMigrations['columns']['drop'][]  = $columnObject->generateDropMigration();
                 $downMigrations['columns']['add'][] = $columnObject->generateAddMigration($previousColumnName);
+                $updated                            = true;
             }
             $previousColumnName = $column->getName();
         }
@@ -267,6 +278,7 @@ class MigrationFileGenerator extends BaseGenerator
 
                 $upMigrations['indexes']['add'][]    = $indexObject->generateAddMigration();
                 $downMigrations['indexes']['drop'][] = $indexObject->generateDropMigration();
+                $updated                             = true;
             }
         }
 
@@ -276,7 +288,12 @@ class MigrationFileGenerator extends BaseGenerator
 
                 $upMigrations['columns']['drop'][]  = $indexObject->generateDropMigration();
                 $downMigrations['columns']['add'][] = $indexObject->generateAddMigration();
+                $updated                            = true;
             }
+        }
+
+        if (!$updated) {
+            return false;
         }
 
         return [

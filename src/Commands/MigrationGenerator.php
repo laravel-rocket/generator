@@ -9,7 +9,7 @@ class MigrationGenerator extends MWBGenerator
 {
     protected $name = 'rocket:make:migration';
 
-    protected $signature = 'rocket:make:migration --name={name} {--rebuild} {--json=}';
+    protected $signature = 'rocket:make:migration {--name=} {--rebuild} {--json=}';
 
     protected $description = 'Create Migration';
 
@@ -59,7 +59,10 @@ class MigrationGenerator extends MWBGenerator
             if (!empty($name) && $name != $table->getName()) {
                 continue;
             }
-            $generator->generate($table, $generateAlterTableMigrationFile);
+            $result = $generator->generate($table, $generateAlterTableMigrationFile);
+            if ($result === false) {
+                $this->output($table->getName().' migration create skipped', 'yellow');
+            }
         }
 
         $this->databaseService->resetDatabase();
