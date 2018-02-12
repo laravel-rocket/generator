@@ -4,6 +4,7 @@ namespace LaravelRocket\Generator\Providers;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use LaravelRocket\Generator\Commands\GenerateFromMWB;
 use LaravelRocket\Generator\Commands\HelperGenerator;
+use LaravelRocket\Generator\Commands\MigrationGenerator;
 use LaravelRocket\Generator\Commands\ServiceGenerator;
 use LaravelRocket\Generator\Commands\ValidatorFromMWB;
 
@@ -38,7 +39,7 @@ class ServiceProvider extends BaseServiceProvider
         });
 
         $this->app->singleton('command.rocket.make.migration', function ($app) {
-            return new HelperGenerator($app['config'], $app['files'], $app['view']);
+            return new MigrationGenerator($app['config'], $app['files'], $app['view']);
         });
 
         $this->commands(
