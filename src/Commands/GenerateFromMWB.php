@@ -33,6 +33,8 @@ class GenerateFromMWB extends MWBGenerator
      * Execute the console command.
      *
      * @return bool|null
+     *
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function handle()
     {

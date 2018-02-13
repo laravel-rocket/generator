@@ -12,11 +12,17 @@ class {!! $className !!} extends Migration
     {
         Schema::table('{{ $tableName }}', function($table) {
             /** @var $table \Illuminate\Database\Schema\Blueprint */
-@foreach( $upColumns as $column )
-    {!! $column !!}
+@foreach( $upMigrations['indexes']['drop'] as $index )
+            {!! $index !!}
 @endforeach
-@foreach( $upIndexes as $index )
-    {!! $index !!}
+@foreach( $upMigrations['columns']['drop'] as $column )
+            {!! $column !!}
+@endforeach
+@foreach( $upMigrations['columns']['add'] as $column )
+            {!! $column !!}
+@endforeach
+@foreach( $upMigrations['indexes']['add'] as $index )
+            {!! $index !!}
 @endforeach
         });
     }
@@ -30,11 +36,17 @@ class {!! $className !!} extends Migration
     {
         Schema::table('{{ $tableName }}', function($table) {
             /** @var $table \Illuminate\Database\Schema\Blueprint */
-@foreach( $downIndexes as $index )
-    {!! $index !!}
+@foreach( $downMigrations['indexes']['drop'] as $index )
+            {!! $index !!}
 @endforeach
-@foreach( $downColumns as $column )
-    {!! $column !!}
+@foreach( $downMigrations['columns']['drop'] as $column )
+            {!! $column !!}
+@endforeach
+@foreach( $downMigrations['columns']['add'] as $column )
+            {!! $column !!}
+@endforeach
+@foreach( $downMigrations['indexes']['add'] as $index )
+            {!! $index !!}
 @endforeach
         });
     }

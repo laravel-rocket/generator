@@ -178,6 +178,7 @@ class Column
                 $type = 'date';
                 break;
             case 'varchar':
+            case 'string':
                 $type = 'string';
                 if ($column->getLength() != 255) {
                     $postfix = ', '.$column->getLength();

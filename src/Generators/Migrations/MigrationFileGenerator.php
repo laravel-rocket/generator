@@ -50,7 +50,7 @@ class MigrationFileGenerator extends BaseGenerator
 
         if ($isAlterMigration) {
             $result              = $this->getAlterTableInfo($table);
-            if ($result) {
+            if (!$result) {
                 return false;
             }
         } else {
@@ -242,8 +242,8 @@ class MigrationFileGenerator extends BaseGenerator
             if (in_array($column->getName(), $addedColumns)) {
                 $columnObject = new Column($column);
 
-                $upMigrations['columns']['add'][]    = $columnObject->generateAddMigration($previousColumnName);
-                $downMigrations['columns']['drop'][] = $columnObject->generateDropMigration();
+                $upMigrations['columns']['add'][]    = $columnObject->generateAddMigration($previousColumnName).';';
+                $downMigrations['columns']['drop'][] = $columnObject->generateDropMigration().';';
                 $updated                             = true;
             }
             $previousColumnName = $column->getName();
@@ -254,8 +254,8 @@ class MigrationFileGenerator extends BaseGenerator
             if (in_array($column->getName(), $removedColumns)) {
                 $columnObject = new Column($column);
 
-                $upMigrations['columns']['drop'][]  = $columnObject->generateDropMigration();
-                $downMigrations['columns']['add'][] = $columnObject->generateAddMigration($previousColumnName);
+                $upMigrations['columns']['drop'][]  = $columnObject->generateDropMigration().';';
+                $downMigrations['columns']['add'][] = $columnObject->generateAddMigration($previousColumnName).';';
                 $updated                            = true;
             }
             $previousColumnName = $column->getName();
@@ -276,8 +276,8 @@ class MigrationFileGenerator extends BaseGenerator
             if (in_array($index->getName(), $addedIndexes)) {
                 $indexObject = new Index($index);
 
-                $upMigrations['indexes']['add'][]    = $indexObject->generateAddMigration();
-                $downMigrations['indexes']['drop'][] = $indexObject->generateDropMigration();
+                $upMigrations['indexes']['add'][]    = $indexObject->generateAddMigration().';';
+                $downMigrations['indexes']['drop'][] = $indexObject->generateDropMigration().';';
                 $updated                             = true;
             }
         }
@@ -286,8 +286,8 @@ class MigrationFileGenerator extends BaseGenerator
             if (in_array($index->getName(), $removedIndexes)) {
                 $indexObject = new Index($index);
 
-                $upMigrations['columns']['drop'][]  = $indexObject->generateDropMigration();
-                $downMigrations['columns']['add'][] = $indexObject->generateAddMigration();
+                $upMigrations['indexes']['drop'][]  = $indexObject->generateDropMigration().';';
+                $downMigrations['indexes']['add'][] = $indexObject->generateAddMigration().';';
                 $updated                            = true;
             }
         }

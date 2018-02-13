@@ -36,7 +36,7 @@ class Index
         $index   = $this->index;
         $type    = $index->isUnique() ? 'unique' : 'index';
         $names   = array_map(function ($column) {
-            return $column->getName();
+            return is_string($column) ? $column : $column->getName();
         }, $index->getColumns());
         $columns = '\''.implode('\',\'', $names).'\'';
         $line    = '$table->'.$type.'(['.$columns.'], \''.$this->getName().'\')';

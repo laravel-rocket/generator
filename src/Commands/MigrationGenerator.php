@@ -9,7 +9,7 @@ class MigrationGenerator extends MWBGenerator
 {
     protected $name = 'rocket:make:migration';
 
-    protected $signature = 'rocket:make:migration {--name=} {--rebuild} {--json=}';
+    protected $signature = 'rocket:make:migration {name?} {--rebuild} {--file=} {--json=}';
 
     protected $description = 'Create Migration';
 
@@ -48,12 +48,13 @@ class MigrationGenerator extends MWBGenerator
      */
     protected function generateMigration()
     {
-        $name = $this->input->getOption('name');
+        $name = $this->input->getArgument('name');
         if (!empty($name)) {
             $name = $this->normalizeName($name);
         }
 
-        $generateAlterTableMigrationFile = !$this->input->hasOption('rebuild');
+        $generateAlterTableMigrationFile = !$this->input->getOption('rebuild');
+
         $generator                       = new MigrationFileGenerator($this->config, $this->files, $this->view);
         foreach ($this->tables as $table) {
             if (!empty($name) && $name != $table->getName()) {
