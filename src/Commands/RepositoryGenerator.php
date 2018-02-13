@@ -1,11 +1,11 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use LaravelRocket\Generator\FileUpdaters\Services\RegisterServiceFileUpdater;
+use LaravelRocket\Generator\FileUpdaters\Models\RegisterRepositoryFileUpdater;
 use LaravelRocket\Generator\Generators\Models\RepositoryInterfaceGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryUnitTestGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
-use function ICanBoogie\singularize;
+use function ICanBoogie\pluralize;
 
 class RepositoryGenerator extends MWBGenerator
 {
@@ -44,31 +44,38 @@ class RepositoryGenerator extends MWBGenerator
             $name = substr($name, 0, strlen($name) - 10);
         }
 
-        return ucfirst(camel_case(singularize($name)));
+        return snake_case(pluralize($name));
     }
 
     protected function generate()
     {
-        /** @var \LaravelRocket\Generator\Generators\NameBaseGenerator[] $generators */
+        /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
             new \LaravelRocket\Generator\Generators\Models\RepositoryGenerator($this->config, $this->files, $this->view),
             new RepositoryInterfaceGenerator($this->config, $this->files, $this->view),
             new RepositoryUnitTestGenerator($this->config, $this->files, $this->view),
         ];
 
-        /** @var \LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater[] $fileUpdaters */
+        /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
-            new RegisterServiceFileUpdater($this->config, $this->files, $this->view),
+            new RegisterRepositoryFileUpdater($this->config, $this->files, $this->view),
         ];
 
         $name = $this->normalizeName($this->argument('name'));
 
+        $table = $this->findTableFromName($name);
+        if (empty($table)) {
+            $this->output('No table definition found: '.$name, 'red');
+
+            return;
+        }
+
         $this->output('Processing '.$name.'Repository...', 'green');
         foreach ($generators as $generator) {
-            $generator->generate($name, $this->json);
+            $generator->generate($table, $this->tables, $this->json);
         }
         foreach ($fileUpdaters as $fileUpdater) {
-            $fileUpdater->insert($name);
+            $fileUpdater->insert($table, $this->tables, $this->json);
         }
     }
 }

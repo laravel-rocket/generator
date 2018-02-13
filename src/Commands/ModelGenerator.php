@@ -45,7 +45,7 @@ class ModelGenerator extends MWBGenerator
 
     protected function generate()
     {
-        /** @var \LaravelRocket\Generator\Generators\NameBaseGenerator[] $generators */
+        /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
             new \LaravelRocket\Generator\Generators\Models\ModelGenerator($this->config, $this->files, $this->view),
             new ModelFactoryGenerator($this->config, $this->files, $this->view),
@@ -53,18 +53,25 @@ class ModelGenerator extends MWBGenerator
             new PresenterGenerator($this->config, $this->files, $this->view),
         ];
 
-        /** @var \LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater[] $fileUpdaters */
+        /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
         ];
 
         $name = $this->normalizeName($this->argument('name'));
 
+        $table = $this->findTableFromName($name);
+        if (empty($table)) {
+            $this->output('No table definition found: '.$name, 'red');
+
+            return;
+        }
+
         $this->output('Processing '.$name.' ...', 'green');
         foreach ($generators as $generator) {
-            $generator->generate($name, $this->json);
+            $generator->generate($table, $this->tables, $this->json);
         }
         foreach ($fileUpdaters as $fileUpdater) {
-            $fileUpdater->insert($name);
+            $fileUpdater->insert($table, $this->tables, $this->json);
         }
     }
 }

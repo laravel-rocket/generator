@@ -15,7 +15,7 @@ class AdminCRUDGenerator extends MWBGenerator
 {
     protected $name = 'rocket:make:crud:admin';
 
-    protected $signature = 'rocket:make:repository {name} {--file=} {--json=}';
+    protected $signature = 'rocket:make:crud:admin {name} {--file=} {--json=}';
 
     protected $description = 'Create Admin CRUD';
 
@@ -49,7 +49,7 @@ class AdminCRUDGenerator extends MWBGenerator
 
     protected function generate()
     {
-        /** @var \LaravelRocket\Generator\Generators\NameBaseGenerator[] $generators */
+        /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
             new LanguageFileGenerator($this->config, $this->files, $this->view),
             new AdminCRUDControllerGenerator($this->config, $this->files, $this->view),
@@ -58,20 +58,26 @@ class AdminCRUDGenerator extends MWBGenerator
             new AdminCRUDTemplateGenerator($this->config, $this->files, $this->view),
         ];
 
-        /** @var \LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater[] $fileUpdaters */
+        /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
             new RouterFileUpdater($this->config, $this->files, $this->view),
             new SideBarFileUpdater($this->config, $this->files, $this->view),
         ];
 
-        $name = $this->normalizeName($this->argument('name'));
+        $name  = $this->normalizeName($this->argument('name'));
+        $table = $this->findTableFromName($name);
+        if (empty($table)) {
+            $this->output('No table definition found: '.$name, 'red');
+
+            return;
+        }
 
         $this->output('Processing '.$name.'Repository...', 'green');
         foreach ($generators as $generator) {
-            $generator->generate($name, $this->json);
+            $generator->generate($table, $this->tables, $this->json);
         }
         foreach ($fileUpdaters as $fileUpdater) {
-            $fileUpdater->insert($name);
+            $fileUpdater->insert($table, $this->tables, $this->json);
         }
     }
 }
