@@ -6,6 +6,7 @@ use LaravelRocket\Generator\Commands\GenerateFromMWB;
 use LaravelRocket\Generator\Commands\HelperGenerator;
 use LaravelRocket\Generator\Commands\ServiceGenerator;
 use LaravelRocket\Generator\Commands\ValidatorFromMWB;
+use LaravelRocket\Generator\Commands\InterfaceValidator;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -37,6 +38,10 @@ class ServiceProvider extends BaseServiceProvider
             return new HelperGenerator($app['config'], $app['files'], $app['view']);
         });
 
+        $this->app->singleton('command.rocket.validate.interface-consistency', function ($app) {
+            return new HelperGenerator($app['config'], $app['files'], $app['view']);
+        });
+
         $this->commands(
             'command.rocket.generate.from-mwb'
         );
@@ -51,6 +56,10 @@ class ServiceProvider extends BaseServiceProvider
 
         $this->commands(
             'command.rocket.make.helper'
+        );
+
+        $this->commands(
+            'command.rocket.validate.interface-consistency'
         );
     }
 }
