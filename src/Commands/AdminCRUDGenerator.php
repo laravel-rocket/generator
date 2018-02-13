@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use function ICanBoogie\singularize;
 use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\RouterFileUpdater;
 use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\SideBarFileUpdater;
 use LaravelRocket\Generator\Generators\CRUD\Admin\ControllerGenerator as AdminCRUDControllerGenerator;
@@ -72,7 +73,7 @@ class AdminCRUDGenerator extends MWBGenerator
             return;
         }
 
-        $this->output('Processing '.$name.'Repository...', 'green');
+        $this->output('Processing '.ucfirst(singularize($name)).' Admin CRUD...', 'green');
         foreach ($generators as $generator) {
             $generator->generate($table, $this->tables, $this->json);
         }

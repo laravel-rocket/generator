@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use function ICanBoogie\singularize;
 use LaravelRocket\Generator\Generators\Models\ModelFactoryGenerator;
 use LaravelRocket\Generator\Generators\Models\ModelUnitTestGenerator;
 use LaravelRocket\Generator\Generators\Models\PresenterGenerator;
@@ -66,7 +67,7 @@ class ModelGenerator extends MWBGenerator
             return;
         }
 
-        $this->output('Processing '.$name.' ...', 'green');
+        $this->output('Processing '.ucfirst(singularize($name)).' ...', 'green');
         foreach ($generators as $generator) {
             $generator->generate($table, $this->tables, $this->json);
         }
