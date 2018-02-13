@@ -200,8 +200,10 @@ class InterfaceValidator extends BaseCommand
             return false;
         }
         
-        // compare $imp_statements and $int_statements
+        // WORK_IN_PROGRESS
         $pass = true;
+        // compare $imp_statements and $int_statements
+        // comparing logics go here
         
         return $pass;
     }
