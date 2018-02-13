@@ -51,20 +51,13 @@ class InterfaceValidator extends BaseCommand
      */
     public function handle()
     {
-        // $this->tables = $this->getTablesFromMWBFile();
-        // if ($this->tables === false) {
-        //     return false;
-        // }
-        // $this->getAppJson();
-
-        // $success = $this->validateTableSchema();
-        // if (!$success) {
-        //     return false;
-        // }
-        // return true;
-
         $this->updateFileList();
         $this->setFileToBeChecked();
+        $check_result = $this->checkFiles();
+        if ( ! $check_result ) {
+            return false;
+        }
+        return true;
     }
 
     protected function updateFileList()
@@ -160,7 +153,17 @@ class InterfaceValidator extends BaseCommand
     {
         $no_mismatch = true;
         foreach($this->fileList as $name => $fileEntry) {
-            if ($fileEntry['implement'])
+            if ( ! $fileEntry['checking'] ) {
+                continue;
+            }
+            if ( ! $fileEntry['implement']['exists'] ) {
+                continue;
+            }
+            if ( ! $fileEntry['interface']['exists'] ) {
+                $this->output('The file ['.$name.'] does not have the interface counterpart.', 'error');
+                $no_mismatch = false;
+                continue;
+            }
             $result = $this->compareFiles(
                 $fileEntry['implement']['path'], 
                 $fileEntry['interface']['path']
@@ -178,12 +181,13 @@ class InterfaceValidator extends BaseCommand
     // WORK_IN_PROGRESS
     protected function compareFiles($implement_path,$interface_path)
     {
-        $lexer = new Lexer([
-            'usedAttributes' => [
-                'comments', 'startLine', 'endLine',
-            ],
-        ]);
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
+        // $lexer = new Lexer([
+        //     'usedAttributes' => [
+        //         'comments', 'startLine', 'endLine',
+        //     ],
+        // ]);
+        // $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
         
         try {
             $imp_statements = $parser->parse(file_get_contents($implement_path));
