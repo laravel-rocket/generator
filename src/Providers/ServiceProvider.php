@@ -80,9 +80,11 @@ class ServiceProvider extends BaseServiceProvider
         $this->commands(
             'command.rocket.make.model'
         );
+
         $this->commands(
             'command.rocket.make.repository'
         );
+
         $this->commands(
             'command.rocket.make.crud.admin'
         );

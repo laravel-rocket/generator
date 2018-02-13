@@ -11,7 +11,7 @@ class RepositoryGenerator extends MWBGenerator
 {
     protected $name = 'rocket:make:repository';
 
-    protected $signature = 'rocket:make:repository {name} {--json=}';
+    protected $signature = 'rocket:make:repository {name} {--file=} {--json=}';
 
     protected $description = 'Create Repository';
 

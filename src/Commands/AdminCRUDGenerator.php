@@ -13,11 +13,11 @@ use function ICanBoogie\pluralize;
 
 class AdminCRUDGenerator extends MWBGenerator
 {
-    protected $name = 'rocket:make:repository';
+    protected $name = 'rocket:make:crud:admin';
 
-    protected $signature = 'rocket:make:repository {name} {--json=}';
+    protected $signature = 'rocket:make:repository {name} {--file=} {--json=}';
 
-    protected $description = 'Create Repository';
+    protected $description = 'Create Admin CRUD';
 
     /**
      * Execute the console command.

@@ -9,11 +9,11 @@ use function ICanBoogie\pluralize;
 
 class ModelGenerator extends MWBGenerator
 {
-    protected $name = 'rocket:make:repository';
+    protected $name = 'rocket:make:model';
 
-    protected $signature = 'rocket:make:repository {name} {--json=}';
+    protected $signature = 'rocket:make:model {name} {--file=} {--json=}';
 
-    protected $description = 'Create Repository';
+    protected $description = 'Create Model';
 
     /**
      * Execute the console command.
