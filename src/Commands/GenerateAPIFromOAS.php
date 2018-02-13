@@ -39,9 +39,11 @@ class GenerateAPIFromOAS extends BaseCommand
         }
 
         $this->databaseService = new DatabaseService($this->config, $this->files);
-        $databaseName          = $this->databaseService->resetDatabase();
+        $this->databaseService->resetDatabase();
 
         $this->databaseService->dropDatabase();
+
+        return true;
     }
 
     protected function getAPISpecFromOASFile()

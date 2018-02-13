@@ -1,7 +1,6 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use LaravelRocket\Generator\Objects\Definitions;
 use LaravelRocket\Generator\Validators\Error;
 use LaravelRocket\Generator\Validators\TableSchemaValidator;
 use TakaakiMizuno\MWBParser\Parser;
@@ -39,30 +38,6 @@ class ValidatorFromMWB extends BaseCommand
         }
 
         return true;
-    }
-
-    protected function getAppJson()
-    {
-        $file    = $this->option('json');
-        $default = false;
-        if (empty($file)) {
-            $default = true;
-            $file    = base_path('documents/app.json');
-        }
-
-        if (!file_exists($file)) {
-            if ($default) {
-                $this->output('JSON file ( '.$file.' ) doesn\'t exist. This is default file path. You can specify file path with --json option.', 'error');
-            } else {
-                $this->output('JSON file  ( '.$file.' ) doesn\'t exist. Please check file path.', 'error');
-            }
-
-            return false;
-        }
-
-        $data = file_get_contents($file);
-
-        $this->json = new Definitions($data);
     }
 
     protected function getTablesFromMWBFile()

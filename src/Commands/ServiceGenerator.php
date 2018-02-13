@@ -2,6 +2,8 @@
 namespace LaravelRocket\Generator\Commands;
 
 use LaravelRocket\Generator\FileUpdaters\Services\RegisterServiceFileUpdater;
+use LaravelRocket\Generator\Generators\Services\ServiceInterfaceGenerator;
+use LaravelRocket\Generator\Generators\Services\ServiceUnitTestGenerator;
 use function ICanBoogie\singularize;
 
 class ServiceGenerator extends BaseCommand
@@ -39,8 +41,8 @@ class ServiceGenerator extends BaseCommand
         /** @var \LaravelRocket\Generator\Generators\NameBaseGenerator[] $generators */
         $generators = [
             new \LaravelRocket\Generator\Generators\Services\ServiceGenerator($this->config, $this->files, $this->view),
-            new \LaravelRocket\Generator\Generators\Services\ServiceInterfaceGenerator($this->config, $this->files, $this->view),
-            new \LaravelRocket\Generator\Generators\Services\ServiceUnitTestGenerator($this->config, $this->files, $this->view),
+            new ServiceInterfaceGenerator($this->config, $this->files, $this->view),
+            new ServiceUnitTestGenerator($this->config, $this->files, $this->view),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater[] $fileUpdaters */

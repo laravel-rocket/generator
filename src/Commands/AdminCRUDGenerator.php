@@ -1,13 +1,17 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use LaravelRocket\Generator\Generators\Models\ModelFactoryGenerator;
-use LaravelRocket\Generator\Generators\Models\ModelUnitTestGenerator;
-use LaravelRocket\Generator\Generators\Models\PresenterGenerator;
+use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\RouterFileUpdater;
+use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\SideBarFileUpdater;
+use LaravelRocket\Generator\Generators\CRUD\Admin\ControllerGenerator as AdminCRUDControllerGenerator;
+use LaravelRocket\Generator\Generators\CRUD\Admin\RequestGenerator as AdminCRUDRequestGenerator;
+use LaravelRocket\Generator\Generators\CRUD\Admin\TemplateGenerator as AdminCRUDTemplateGenerator;
+use LaravelRocket\Generator\Generators\CRUD\Admin\UnitTestGenerator as AdminCRUDUnitTestGenerator;
+use LaravelRocket\Generator\Generators\Models\LanguageFileGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use function ICanBoogie\pluralize;
 
-class ModelGenerator extends MWBGenerator
+class AdminCRUDGenerator extends MWBGenerator
 {
     protected $name = 'rocket:make:repository';
 
@@ -47,19 +51,22 @@ class ModelGenerator extends MWBGenerator
     {
         /** @var \LaravelRocket\Generator\Generators\NameBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\Models\ModelGenerator($this->config, $this->files, $this->view),
-            new ModelFactoryGenerator($this->config, $this->files, $this->view),
-            new ModelUnitTestGenerator($this->config, $this->files, $this->view),
-            new PresenterGenerator($this->config, $this->files, $this->view),
+            new LanguageFileGenerator($this->config, $this->files, $this->view),
+            new AdminCRUDControllerGenerator($this->config, $this->files, $this->view),
+            new AdminCRUDRequestGenerator($this->config, $this->files, $this->view),
+            new AdminCRUDUnitTestGenerator($this->config, $this->files, $this->view),
+            new AdminCRUDTemplateGenerator($this->config, $this->files, $this->view),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
+            new RouterFileUpdater($this->config, $this->files, $this->view),
+            new SideBarFileUpdater($this->config, $this->files, $this->view),
         ];
 
         $name = $this->normalizeName($this->argument('name'));
 
-        $this->output('Processing '.$name.' ...', 'green');
+        $this->output('Processing '.$name.'Repository...', 'green');
         foreach ($generators as $generator) {
             $generator->generate($name, $this->json);
         }

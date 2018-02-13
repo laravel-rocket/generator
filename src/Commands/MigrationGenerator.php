@@ -29,7 +29,7 @@ class MigrationGenerator extends MWBGenerator
         $this->getAppJson();
 
         $this->databaseService = new DatabaseService($this->config, $this->files);
-        $databaseName          = $this->databaseService->resetDatabase();
+        $this->databaseService->resetDatabase();
 
         $this->generateMigration();
 

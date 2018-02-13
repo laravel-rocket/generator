@@ -29,7 +29,9 @@ class RepositoryGenerator extends MWBGenerator
         $this->getAppJson();
 
         $this->databaseService = new DatabaseService($this->config, $this->files);
-        $databaseName          = $this->databaseService->resetDatabase();
+        $this->databaseService->resetDatabase();
+
+        $this->generate();
 
         $this->databaseService->dropDatabase();
 
@@ -45,11 +47,11 @@ class RepositoryGenerator extends MWBGenerator
         return ucfirst(camel_case(singularize($name)));
     }
 
-    protected function generateRepository()
+    protected function generate()
     {
         /** @var \LaravelRocket\Generator\Generators\NameBaseGenerator[] $generators */
         $generators = [
-            new self($this->config, $this->files, $this->view),
+            new \LaravelRocket\Generator\Generators\Models\RepositoryGenerator($this->config, $this->files, $this->view),
             new RepositoryInterfaceGenerator($this->config, $this->files, $this->view),
             new RepositoryUnitTestGenerator($this->config, $this->files, $this->view),
         ];
@@ -61,7 +63,7 @@ class RepositoryGenerator extends MWBGenerator
 
         $name = $this->normalizeName($this->argument('name'));
 
-        $this->output('Processing '.$name.'Service...', 'green');
+        $this->output('Processing '.$name.'Repository...', 'green');
         foreach ($generators as $generator) {
             $generator->generate($name, $this->json);
         }
