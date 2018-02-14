@@ -14,7 +14,7 @@ class LanguageFileGenerator extends ModelBaseGenerator
         $modelName = $this->getModelName();
         $viewName  = kebab_case(pluralize($modelName));
 
-        return resource_path('lang/en/tables/'.$viewName.'/columns.php');
+        return resource_path('lang/en/tables/'.$this->table->getName().'/columns.php');
     }
 
     /**
@@ -33,6 +33,7 @@ class LanguageFileGenerator extends ModelBaseGenerator
         $modelName              = $this->getModelName();
         $variables              = $this->getColumns();
         $variables['modelName'] = $modelName;
+        $variables['tableName'] = $this->table->getName();
 
         return $variables;
     }
@@ -91,12 +92,12 @@ class LanguageFileGenerator extends ModelBaseGenerator
 
             $definitionType = array_get($columnDefinition, 'type');
             if ($definitionType === 'type') {
-                $options                    = array_get($columnDefinition, 'options', []);
-                $result                     = [];
+                $options = array_get($columnDefinition, 'options', []);
+                $result  = [];
                 foreach ($options as $index => $option) {
-                    $value                              = array_get($option, 'value', $index);
-                    $name                               = array_get($option, 'name', $index);
-                    $result[$value]                     = $name;
+                    $value          = array_get($option, 'value', $index);
+                    $name           = array_get($option, 'name', $index);
+                    $result[$value] = $name;
                 }
                 $columnInfo['columns'][$name]['options'] = $result;
             }

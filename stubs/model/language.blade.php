@@ -1,7 +1,7 @@
 return [
 @foreach( $columns as $key => $info )
     '{{ $key }}' => [
-        'name' => '{{ array_get($info, 'name' }}',
+        'name' => '{{ array_get($info, 'name', $key) }}',
 @if( count(array_get($info, 'booleans', [])) > 0 )
         'booleans' => [
 @foreach( array_get($info, 'booleans', []) as $key => $name )
@@ -9,13 +9,13 @@ return [
 @endforeach
         ],
 @endif
-    @if( count(array_get($info, 'options', [])) > 0 )
+@if( count(array_get($info, 'options', [])) > 0 )
         'options' => [
-        @foreach( array_get($info, 'options', []) as $key => $name )
+@foreach( array_get($info, 'options', []) as $key => $name )
             '{{ $key }} => '{{ $name }}',
-        @endforeach
+@endforeach
         ],
-    @endif
+@endif
     ],
 @endforeach
 ];

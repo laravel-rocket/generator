@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use LaravelRocket\Generator\Generators\Models\ConfigFileGenerator;
+use LaravelRocket\Generator\Generators\Models\LanguageFileGenerator;
 use LaravelRocket\Generator\Generators\Models\ModelFactoryGenerator;
 use LaravelRocket\Generator\Generators\Models\ModelUnitTestGenerator;
 use LaravelRocket\Generator\Generators\Models\PresenterGenerator;
@@ -52,6 +54,8 @@ class ModelGenerator extends MWBGenerator
             new ModelFactoryGenerator($this->config, $this->files, $this->view),
             new ModelUnitTestGenerator($this->config, $this->files, $this->view),
             new PresenterGenerator($this->config, $this->files, $this->view),
+            new LanguageFileGenerator($this->config, $this->files, $this->view),
+            new ConfigFileGenerator($this->config, $this->files, $this->view),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */

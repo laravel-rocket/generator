@@ -26,7 +26,8 @@ class ConfigFileGenerator extends ModelBaseGenerator
      */
     protected function getVariables(): array
     {
-        $variables = $this->getColumns();
+        $variables              = $this->getColumns();
+        $variables['tableName'] = $this->table->getName();
 
         return $variables;
     }
@@ -58,7 +59,7 @@ class ConfigFileGenerator extends ModelBaseGenerator
                         $name                                            = array_get($option, 'name', $index);
                         $columnInfo['columns'][$name]['options'][$value] = $name;
                     }
-                break;
+                    break;
             }
         }
 

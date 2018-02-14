@@ -33,6 +33,7 @@ class PresenterGenerator extends ModelBaseGenerator
         $variables['modelName']    = $modelName;
         $variables['variableName'] = camel_case($modelName);
         $variables['viewName']     = kebab_case(pluralize($modelName));
+        $variables['tableName']    = $this->table->getName();
         $variables['relations']    = $this->getRelations();
 
         return $variables;
