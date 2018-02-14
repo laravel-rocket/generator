@@ -36,7 +36,7 @@
                 <tr>
                     <th style="width: 10px">ID</th>
 @foreach( $listColumns as $column)
-                    <th>＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</th>
+                    <th>＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')</th>
 @endforeach
                     <th style="width: 40px">&nbsp;</th>
                 </tr>
@@ -49,9 +49,9 @@
 @elseif( $column['type'] == 'boolean')
                                 <td>
                                     ＠if( $model->{{ $column['name'] }} )
-                                    <span class="badge bg-green">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}_true')</span>
+                                    <span class="badge bg-green">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.booleans.true')</span>
                                     ＠else
-                                    <span class="badge bg-red">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}_false')</span>
+                                    <span class="badge bg-red">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.booleans.false')</span>
                                     ＠endif
                                 </td>
 @elseif( $column['type'] == 'relation')

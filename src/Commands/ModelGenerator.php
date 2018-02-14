@@ -1,12 +1,12 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use function ICanBoogie\singularize;
 use LaravelRocket\Generator\Generators\Models\ModelFactoryGenerator;
 use LaravelRocket\Generator\Generators\Models\ModelUnitTestGenerator;
 use LaravelRocket\Generator\Generators\Models\PresenterGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use function ICanBoogie\pluralize;
+use function ICanBoogie\singularize;
 
 class ModelGenerator extends MWBGenerator
 {

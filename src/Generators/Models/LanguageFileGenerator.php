@@ -60,7 +60,12 @@ class LanguageFileGenerator extends ModelBaseGenerator
                 $viewName = title_case(preg_replace('/_/', ' ', $viewName));
             }
 
-            $columnInfo['columns'][$name] = trim($viewName);
+            $viewName                     = trim($viewName);
+            $columnInfo['columns'][$name] = [
+                'name'     => $viewName,
+                'options'  => [],
+                'booleans' => [],
+            ];
 
             $columnObject = new Column($column);
 
@@ -70,26 +75,30 @@ class LanguageFileGenerator extends ModelBaseGenerator
                 case 'boolean':
                     if (empty($options) || count($options) === 0) {
                         if ($name === 'is_enabled') {
-                            $columnInfo['booleans'][$name.'_true']  = 'Enabled';
-                            $columnInfo['booleans'][$name.'_false'] = 'Disabled';
+                            $columnInfo['columns'][$name]['booleans']['true']  = 'Enabled';
+                            $columnInfo['columns'][$name]['booleans']['false'] = 'Disabled';
                         } else {
-                            $columnInfo['booleans'][$name.'_true']  = 'Yes';
-                            $columnInfo['booleans'][$name.'_false'] = 'No';
+                            $columnInfo['columns'][$name]['booleans']['true']  = 'Yes';
+                            $columnInfo['columns'][$name]['booleans']['false'] = 'No';
                         }
                     } else {
                         foreach ($options as $option) {
-                            $columnInfo['booleans'][$name.'_'.array_get($option, 'value', '')] = array_get($option, 'name', '');
+                            $columnInfo['columns'][$name]['booleans'][array_get($option, 'value', '')] = array_get($option, 'name', '');
                         }
                     }
                     break;
-                case 'select':
-                    if (!empty($options) && count($options) !== 0) {
-                        $columnInfo['options'][$name] = [];
-                        foreach ($options as $option) {
-                            $columnInfo['options'][$name][array_get($option, 'value', '')] = array_get($option, 'name', '');
-                        }
-                    }
-                    break;
+            }
+
+            $definitionType = array_get($columnDefinition, 'type');
+            if ($definitionType === 'type') {
+                $options                    = array_get($columnDefinition, 'options', []);
+                $result                     = [];
+                foreach ($options as $index => $option) {
+                    $value                              = array_get($option, 'value', $index);
+                    $name                               = array_get($option, 'name', $index);
+                    $result[$value]                     = $name;
+                }
+                $columnInfo['columns'][$name]['options'] = $result;
             }
         }
 

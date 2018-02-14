@@ -1,7 +1,6 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use function ICanBoogie\singularize;
 use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\RouterFileUpdater;
 use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\SideBarFileUpdater;
 use LaravelRocket\Generator\Generators\CRUD\Admin\ControllerGenerator as AdminCRUDControllerGenerator;
@@ -11,6 +10,7 @@ use LaravelRocket\Generator\Generators\CRUD\Admin\UnitTestGenerator as AdminCRUD
 use LaravelRocket\Generator\Generators\Models\LanguageFileGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use function ICanBoogie\pluralize;
+use function ICanBoogie\singularize;
 
 class AdminCRUDGenerator extends MWBGenerator
 {

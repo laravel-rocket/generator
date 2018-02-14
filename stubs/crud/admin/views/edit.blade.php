@@ -85,27 +85,27 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
 @if( $column['type'] == 'textarea')
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
-                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
-                    <textarea name="{{ $column['name'] }}" class="form-control" rows="5" placeholder="＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')">｛!!  old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} !!｝</textarea>
+                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')</label>
+                    <textarea name="{{ $column['name'] }}" class="form-control" rows="5" placeholder="＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')">｛!!  old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} !!｝</textarea>
                 </div>
 @elseif( $column['type'] === 'boolean')
                 <td>
                     <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
-                        <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label><br/>
-                        <input type="radio" name="{{ $column['name'] }}" value="0" ＠if( ${{ $variableName }}->{{ $column['name'] }} == 0 ) checked ＠endif> ＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}_false')
-                        <input type="radio" name="{{ $column['name'] }}" value="1" ＠if( ${{ $variableName }}->{{ $column['name'] }} == 1 ) checked ＠endif> ＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}_true')
+                        <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')</label><br/>
+                        <input type="radio" name="{{ $column['name'] }}" value="0" ＠if( ${{ $variableName }}->{{ $column['name'] }} == 0 ) checked ＠endif> ＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.booleans.false')
+                        <input type="radio" name="{{ $column['name'] }}" value="1" ＠if( ${{ $variableName }}->{{ $column['name'] }} == 1 ) checked ＠endif> ＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.booleans.true')
                     </div>
                 </td>
 @elseif( $column['type'] === 'password')
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
-                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
+                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')</label>
                     <input type="password" class="form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="">
                 </div>
 @elseif( $column['type'] === 'image')
 
                 <div class="row">
                     <div class="col-md-12">
-
+                        <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')</label><br/>
                         <div id="kv-avatar-errors-{{ $column['name'] }}" class="center-block" style="display:none;"></div>
                         <div class="kv-avatar center-block" style="width:160px">
                             <input id="{{ $column['name'] }}" name="{{ $column['name'] }}" type="file" class="file-loading">
@@ -116,22 +116,22 @@
 @elseif( $column['type'] === 'file')
                 <div class="row">
                     <div class="col-md-12">
-                        <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label><br/>
+                        <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')</label><br/>
                         <input id="{{ $column['name'] }}" name="{{ $column['name'] }}" type="file">
                     </div>
                 </div>
 @elseif( $column['type'] === 'select')
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
-                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
+                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')</label>
                 <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
 @foreach($column['options'] as $option)
-                        <option value="{{ array_get($option, 'value') }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}_options.{{ array_get($option, 'value') }}')</option>
+                        <option value="{{ array_get($option, 'value') }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.options.{{ array_get($option, 'value') }}')</option>
 @endforeach
                     </select>
                 </div>
 @elseif( $column['type'] === 'country')
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
-                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
+                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
 ＠foreach(config('data.data.countries.country_codes.2digits') as $code => $key)
                         <option value="｛｛ $code ｝｝">＠lang('data/countries.' . $key )</option>
@@ -140,13 +140,13 @@
                 </div>
 @elseif( $column['type'] == 'relation')
                 <div class="form-group @if ($errors->has('type')) has-error @endif">
-                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
+                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
                     </select>
                 </div>
 @else
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
-                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}')</label>
+                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')</label>
                     <input type="text" class="form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="｛｛ old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} ｝｝">
                 </div>
 @endif
