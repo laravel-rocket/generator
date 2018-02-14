@@ -13,7 +13,7 @@ class RegisterRepositoryFileUpdater extends TableBaseFileUpdater
             }
         }
 
-        return !$this->detectRelationTable($this->table);
+        return true;
     }
 
     protected function getTargetFilePath(): string

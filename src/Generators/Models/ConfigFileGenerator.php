@@ -55,9 +55,9 @@ class ConfigFileGenerator extends ModelBaseGenerator
                 case 'type':
                     $options = array_get($columnDefinition, 'options', []);
                     foreach ($options as $index => $option) {
-                        $value                                           = array_get($option, 'value', $index);
-                        $name                                            = array_get($option, 'name', $index);
-                        $columnInfo['columns'][$name]['options'][$value] = $name;
+                        $optionValue                                           = array_get($option, 'value', $index);
+                        $optionName                                            = array_get($option, 'name', $index);
+                        $columnInfo['columns'][$name]['options'][$optionValue] = $optionName;
                     }
                     break;
             }
