@@ -133,8 +133,17 @@
                 <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
-＠foreach(config('data.data.countries.country_codes.3digits') as $code => $key)
-                        <option value="｛｛ $code ｝｝">{{ \CountryHelper::getCountryName($code, $code) }}</option>
+＠foreach(config('data.data.currency.currency_codes') as $code => $key)
+                        <option value="｛｛ $code ｝｝">｛｛ \DataHelper::getCountryName($code, $code) ｝｝</option>
+＠endforeach
+                    </select>
+                </div>
+@elseif( $column['type'] === 'currency')
+                <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
+                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
+                    <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
+＠foreach(config('data.data.currencies.currency_codes') as $code => $key)
+                        <option value="｛｛ $code ｝｝">｛｛ \DataHelper::getCurrencyName($code, $code) ｝｝</option>
 ＠endforeach
                     </select>
                 </div>

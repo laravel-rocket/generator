@@ -27,8 +27,8 @@ class {!! $serviceName !!} extends @if($isAuthService) AuthenticatableService @e
 @endforeach
 
     public function __construct(
-@foreach( $repositories as $repository)
-    {!! $repository !!}Interface ${!! lcfirst($repository) !!}
+@foreach( $repositories as $index => $repository)
+    {!! $repository !!}Interface ${!! lcfirst($repository) !!}{{ ($loop->last ? '' : ',') }}
 @endforeach
     ) {
 @foreach( $repositories as $repository)

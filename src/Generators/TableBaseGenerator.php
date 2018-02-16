@@ -310,6 +310,10 @@ class TableBaseGenerator extends BaseGenerator
                 $this->copyConfigFile(['data', 'data', 'countries.php']);
                 $this->copyConfigFile(['data', 'data', 'phones.php']);
                 $this->copyLanguageFile(['data', 'countries.php']);
+                break;
+            case 'currency':
+                $this->copyConfigFile(['data', 'data', 'currencies.php']);
+                $this->copyLanguageFile(['data', 'currencies.php']);
         }
     }
 }

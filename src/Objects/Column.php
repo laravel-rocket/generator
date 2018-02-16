@@ -134,6 +134,10 @@ class Column
             return ['country', null];
         }
 
+        if (ends_with($name, 'currency_code') && $type === 'varchar') {
+            return ['currency', null];
+        }
+
         if (ends_with($name, 'gender') && $type === 'varchar') {
             return ['select', array_get($definitions, 'options', [[
                 'name'  => 'Male',

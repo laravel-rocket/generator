@@ -71,9 +71,9 @@ class ModelGenerator extends ModelBaseGenerator
             if ($type === 'type') {
                 $options = array_get($column, 'options', []);
                 foreach ($options as $option) {
-                    $value            = array_get($option, 'value');
-                    $name             = $this->generateConstantName($name, $value);
-                    $constants[$name] = "$name = '$value'";
+                    $value                    = array_get($option, 'value');
+                    $constantName             = $this->generateConstantName($name, $value);
+                    $constants[$constantName] = "$constantName = '$value'";
                 }
             }
         }

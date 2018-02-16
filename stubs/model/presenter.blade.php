@@ -54,7 +54,12 @@ class {{ $modelName }}Presenter extends BasePresenter
 @elseif( $editableColumn['type'] == 'country')
     public function {{ $editableColumn['name'] }}()
     {
-        return \CountryHelper::getCountryName($this->entity->{{ $editableColumn['name'] }}, $this->entity->{{ $editableColumn['name'] }});
+        return \DataHelper::getCountryName($this->entity->{{ $editableColumn['name'] }}, $this->entity->{{ $editableColumn['name'] }});
+    }
+@elseif( $editableColumn['type'] == 'currency')
+    public function {{ $editableColumn['name'] }}()
+    {
+    return \DataHelper::getCurrencyName($this->entity->{{ $editableColumn['name'] }}, $this->entity->{{ $editableColumn['name'] }});
     }
 @elseif( $editableColumn['type'] == 'boolean')
     public function {{ $editableColumn['name'] }}()
