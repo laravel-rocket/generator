@@ -9,6 +9,7 @@ use LaravelRocket\Generator\Objects\Definitions;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Process\Process;
 
 class BaseCommand extends Command
 {
@@ -135,5 +136,23 @@ class BaseCommand extends Command
         } else {
             $this->output->writeln($message);
         }
+    }
+
+    protected function styleCode()
+    {
+        \Artisan::call('ide-helper:model', ['-W' => '']);
+        \Artisan::call('ide-helper:generate');
+
+        foreach (['app', 'tests', 'config', 'database'] as $path) {
+            $this->command('php-cs-fixer fix -v '.$path);
+        }
+    }
+
+    protected function command($command)
+    {
+        $process = new Process($command);
+        $process->run();
+
+        return $process->getOutput();
     }
 }

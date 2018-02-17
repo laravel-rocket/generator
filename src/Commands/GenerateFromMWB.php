@@ -58,6 +58,8 @@ class GenerateFromMWB extends MWBGenerator
 
         $this->databaseService->dropDatabase();
 
+        $this->styleCode();
+
         return true;
     }
 
