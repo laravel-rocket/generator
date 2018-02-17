@@ -56,9 +56,9 @@ class GenerateFromMWB extends MWBGenerator
         $this->generateMigration();
         $this->generateModel();
 
-        $this->databaseService->dropDatabase();
-
         $this->styleCode();
+
+        $this->databaseService->dropDatabase();
 
         return true;
     }

@@ -140,10 +140,11 @@ class BaseCommand extends Command
 
     protected function styleCode()
     {
-        \Artisan::call('ide-helper:model', ['-W' => true]);
+        \Artisan::call('ide-helper:model', ['-W' => true, '--env' => 'rocket']);
         \Artisan::call('ide-helper:generate');
 
         foreach (['app', 'tests', 'config', 'database'] as $path) {
+            $path = base_path($path);
             $this->command('php-cs-fixer fix -v '.$path);
         }
     }
