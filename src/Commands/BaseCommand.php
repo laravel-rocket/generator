@@ -140,7 +140,7 @@ class BaseCommand extends Command
 
     protected function styleCode()
     {
-        \Artisan::call('ide-helper:model', ['-W' => '']);
+        \Artisan::call('ide-helper:model', ['-W' => true]);
         \Artisan::call('ide-helper:generate');
 
         foreach (['app', 'tests', 'config', 'database'] as $path) {
