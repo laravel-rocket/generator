@@ -119,14 +119,15 @@ class InterfaceValidator extends BaseCommand
                 }
             }
         }
+        // SECTION_NOT_NEEDED
         // check for missing interface files
-        foreach ($this->fileList as $name => $file) {
-            if ( $file['interface']['exists'] == false ) {
-                $this->output('The interface file for ['.$name.'] does not exist.', 'error');
-                // $file['checking'] = false;
-                $return = false;
-            }
-        }
+        // foreach ($this->fileList as $name => $file) {
+        //     if ( $file['interface']['exists'] == false ) {
+        //         $this->output('The interface file for ['.$name.'] does not exist.', 'error');
+        //         // $file['checking'] = false;
+        //         $return = false;
+        //     }
+        // }
         return $return;
     }
 
@@ -164,13 +165,13 @@ class InterfaceValidator extends BaseCommand
                 $no_mismatch = false;
                 continue;
             }
-            $result = $this->compareFiles(
+            $compare_result = $this->compareFiles(
                 $fileEntry['implement']['path'], 
                 $fileEntry['interface']['path']
             );
-            if ( $result === false ) {
+            if ( $compare_result === false ) {
                 // mismatch found
-                $this->output('Mismatch between this file and its interface found: ['.$name.']', 'error');
+                // $this->output('Mismatch between this file and its interface found: ['.$name.']', 'error');
                 // return false;
                 $no_mismatch = false;
             }
@@ -178,8 +179,7 @@ class InterfaceValidator extends BaseCommand
         return $no_mismatch;
     }
 
-    // WORK_IN_PROGRESS
-    protected function compareFiles($implement_path,$interface_path)
+    protected function compareFiles($implement_path, $interface_path)
     {
         // $lexer = new Lexer([
         //     'usedAttributes' => [
@@ -200,12 +200,72 @@ class InterfaceValidator extends BaseCommand
             return false;
         }
         
-        // WORK_IN_PROGRESS
-        $pass = true;
         // compare $imp_statements and $int_statements
-        // comparing logics go here
-        
+        return compareStatements($imp_statements, $int_statements);
+    }
+
+    protected function compareStatements($implement_statements, $interface_statements)
+    {
+        $pass = true;
+        $imp_method_all = getMethods($implement_statements);
+        $int_method_all = getMethods($interface_statements);
+        foreach ($imp_method_all as $imp_method) {
+            $name = $imp_method->name;
+            $int_method = searchMethodByName($int_method_all, $name);
+            if ( empty($int_method) ) {
+                // method exists in IMP, not found in INT
+                $this->output('Method ['.$name.'], exists in the implementation file, is not defined in the interface file.', 'error');
+                $pass = false;
+                continue;
+            }
+            $imp_param_count = count($imp_method->params);
+            $int_param_count = count($int_method->params);
+            if ( $imp_param_count !== $int_param_count ) {
+                // different number of params
+                $this->output('Method ['.$name.'] has different numbers of parameters in the interface & implementation files.', 'error');
+                $pass = false;
+                continue;
+            }
+            for ($i = 0; $i < $imp_param_count; $i++) {
+                $imp_param_name = $imp_method->params[$i]->name;
+                $int_param_name = $int_method->params[$i]->name;
+                if ( $imp_param_name !== $int_param_name ) {
+                    $this->output('Method ['.$name.'] has different names for parameter #'.$i.' in the interface & implementation files.', 'error');
+                    $pass = false;
+                }
+            }
+        }
         return $pass;
+    }
+
+    protected function getMethods($statements)
+    {
+        $methods = array();
+        foreach ($statements as $statement) {
+            if (get_class($statement) == ClassMethod::class) {
+                if ($statement->flags == 1) {
+                    array_push($methods, $statement);
+                }
+                continue;
+            }
+            if (property_exists($statement, 'stmts')) {
+                $methods_sub = getMethods($statement->stmts);
+                if ( count($methods_sub) >= 1 ) {
+                    $methods = array_merge($methods, $methods_sub);
+                }
+            }
+        }
+        return $methods;
+    }
+
+    protected function searchMethodByName($methods, $name)
+    {
+        foreach ($methods as $method) {
+            if ($method->name == $name) {
+                return $method;
+            }
+        }
+        return null;
     }
 
     // NOT_IN_USE / WORK_IN_PROGRESS
