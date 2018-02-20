@@ -1,9 +1,7 @@
 <?php
-namespace LaravelRocket\Generator\Validators\Rules;
+namespace LaravelRocket\Generator\Validators;
 
-use LaravelRocket\Generator\Validators\Error;
-
-class Base
+class BaseRule
 {
     public function validate($data)
     {

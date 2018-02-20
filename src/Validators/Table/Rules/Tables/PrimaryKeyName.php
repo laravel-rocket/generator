@@ -1,10 +1,10 @@
 <?php
-namespace LaravelRocket\Generator\Validators\Rules\Tables;
+namespace LaravelRocket\Generator\Validators\Table\Rules\Tables;
 
+use LaravelRocket\Generator\Validators\BaseRule;
 use LaravelRocket\Generator\Validators\Error;
-use LaravelRocket\Generator\Validators\Rules\Base;
 
-class PrimaryKeyName extends Base
+class PrimaryKeyName extends BaseRule
 {
     public function validate($data)
     {

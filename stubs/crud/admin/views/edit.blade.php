@@ -11,6 +11,7 @@
     <script src="｛｛ \URLHelper::asset('libs/datetimepicker/js/bootstrap-datetimepicker.min.js', 'admin') ｝｝"></script>
     <script>
         $('.datetime-field').datetimepicker(｛'format': 'YYYY-MM-DD HH:mm:ss'｝);
+        $('.date-field').datepicker(｛'format': 'YYYY-MM-DD'｝);
     </script>
 @foreach( $editableColumns as $column)
 @if( $column['type'] === 'image')
@@ -101,8 +102,12 @@
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <input type="password" class="form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="">
                 </div>
+@elseif( $column['type'] === 'date')
+                <div class="form-group date ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
+                    <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
+                    <input type="text" class="datepicker form-control" id="{{ $column['name'] }}" name="{{ $column['name'] }}" value="">
+                </div>
 @elseif( $column['type'] === 'image')
-
                 <div class="row">
                     <div class="col-md-12">
                         <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label><br/>

@@ -118,6 +118,12 @@ class BaseFileUpdater
         return true;
     }
 
+    /**
+     * @param string $filePath
+     * @param string $methodName
+     *
+     * @return null
+     */
     protected function getMethodObject(string $filePath, string $methodName)
     {
         $lexer = new Lexer([
@@ -142,7 +148,13 @@ class BaseFileUpdater
         return $method;
     }
 
-    protected function getFunction($name, $statements)
+    /**
+     * @param string $name
+     * @param $statements
+     *
+     * @return null
+     */
+    protected function getFunction(string $name, $statements)
     {
         foreach ($statements as $statement) {
             if (get_class($statement) == ClassMethod::class && $statement->name == $name) {

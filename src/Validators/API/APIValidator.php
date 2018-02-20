@@ -1,5 +1,7 @@
 <?php
-namespace LaravelRocket\Generator\Validators;
+namespace LaravelRocket\Generator\Validators\API;
+
+use LaravelRocket\Generator\Validators\BaseValidator;
 
 class APIValidator extends BaseValidator
 {

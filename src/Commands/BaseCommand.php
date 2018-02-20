@@ -140,6 +140,8 @@ class BaseCommand extends Command
 
     protected function styleCode()
     {
+        $this->output('  > Reformatting code....');
+
         \Artisan::call('ide-helper:model', ['-W' => true, '--env' => 'rocket']);
         \Artisan::call('ide-helper:generate');
 

@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators\CRUD;
 
+use LaravelRocket\Generator\Objects\Column;
 use function ICanBoogie\pluralize;
 
 class ControllerGenerator extends CRUDBaseGenerator
@@ -36,6 +37,10 @@ class ControllerGenerator extends CRUDBaseGenerator
         foreach ($this->table->getColumns() as $column) {
             $name = $column->getName();
             $type = $column->getType();
+
+            $columnDefinition             = $this->json->getColumnDefinition($this->table->getName(), $column->getName());
+            $columnObject                 = new Column($column);
+            list($ediFieldType, $options) = $columnObject->getEditFieldType([], $columnDefinition);
 
             if (in_array($name, $excludes)) {
                 continue;

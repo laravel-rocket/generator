@@ -1,12 +1,13 @@
 <?php
-namespace LaravelRocket\Generator\Validators;
+namespace LaravelRocket\Generator\Validators\Table;
 
-use LaravelRocket\Generator\Validators\Rules\Columns\AvoidDateTime;
-use LaravelRocket\Generator\Validators\Rules\Columns\AvoidLongVarChar;
-use LaravelRocket\Generator\Validators\Rules\Columns\ColumnName;
-use LaravelRocket\Generator\Validators\Rules\Columns\GenderWithVarChar;
-use LaravelRocket\Generator\Validators\Rules\Tables\PrimaryKeyName;
-use LaravelRocket\Generator\Validators\Rules\Tables\TableName;
+use LaravelRocket\Generator\Validators\BaseValidator;
+use LaravelRocket\Generator\Validators\Table\Rules\Columns\AvoidDateTime;
+use LaravelRocket\Generator\Validators\Table\Rules\Columns\AvoidLongVarChar;
+use LaravelRocket\Generator\Validators\Table\Rules\Columns\ColumnName;
+use LaravelRocket\Generator\Validators\Table\Rules\Columns\GenderWithVarChar;
+use LaravelRocket\Generator\Validators\Table\Rules\Tables\PrimaryKeyName;
+use LaravelRocket\Generator\Validators\Table\Rules\Tables\TableName;
 
 class TableSchemaValidator extends BaseValidator
 {
@@ -19,13 +20,13 @@ class TableSchemaValidator extends BaseValidator
     public function validate($tables, $json)
     {
 
-        /** @var \LaravelRocket\Generator\Validators\Rules\Base[] $tableRules */
+        /** @var \LaravelRocket\Generator\Validators\BaseRule[] $tableRules */
         $tableRules = [
             new TableName(),
             new PrimaryKeyName(),
         ];
 
-        /** @var \LaravelRocket\Generator\Validators\Rules\Base[] $columnRules */
+        /** @var \LaravelRocket\Generator\Validators\BaseRule[] $columnRules */
         $columnRules = [
             new ColumnName(),
             new AvoidLongVarChar(),

@@ -138,6 +138,10 @@ class Column
             return ['currency', null];
         }
 
+        if ($type === 'date') {
+            return ['date', null];
+        }
+
         if (ends_with($name, 'gender') && $type === 'varchar') {
             return ['select', array_get($definitions, 'options', [[
                 'name'  => 'Male',

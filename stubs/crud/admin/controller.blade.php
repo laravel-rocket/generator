@@ -111,6 +111,21 @@ class {{ $modelName }}Controller extends Controller
             return redirect()->back()->withErrors(trans('admin.errors.general.save_failed'));
         }
 
+@if( count($fileColumns) > 0)
+@foreach( $fileColumns as $fileColumn)
+        if ($request->hasFile('{{ $fileColumn }}')) {
+            $file = $user->faceImage;
+            if (!empty($faceImage)) {
+                $this->fileService->delete($faceImage);
+            }
+            $file                     = $request->file('{{ $fileColumn }}');
+            $mediaType                = $file->getClientMimeType();
+            $path                     = $file->getPathname();
+            $file                     = $this->fileService->upload('file', $path, $mediaType, []);
+            $updates['{{ $fileColumn }}'] = $file->id;
+        }
+@endforeach
+@endif
         return redirect()->action('Admin\{{ $modelName }}Controller@index')
             ->with('message-success', trans('admin.messages.general.create_success'));
     }

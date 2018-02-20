@@ -33,4 +33,28 @@ class BaseValidator
 
         $this->fileService = new FileService($this->config, $this->files, $this->view);
     }
+
+    /**
+     * @param string $path
+     * @param string $postfix
+     *
+     * @return string[]
+     */
+    public function getDirectoryFiles(string $path, string $postfix = '')
+    {
+        if (!is_dir($path)) {
+            return [];
+        }
+
+        $results = [];
+        $files   = array_diff(scandir($path), ['..', '.']);
+        foreach ($files as $file) {
+            $absolutePath = $path.DIRECTORY_SEPARATOR.$file;
+            if (!is_dir($absolutePath) && empty($postfix) || ends_with($file, $postfix)) {
+                $results[] = $absolutePath;
+            }
+        }
+
+        return $results;
+    }
 }
