@@ -11,6 +11,8 @@ use PhpParser\ParserFactory;
 
 class ClassLike
 {
+    protected $excludeMethods = [];
+
     /** @var string $path */
     protected $path;
 
@@ -91,10 +93,10 @@ class ClassLike
     }
 
     /**
-     * @param $name
-     * @param \PhpParser\Node\Stmt $statements
+     * @param string                                   $name
+     * @param \PhpParser\Node\Stmt[]|\PhpParser\Node[] $statements
      *
-     * @return null|\PhpParser\Node\Stmt\ClassLike
+     * @return null|StmtClassLike
      */
     protected function getClassLikeObject(string $name, $statements)
     {
@@ -123,7 +125,9 @@ class ClassLike
         }
         foreach ($classLike->stmts as $statement) {
             if (is_a($statement, ClassMethod::class)) {
-                $this->methods[$statement->name] = $statement;
+                if (!in_array($statement->name, $this->excludeMethods) || !starts_with($statement->name, '__')) {
+                    $this->methods[$statement->name] = $statement;
+                }
             } elseif (is_a($statement, Property::class)) {
                 $this->properties[] = $statement;
             } elseif (is_a($statement, ClassConst::class)) {

@@ -18,8 +18,8 @@ class ServiceValidator extends BaseValidator
 
         /** @var \LaravelRocket\Generator\Validators\BaseRule[] $tableRules */
         $rules = [
-            Coverage::class,
-            Consistency::class,
+            new Coverage(),
+            new Consistency(),
         ];
 
         $interfacePath = app_path('Services');
