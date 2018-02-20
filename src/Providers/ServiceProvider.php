@@ -9,6 +9,7 @@ use LaravelRocket\Generator\Commands\MigrationGenerator;
 use LaravelRocket\Generator\Commands\ModelGenerator;
 use LaravelRocket\Generator\Commands\RepositoryGenerator;
 use LaravelRocket\Generator\Commands\ServiceGenerator;
+use LaravelRocket\Generator\Commands\Validate;
 use LaravelRocket\Generator\Commands\ValidatorFromMWB;
 
 class ServiceProvider extends BaseServiceProvider
@@ -57,6 +58,11 @@ class ServiceProvider extends BaseServiceProvider
             return new AdminCRUDGenerator($app['config'], $app['files'], $app['view']);
         });
 
+        $this->app->singleton('command.rocket.validate', function ($app) {
+            return new Validate($app['config'], $app['files'], $app['view']);
+        });
+
+
         $this->commands(
             'command.rocket.generate.from-mwb'
         );
@@ -88,5 +94,10 @@ class ServiceProvider extends BaseServiceProvider
         $this->commands(
             'command.rocket.make.crud.admin'
         );
+
+        $this->commands(
+            'command.rocket.validate'
+        );
+
     }
 }
