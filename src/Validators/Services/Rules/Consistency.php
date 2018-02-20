@@ -1,10 +1,10 @@
 <?php
-namespace LaravelRocket\Generator\Validators\Service\Rules;
+namespace LaravelRocket\Generator\Validators\Services\Rules;
 
 use LaravelRocket\Generator\Validators\BaseRule;
 use LaravelRocket\Generator\Validators\Error;
 
-class Coverage extends BaseRule
+class Consistency extends BaseRule
 {
     public function validate($data)
     {
@@ -19,26 +19,29 @@ class Coverage extends BaseRule
 
         $errors = [];
 
-        if (!file_exists($test->getPath())) {
+        if (!file_exists($class->getPath())) {
             $errors[] = new Error(
-                'TestFile  '.$test->getPath().' does\'t exists.',
+                'Production Class '.$class->getPath().' does\'t exists.',
                 Error::LEVEL_ERROR,
                 $name,
-                'Add unit test file named : '.$test->getPath()
-                );
+                'Add class file named : '.$class->getPath()
+            );
 
             return $this->response($errors);
         }
 
-        $testMethods = $test->getMethods();
-        foreach ($interface->getMethods() as $name => $method) {
-            $testName = 'test'.ucfirst($name);
-            if (!array_key_exists($testName, $testMethods)) {
+        $objectMethods    = array_keys($class->getMethods());
+        $interfaceMethods = array_keys($interface->getMethods());
+
+        $onlyInObjects = array_diff($objectMethods, $interfaceMethods);
+        foreach ($onlyInObjects as $methodName) {
+            $object = $class->getMethods()[$methodName];
+            if ($object->isPublic()) {
                 $errors[] = new Error(
-                    'Method '.$name.' has no test method ( '.$testName.').',
+                    'Method '.$methodName.' doesn\'t exist in interface.',
                     Error::LEVEL_ERROR,
                     $name,
-                    'Write unit test named : '.$testName
+                    'Add it to  Interface file : '.$interface->getPath()
                 );
             }
         }

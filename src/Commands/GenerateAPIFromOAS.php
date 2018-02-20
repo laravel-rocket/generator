@@ -4,7 +4,7 @@ namespace LaravelRocket\Generator\Commands;
 use LaravelRocket\Generator\Generators\APIs\ResponseGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use LaravelRocket\Generator\Services\OASService;
-use LaravelRocket\Generator\Validators\APIValidator;
+use LaravelRocket\Generator\Validators\APIs\APIValidator;
 use LaravelRocket\Generator\Validators\Error;
 
 class GenerateAPIFromOAS extends BaseCommand

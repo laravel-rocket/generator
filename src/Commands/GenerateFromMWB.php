@@ -20,7 +20,7 @@ use LaravelRocket\Generator\Generators\Models\RepositoryInterfaceGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryUnitTestGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use LaravelRocket\Generator\Validators\Error;
-use LaravelRocket\Generator\Validators\TableSchemaValidator;
+use LaravelRocket\Generator\Validators\Tables\TableSchemaValidator;
 
 class GenerateFromMWB extends MWBGenerator
 {

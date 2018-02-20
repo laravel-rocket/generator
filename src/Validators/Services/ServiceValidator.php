@@ -1,9 +1,10 @@
 <?php
-namespace LaravelRocket\Generator\Validators\Table;
+namespace LaravelRocket\Generator\Validators\Services;
 
 use LaravelRocket\Generator\Objects\ClassLike;
 use LaravelRocket\Generator\Validators\BaseValidator;
-use LaravelRocket\Generator\Validators\Service\Rules\Coverage;
+use LaravelRocket\Generator\Validators\Services\Rules\Consistency;
+use LaravelRocket\Generator\Validators\Services\Rules\Coverage;
 
 class ServiceValidator extends BaseValidator
 {
@@ -18,6 +19,7 @@ class ServiceValidator extends BaseValidator
         /** @var \LaravelRocket\Generator\Validators\BaseRule[] $tableRules */
         $rules = [
             Coverage::class,
+            Consistency::class,
         ];
 
         $interfacePath = app_path('Services');

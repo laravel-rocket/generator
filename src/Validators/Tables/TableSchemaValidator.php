@@ -1,13 +1,13 @@
 <?php
-namespace LaravelRocket\Generator\Validators\Table;
+namespace LaravelRocket\Generator\Validators\Tables;
 
 use LaravelRocket\Generator\Validators\BaseValidator;
-use LaravelRocket\Generator\Validators\Table\Rules\Columns\AvoidDateTime;
-use LaravelRocket\Generator\Validators\Table\Rules\Columns\AvoidLongVarChar;
-use LaravelRocket\Generator\Validators\Table\Rules\Columns\ColumnName;
-use LaravelRocket\Generator\Validators\Table\Rules\Columns\GenderWithVarChar;
-use LaravelRocket\Generator\Validators\Table\Rules\Tables\PrimaryKeyName;
-use LaravelRocket\Generator\Validators\Table\Rules\Tables\TableName;
+use LaravelRocket\Generator\Validators\Tables\Rules\Columns\AvoidDateTime;
+use LaravelRocket\Generator\Validators\Tables\Rules\Columns\AvoidLongVarChar;
+use LaravelRocket\Generator\Validators\Tables\Rules\Columns\ColumnName;
+use LaravelRocket\Generator\Validators\Tables\Rules\Columns\GenderWithVarChar;
+use LaravelRocket\Generator\Validators\Tables\Rules\Tables\PrimaryKeyName;
+use LaravelRocket\Generator\Validators\Tables\Rules\Tables\TableName;
 
 class TableSchemaValidator extends BaseValidator
 {

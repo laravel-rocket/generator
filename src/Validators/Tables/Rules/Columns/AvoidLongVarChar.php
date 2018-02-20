@@ -1,5 +1,5 @@
 <?php
-namespace LaravelRocket\Generator\Validators\Table\Rules\Columns;
+namespace LaravelRocket\Generator\Validators\Tables\Rules\Columns;
 
 use LaravelRocket\Generator\Validators\BaseRule;
 use LaravelRocket\Generator\Validators\Error;

@@ -1,10 +1,10 @@
 <?php
-namespace LaravelRocket\Generator\Validators\Table\Rules\Columns;
+namespace LaravelRocket\Generator\Validators\Tables\Rules\Columns;
 
 use LaravelRocket\Generator\Validators\BaseRule;
 use LaravelRocket\Generator\Validators\Error;
 
-class ColumnName extends BaseRule
+class GenderWithVarChar extends BaseRule
 {
     public function validate($data)
     {
@@ -20,29 +20,15 @@ class ColumnName extends BaseRule
             return $this->response(new Error('No column passed.', Error::LEVEL_ERROR, 'System'));
         }
 
-        $errors   = [];
+        $errors = [];
 
-        $name = $column->getName();
-        if (preg_match('/[^a-z0-9_]/', $name, $matches)) {
+        $type = $column->getType();
+        if ($type === 'datetime') {
             $errors[] = new Error(
-                sprintf(
-                    'Only a to z ( small letters ) and numbers and underscore(_) can be used for column name. %s found.',
-                    $matches[0]
-                ),
+                'Must not use \'datetime\' type.',
                 Error::LEVEL_ERROR,
                 $table->getName().'/'.$column->getName(),
-                ''
-            );
-        }
-
-        $idealName = snake_case($name);
-
-        if (snake_case($name) != $name) {
-            $errors[] = new Error(
-                'Column name must be snake case.',
-                Error::LEVEL_ERROR,
-                $table->getName().'/'.$column->getName(),
-                "User $idealName"
+                'Use \'timestamp\' instead.'
             );
         }
 

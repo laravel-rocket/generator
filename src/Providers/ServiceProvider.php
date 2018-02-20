@@ -62,7 +62,6 @@ class ServiceProvider extends BaseServiceProvider
             return new Validate($app['config'], $app['files'], $app['view']);
         });
 
-
         $this->commands(
             'command.rocket.generate.from-mwb'
         );
@@ -98,6 +97,5 @@ class ServiceProvider extends BaseServiceProvider
         $this->commands(
             'command.rocket.validate'
         );
-
     }
 }

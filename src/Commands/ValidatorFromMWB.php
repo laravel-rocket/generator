@@ -2,7 +2,7 @@
 namespace LaravelRocket\Generator\Commands;
 
 use LaravelRocket\Generator\Validators\Error;
-use LaravelRocket\Generator\Validators\TableSchemaValidator;
+use LaravelRocket\Generator\Validators\Tables\TableSchemaValidator;
 use TakaakiMizuno\MWBParser\Parser;
 
 class ValidatorFromMWB extends BaseCommand

@@ -2,7 +2,7 @@
 namespace LaravelRocket\Generator\Commands;
 
 use LaravelRocket\Generator\Validators\Error;
-use LaravelRocket\Generator\Validators\Table\ServiceValidator;
+use LaravelRocket\Generator\Validators\Services\ServiceValidator;
 
 class Validate extends BaseCommand
 {

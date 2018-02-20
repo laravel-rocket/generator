@@ -1,11 +1,10 @@
 <?php
-namespace LaravelRocket\Generator\Validators\Table\Rules\Tables;
+namespace LaravelRocket\Generator\Validators\Tables\Rules\Columns;
 
 use LaravelRocket\Generator\Validators\BaseRule;
 use LaravelRocket\Generator\Validators\Error;
-use function ICanBoogie\pluralize;
 
-class TableName extends BaseRule
+class ColumnName extends BaseRule
 {
     public function validate($data)
     {
@@ -15,41 +14,36 @@ class TableName extends BaseRule
             return $this->response(new Error('No table passed.', Error::LEVEL_ERROR, 'System'));
         }
 
-        $errors = [];
+        /** @var \TakaakiMizuno\MWBParser\Elements\Column $column */
+        $column = array_get($data, 'column', null);
+        if (empty($column)) {
+            return $this->response(new Error('No column passed.', Error::LEVEL_ERROR, 'System'));
+        }
 
-        $name = $table->getName();
+        $errors   = [];
+
+        $name = $column->getName();
         if (preg_match('/[^a-z0-9_]/', $name, $matches)) {
             $errors[] = new Error(
                 sprintf(
-                    'Only a to z ( small letters ) and numbers and underscore(_) can be used for table name. %s found.',
+                    'Only a to z ( small letters ) and numbers and underscore(_) can be used for column name. %s found.',
                     $matches[0]
                 ),
                 Error::LEVEL_ERROR,
-                $name,
+                $table->getName().'/'.$column->getName(),
                 ''
             );
         }
 
-        $idealName = pluralize(snake_case($name));
+        $idealName = snake_case($name);
 
         if (snake_case($name) != $name) {
             $errors[] = new Error(
-                'Table name must be snake case.',
+                'Column name must be snake case.',
                 Error::LEVEL_ERROR,
-                $name,
+                $table->getName().'/'.$column->getName(),
                 "User $idealName"
             );
-        }
-
-        if (pluralize($name) != $name) {
-            $errors[] = new Error(
-                'Table name must be plural form.',
-                Error::LEVEL_ERROR,
-                $name,
-                "User $idealName"
-            );
-
-            $errors[] = sprintf('Table name must be plural form : %s', $name);
         }
 
         return $this->response($errors);
