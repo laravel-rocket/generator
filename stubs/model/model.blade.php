@@ -59,7 +59,13 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
 
     protected $dates  = [
 @foreach( $timestamps as $timestamp)
-    '{{ $timestamp }}',
+        '{{ $timestamp }}',
+@endforeach
+    ];
+
+    protected $casts     = [
+@foreach( $casts as $column => $type)
+        '{{ $column }}' => '{{ $type }}',
 @endforeach
     ];
 

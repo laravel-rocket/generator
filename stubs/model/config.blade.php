@@ -4,7 +4,7 @@ return [
     @if( count(array_get($info, 'options', [])) > 0 )
         'options' => [
         @foreach( array_get($info, 'options', []) as $optionKey => $optionName )
-            '{{ $key }}' => 'tables/{{ $tableName }}/columns.{{ $key }}.{{ $optionKey }}.name',
+            '{{ $optionKey }}' => 'tables/{{ $tableName }}/columns.{{ $key }}.options.{{ $optionKey }}',
         @endforeach
         ],
     @endif

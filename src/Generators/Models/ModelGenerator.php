@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use LaravelRocket\Generator\Objects\Column;
 use PhpParser\Error;
 use PhpParser\Lexer;
 use PhpParser\ParserFactory;
@@ -37,8 +38,28 @@ class ModelGenerator extends ModelBaseGenerator
         $variables['relationTable'] = $this->detectRelationTable($this->table);
         $variables['relations']     = $this->getRelations();
         $variables['constants']     = $this->getConstants();
+        $variables['casts']         = $this->getCasts();
 
         return $variables;
+    }
+
+    protected function getCasts(): array
+    {
+        $casts = [];
+        foreach ($this->table->getColumns() as $column) {
+            $columnDefinition             = $this->json->getColumnDefinition($this->table->getName(), $column->getName());
+            $columnObject                 = new Column($column);
+            list($ediFieldType, $options) = $columnObject->getEditFieldType([], $columnDefinition);
+            $definitionType               = array_get($columnDefinition, 'type', '');
+
+            if ($ediFieldType === 'boolean' || $definitionType == 'boolean') {
+                $casts[$column->getName()] = 'boolean';
+            } elseif ($definitionType === 'array') {
+                $casts[$column->getName()] = 'array';
+            }
+        }
+
+        return $casts;
     }
 
     protected function getConstants(): array
