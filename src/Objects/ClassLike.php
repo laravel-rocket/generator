@@ -6,6 +6,7 @@ use PhpParser\Lexer;
 use PhpParser\Node\Stmt\ClassConst;
 use PhpParser\Node\Stmt\ClassLike as StmtClassLike;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\ParserFactory;
 
@@ -16,10 +17,31 @@ class ClassLike
     /** @var string $path */
     protected $path;
 
+    /** @var \PhpParser\Node\Stmt[]|\PhpParser\Node[] $statements */
+    protected $statements;
+
+    /** @var \PhpParser\Node\Stmt\ClassLike */
+    protected $classStatement;
+
+    /**
+     * @var string
+     */
+    protected $nameSpace = '';
+
+    /**
+     * @var string
+     */
+    protected $className = '';
+
     /**
      * @var ClassMethod[]
      */
     protected $methods = [];
+
+    /**
+     * @var \ReflectionClass
+     */
+    protected $reflection;
 
     /**
      * @var ClassConst[]
@@ -42,7 +64,7 @@ class ClassLike
      */
     public function getPath()
     {
-        return  $this->path;
+        return $this->path;
     }
 
     /**
@@ -51,6 +73,27 @@ class ClassLike
     public function getMethods()
     {
         return $this->methods;
+    }
+
+    public function fullClassName()
+    {
+        return '\\'.$this->nameSpace.'\\'.$this->className;
+    }
+
+    /**
+     * @return null|\ReflectionClass
+     */
+    public function getReflection()
+    {
+        if (empty($this->reflection)) {
+            try {
+                $this->reflection = new \ReflectionClass($this->fullClassName());
+            } catch (\ReflectionException $exception) {
+                return null;
+            }
+        }
+
+        return $this->reflection;
     }
 
     /**
@@ -79,16 +122,17 @@ class ClassLike
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
 
         try {
-            $statements = $parser->parse(file_get_contents($this->path));
+            $this->statements = $parser->parse(file_get_contents($this->path));
         } catch (Error $e) {
             return false;
         }
 
-        $name  = pathinfo($this->path, PATHINFO_FILENAME);
-        $class = $this->getClassLikeObject($name, $statements);
+        $name                 = pathinfo($this->path, PATHINFO_FILENAME);
+        $this->classStatement = $this->getClassLikeObject($name, $this->statements);
 
-        if (is_a($class, StmtClassLike::class)) {
-            $this->getClassInfo($class);
+        if (is_a($this->classStatement, StmtClassLike::class)) {
+            $this->className = $this->classStatement->name;
+            $this->getClassInfo($this->classStatement);
         }
     }
 
@@ -101,6 +145,10 @@ class ClassLike
     protected function getClassLikeObject(string $name, $statements)
     {
         foreach ($statements as $statement) {
+            if (is_a($statement, Namespace_::class)) {
+                $this->nameSpace = $statement->name();
+            }
+
             if (is_a($statement, StmtClassLike::class) && $statement->name == $name) {
                 return $statement;
             }
@@ -115,6 +163,12 @@ class ClassLike
         return null;
     }
 
+    protected function findFileFromClassName($className, $path)
+    {
+        $reflector = new ReflectionClass('Foo');
+        echo $reflector->getFileName();
+    }
+
     /**
      * @param \PhpParser\Node\Stmt\ClassLike $classLike
      */
@@ -123,9 +177,11 @@ class ClassLike
         if (!property_exists($classLike, 'stmts')) {
             return;
         }
+        if (property_exists($classLike, 'implements')) {
+        }
         foreach ($classLike->stmts as $statement) {
             if (is_a($statement, ClassMethod::class)) {
-                if (!in_array($statement->name, $this->excludeMethods) || !starts_with($statement->name, '__')) {
+                if (!in_array($statement->name, $this->excludeMethods) && !starts_with($statement->name, '__')) {
                     $this->methods[$statement->name] = $statement;
                 }
             } elseif (is_a($statement, Property::class)) {

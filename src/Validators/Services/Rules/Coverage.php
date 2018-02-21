@@ -31,11 +31,11 @@ class Coverage extends BaseRule
         }
 
         $testMethods = $test->getMethods();
-        foreach ($interface->getMethods() as $name => $method) {
-            $testName = 'test'.ucfirst($name);
+        foreach ($interface->getMethods() as $methodName => $method) {
+            $testName = 'test'.ucfirst($methodName);
             if (!array_key_exists($testName, $testMethods)) {
                 $errors[] = new Error(
-                    'Method '.$name.' has no test method ( '.$testName.').',
+                    'Method '.$methodName.' has no test method ( '.$testName.').',
                     Error::LEVEL_ERROR,
                     $name,
                     'Write unit test named : '.$testName

@@ -41,6 +41,6 @@ class {!! $className !!} extends Migration
 	 */
 	public function down()
 	{
-		Schema::dropIfExists('{!! $className !!}');
+		Schema::dropIfExists('{!! $tableName !!}');
 	}
 }

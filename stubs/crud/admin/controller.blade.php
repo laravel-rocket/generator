@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 
 use App\Repositories\{{ $modelName }}RepositoryInterface;
+use App\Repositories\FileRepositoryInterface;
 use App\Models\{{ $modelName }};
 use App\Http\Requests\Admin\{{ $modelName }}Request;
 use LaravelRocket\Foundation\Http\Requests\PaginationRequest;
@@ -13,12 +14,16 @@ class {{ $modelName }}Controller extends Controller
     /** @var \App\Repositories\{{ $modelName }}RepositoryInterface */
     protected ${{ $variableName }}Repository;
 
+    /** @var \App\Repositories\FileRepositoryInterface */
+    protected $fileRepository;
 
     public function __construct(
-        {{ $modelName }}RepositoryInterface ${{ $variableName }}Repository
+        {{ $modelName }}RepositoryInterface ${{ $variableName }}Repository,
+        FileRepositoryInterface $fileRepository
     )
     {
         $this->{{ $variableName }}Repository = ${{ $variableName }}Repository;
+        $this->$fileRepository = $fileRepository;
     }
 
     /**
@@ -105,27 +110,40 @@ class {{ $modelName }}Controller extends Controller
         }
 @endif
 
+@if( count($fileColumns) > 0)
+    @foreach( $fileColumns as $fileColumn)
+        if ($request->hasFile('{{ $fileColumn }}')) {
+            $file                     = $request->file('{{ $fileColumn }}');
+            $mediaType                = $file->getClientMimeType();
+            $path                     = $file->getPathname();
+            $file                     = $this->fileService->upload('default-file', $path, $mediaType, []);
+            if( !empty($file) ){
+                $input[{{ $fileColumn }}] = $file->id;
+            }
+        }
+    @endforeach
+@endif
+
+@if( count($imageColumns) > 0)
+    @foreach( $imageColumns as $imageColumn)
+        if ($request->hasFile('{{ $imageColumn }}')) {
+            $file                     = $request->file('{{ $imageColumn }}');
+            $mediaType                = $file->getClientMimeType();
+            $path                     = $file->getPathname();
+            $file                     = $this->fileService->upload('default-image', $path, $mediaType, []);
+            if( !empty($file) ){
+                $input['{{ $imageColumn }}'] = $file->id;
+            }
+        }
+    @endforeach
+@endif
+
         ${{ $variableName }} = $this->{{ $variableName }}Repository->create($input);
 
         if (empty( ${{ $variableName }} )) {
             return redirect()->back()->withErrors(trans('admin.errors.general.save_failed'));
         }
 
-@if( count($fileColumns) > 0)
-@foreach( $fileColumns as $fileColumn)
-        if ($request->hasFile('{{ $fileColumn }}')) {
-            $file = $user->faceImage;
-            if (!empty($faceImage)) {
-                $this->fileService->delete($faceImage);
-            }
-            $file                     = $request->file('{{ $fileColumn }}');
-            $mediaType                = $file->getClientMimeType();
-            $path                     = $file->getPathname();
-            $file                     = $this->fileService->upload('file', $path, $mediaType, []);
-            $updates['{{ $fileColumn }}'] = $file->id;
-        }
-@endforeach
-@endif
         return redirect()->action('Admin\{{ $modelName }}Controller@index')
             ->with('message-success', trans('admin.messages.general.create_success'));
     }
@@ -214,6 +232,43 @@ class {{ $modelName }}Controller extends Controller
             }
         }
 @endif
+
+@if( count($fileColumns) > 0)
+@foreach( $fileColumns as $fileColumn)
+        if ($request->hasFile('{{ $fileColumn }}')) {
+            $file                     = $request->file('{{ $fileColumn }}');
+            $mediaType                = $file->getClientMimeType();
+            $path                     = $file->getPathname();
+            $file                     = $this->fileService->upload('default-file', $path, $mediaType, []);
+            if( !empty($file) ){
+                $oldFile = $this->fileRepository->find(${{ $variableName }}->{{ $fileColumn }});
+                if (!empty($oldFile)) {
+                    $this->fileService->delete($oldFile);
+                }
+                $updates['{{ $fileColumn }}'] = $file->id;
+            }
+        }
+@endforeach
+@endif
+
+@if( count($imageColumns) > 0)
+@foreach( $imageColumns as $imageColumn)
+        if ($request->hasFile('{{ $imageColumn }}')) {
+            $file                     = $request->file('{{ $imageColumn }}');
+            $mediaType                = $file->getClientMimeType();
+            $path                     = $file->getPathname();
+            $file                     = $this->fileService->upload('default-image', $path, $mediaType, []);
+            if( !empty($file) ){
+                $oldFile = $this->fileRepository->find(${{ $variableName }}->{{ $imageColumn }});
+                if (!empty($oldFile)) {
+                    $this->fileService->delete($oldFile);
+                }
+                $updates['{{ $imageColumn }}'] = $file->id;
+            }
+        }
+@endforeach
+@endif
+
         $this->{{ $variableName }}Repository->update(${{ $variableName }}, $input);
 
         return redirect()->action('Admin\{{ $modelName }}Controller＠show', [$id])
@@ -232,6 +287,25 @@ class {{ $modelName }}Controller extends Controller
         if (empty( ${{ $variableName }} )) {
             abort(404);
         }
+
+@if( count($fileColumns) > 0)
+@foreach( $fileColumns as $fileColumn)
+        $file = $this->fileRepository->find(${{ $variableName }}->{{ $fileColumn }});
+        if (!empty($file)) {
+            $this->fileService->delete($file);
+        }
+
+@endforeach
+@endif
+@if( count($imageColumns) > 0)
+@foreach( $imageColumns as $imageColumn)
+        $file = $this->fileRepository->find(${{ $variableName }}->{{ $imageColumn }});
+        if (!empty($file)) {
+            $this->fileService->delete($file);
+        }
+
+@endforeach
+@endif
         $this->{{ $variableName }}Repository->delete(${{ $variableName }});
 
         return redirect()->action('Admin\{{ $modelName }}Controller@index')

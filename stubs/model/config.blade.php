@@ -3,8 +3,8 @@ return [
     '{{ $key }}' => [
     @if( count(array_get($info, 'options', [])) > 0 )
         'options' => [
-        @foreach( array_get($info, 'options', []) as $key => $name )
-            '{{ $key }}' => 'tables/{{ $tableName }}/columns.{{ $key }}.name',
+        @foreach( array_get($info, 'options', []) as $optionKey => $optionName )
+            '{{ $key }}' => 'tables/{{ $tableName }}/columns.{{ $key }}.{{ $optionKey }}.name',
         @endforeach
         ],
     @endif

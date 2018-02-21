@@ -95,9 +95,9 @@ class LanguageFileGenerator extends ModelBaseGenerator
                 $options = array_get($columnDefinition, 'options', []);
                 $result  = [];
                 foreach ($options as $index => $option) {
-                    $value          = array_get($option, 'value', $index);
-                    $name           = array_get($option, 'name', $index);
-                    $result[$value] = $name;
+                    $optionValue          = array_get($option, 'value', $index);
+                    $optionNme            = array_get($option, 'name', $index);
+                    $result[$optionValue] = $optionNme;
                 }
                 $columnInfo['columns'][$name]['options'] = $result;
             }

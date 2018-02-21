@@ -30,6 +30,8 @@ class ControllerGenerator extends CRUDBaseGenerator
             'timestampColumns'     => [],
             'unixTimestampColumns' => [],
             'booleanColumns'       => [],
+            'fileColumns'          => [],
+            'imageColumns'         => [],
         ];
 
         $excludes = ['id', 'remember_token', 'created_at', 'deleted_at', 'updated_at'];
@@ -45,6 +47,14 @@ class ControllerGenerator extends CRUDBaseGenerator
             if (in_array($name, $excludes)) {
                 continue;
             }
+            if ($ediFieldType === 'image') {
+                $columnInfo['imageColumns'][] = $name;
+                continue;
+            }
+            if ($ediFieldType === 'file') {
+                $columnInfo['fileColumns'][] = $name;
+                continue;
+            }
             if (ends_with($name, '_at') && ($type === 'timestamp' || $type === 'timestamp_f')) {
                 $columnInfo['timestampColumns'][] = $name;
                 continue;
@@ -57,6 +67,7 @@ class ControllerGenerator extends CRUDBaseGenerator
                 $columnInfo['booleanColumns'][] = $name;
                 continue;
             }
+
             $columnInfo['fillableColumns'][] = $name;
         }
 

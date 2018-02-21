@@ -34,15 +34,22 @@ class Consistency extends BaseRule
         $interfaceMethods = array_keys($interface->getMethods());
 
         $onlyInObjects = array_diff($objectMethods, $interfaceMethods);
+
+        $reflection = $interface->getReflection();
+
         foreach ($onlyInObjects as $methodName) {
             $object = $class->getMethods()[$methodName];
+
             if ($object->isPublic()) {
-                $errors[] = new Error(
-                    'Method '.$methodName.' doesn\'t exist in interface.',
-                    Error::LEVEL_ERROR,
-                    $name,
-                    'Add it to  Interface file : '.$interface->getPath()
-                );
+                $reflectionMethod = $reflection->getMethod($methodName);
+                if (empty($reflectionMethod)) {
+                    $errors[] = new Error(
+                        'Method '.$methodName.' doesn\'t exist in interface.',
+                        Error::LEVEL_ERROR,
+                        $name,
+                        'Add it to  Interface file : '.$interface->getPath()
+                    );
+                }
             }
         }
 
