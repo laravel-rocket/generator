@@ -1,5 +1,5 @@
 <?php
-namespace LaravelRocket\Generator\FileUpdaters\Services;
+namespace LaravelRocket\Generator\FileUpdaters\Helpers;
 
 use LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater;
 use function ICanBoogie\singularize;

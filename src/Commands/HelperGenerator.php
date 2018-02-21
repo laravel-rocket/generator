@@ -1,7 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use LaravelRocket\Generator\FileUpdaters\Services\RegisterHelperFileUpdater;
+use LaravelRocket\Generator\FileUpdaters\Helpers\RegisterHelperFileUpdater;
 use LaravelRocket\Generator\Generators\Helpers\HelperInterfaceGenerator;
 use LaravelRocket\Generator\Generators\Helpers\HelperUnitTestGenerator;
 use function ICanBoogie\singularize;
