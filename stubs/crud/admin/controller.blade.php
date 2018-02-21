@@ -3,7 +3,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 
 use App\Repositories\{{ $modelName }}RepositoryInterface;
+@if( $modelName !== 'File')
 use App\Repositories\FileRepositoryInterface;
+@endif
 use App\Models\{{ $modelName }};
 use App\Http\Requests\Admin\{{ $modelName }}Request;
 use LaravelRocket\Foundation\Http\Requests\PaginationRequest;
@@ -14,16 +16,22 @@ class {{ $modelName }}Controller extends Controller
     /** @var \App\Repositories\{{ $modelName }}RepositoryInterface */
     protected ${{ $variableName }}Repository;
 
+@if( $modelName !== 'File')
     /** @var \App\Repositories\FileRepositoryInterface */
     protected $fileRepository;
 
+@endif
     public function __construct(
-        {{ $modelName }}RepositoryInterface ${{ $variableName }}Repository,
-        FileRepositoryInterface $fileRepository
+@if( $modelName !== 'File')
+        FileRepositoryInterface $fileRepository,
+@endif
+        {{ $modelName }}RepositoryInterface ${{ $variableName }}Repository
     )
     {
         $this->{{ $variableName }}Repository = ${{ $variableName }}Repository;
+@if( $modelName !== 'File')
         $this->$fileRepository = $fileRepository;
+@endif
     }
 
     /**
