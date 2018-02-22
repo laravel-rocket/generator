@@ -228,7 +228,7 @@ class TableBaseGenerator extends BaseGenerator
                     'referenceColumn' => $relationTableColumns[1],
                     'referenceTable'  => $relationTableNames[1],
                     'name'            => $relationName,
-                    'referenceModel'  => ucfirst(camel_case(singularize($relationTableName))),
+                    'referenceModel'  => ucfirst(camel_case(singularize($relationTableNames[1]))),
                 ];
                 $names[] = $relationName;
             }
