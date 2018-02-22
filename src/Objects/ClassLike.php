@@ -146,7 +146,7 @@ class ClassLike
     {
         foreach ($statements as $statement) {
             if (is_a($statement, Namespace_::class)) {
-                $this->nameSpace = $statement->name();
+                $this->nameSpace = $statement->name;
             }
 
             if (is_a($statement, StmtClassLike::class) && $statement->name == $name) {

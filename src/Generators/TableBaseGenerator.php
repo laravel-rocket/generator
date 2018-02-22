@@ -161,6 +161,7 @@ class TableBaseGenerator extends BaseGenerator
             $column          = $columns[0];
             $referenceColumn = $referenceColumns[0];
             $relations[]     = [
+                'tableColumn'     => $column,
                 'type'            => 'belongsTo',
                 'column'          => $referenceColumn,
                 'referenceColumn' => $column,
@@ -168,13 +169,12 @@ class TableBaseGenerator extends BaseGenerator
                 'name'            => $relationName,
                 'referenceModel'  => ucfirst(camel_case(singularize($foreignKey->getReferenceTableName()))),
             ];
-            $names[] = $relationName;
+            $names[]         = $relationName;
         }
         foreach ($this->tables as $table) {
             if ($this->table->getName() === $table->getName()) {
                 continue;
             }
-            $relationTableName    = '';
             $relationTableColumns = ['', ''];
             $relationTableNames   = ['', ''];
 
@@ -200,6 +200,7 @@ class TableBaseGenerator extends BaseGenerator
 
                 if ($this->table->getName() === $foreignKey->getReferenceTableName() && !in_array($relationName, $names)) {
                     $relations[]             = [
+                        'tableColumn'     => $referenceColumn,
                         'type'            => $foreignKey->hasMany() ? 'hasMany' : 'hasOne',
                         'column'          => $referenceColumn,
                         'referenceColumn' => $column,
@@ -222,6 +223,7 @@ class TableBaseGenerator extends BaseGenerator
 
             if ($hasRelation && $this->detectRelationTable($table) && !in_array($relationName, $names)) {
                 $relations[] = [
+                    'tableColumn'     => $relationTableColumns[0],
                     'type'            => 'belongsToMany',
                     'relationTable'   => $table->getName(),
                     'column'          => $relationTableColumns[0],
@@ -230,7 +232,7 @@ class TableBaseGenerator extends BaseGenerator
                     'name'            => $relationName,
                     'referenceModel'  => ucfirst(camel_case(singularize($relationTableNames[1]))),
                 ];
-                $names[] = $relationName;
+                $names[]     = $relationName;
             }
         }
 
@@ -315,5 +317,24 @@ class TableBaseGenerator extends BaseGenerator
                 $this->copyConfigFile(['data', 'data', 'currencies.php']);
                 $this->copyLanguageFile(['data', 'currencies.php']);
         }
+    }
+
+    protected function detectRepresentativeColumn()
+    {
+        foreach ($this->table->getColumns() as $column) {
+            $name = $column->getName();
+            if ($name === 'name') {
+                return $column;
+            }
+        }
+
+        foreach ($this->table->getColumns() as $column) {
+            $name = $column->getName();
+            if (ends_with($name, '_name')) {
+                return $column;
+            }
+        }
+
+        return 'id';
     }
 }

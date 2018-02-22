@@ -28,13 +28,14 @@ class PresenterGenerator extends ModelBaseGenerator
      */
     protected function getVariables(): array
     {
-        $modelName                 = $this->getModelName();
-        $variables                 = $this->getColumnInfo();
-        $variables['modelName']    = $modelName;
-        $variables['variableName'] = camel_case($modelName);
-        $variables['viewName']     = kebab_case(pluralize($modelName));
-        $variables['tableName']    = $this->table->getName();
-        $variables['relations']    = $this->getRelations();
+        $modelName                         = $this->getModelName();
+        $variables                         = $this->getColumnInfo();
+        $variables['modelName']            = $modelName;
+        $variables['variableName']         = camel_case($modelName);
+        $variables['viewName']             = kebab_case(pluralize($modelName));
+        $variables['tableName']            = $this->table->getName();
+        $variables['relations']            = $this->getRelations();
+        $variables['representativeColumn'] = $this->detectRepresentativeColumn();
 
         return $variables;
     }

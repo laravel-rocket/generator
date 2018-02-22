@@ -74,6 +74,14 @@ class TemplateGenerator extends CRUDBaseGenerator
         $variables['viewName']     = kebab_case(pluralize($modelName));
         $variables['className']    = $modelName.'Repository';
         $variables['tableName']    = $this->table->getName();
+        $variables['relations']    = $this->getRelations();
+
+        $variables['belongsToRelations'] = [];
+        foreach ($variables['relations'] as $relation) {
+            if (array_get($relation, 'type', '') === 'belongsTo') {
+                $variables['belongsToRelations'][$variables['relations']['tableColumn']->getName()] = $relation;
+            }
+        }
 
         return $variables;
     }
