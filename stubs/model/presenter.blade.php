@@ -72,6 +72,6 @@ class {{ $modelName }}Presenter extends BasePresenter
 
     public function toString()
     {
-        return $this-entity->present()->{{ $representativeColumn }};
+        return $this->entity->present()->{{ $representativeColumn }};
     }
 }

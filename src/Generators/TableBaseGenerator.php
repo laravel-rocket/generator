@@ -324,14 +324,14 @@ class TableBaseGenerator extends BaseGenerator
         foreach ($this->table->getColumns() as $column) {
             $name = $column->getName();
             if ($name === 'name') {
-                return $column;
+                return $column->getName();
             }
         }
 
         foreach ($this->table->getColumns() as $column) {
             $name = $column->getName();
             if (ends_with($name, '_name')) {
-                return $column;
+                return $column->getName();
             }
         }
 

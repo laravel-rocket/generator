@@ -79,7 +79,8 @@ class TemplateGenerator extends CRUDBaseGenerator
         $variables['belongsToRelations'] = [];
         foreach ($variables['relations'] as $relation) {
             if (array_get($relation, 'type', '') === 'belongsTo') {
-                $variables['belongsToRelations'][$variables['relations']['tableColumn']->getName()] = $relation;
+                $tableColumn                                              = array_get($relation, 'tableColumn');
+                $variables['belongsToRelations'][$tableColumn->getName()] = $relation;
             }
         }
 
