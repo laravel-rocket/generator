@@ -163,12 +163,6 @@ class ClassLike
         return null;
     }
 
-    protected function findFileFromClassName($className, $path)
-    {
-        $reflector = new ReflectionClass('Foo');
-        echo $reflector->getFileName();
-    }
-
     /**
      * @param \PhpParser\Node\Stmt\ClassLike $classLike
      */

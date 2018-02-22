@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use LaravelRocket\Generator\Objects\ClassLike;
+
 class RepositoryGenerator extends ModelBaseGenerator
 {
     /**
@@ -26,15 +28,16 @@ class RepositoryGenerator extends ModelBaseGenerator
      */
     protected function getVariables(): array
     {
-        $modelName                   = $this->getModelName();
-        $variables                   = [];
-        $variables['modelName']      = $modelName;
-        $variables['className']      = $modelName.'Repository';
-        $variables['variableName']   = camel_case($modelName);
-        $variables['tableName']      = $this->table->getName();
-        $variables['relationTable']  = $this->detectRelationTable($this->table);
-        $variables['baseClass']      = $variables['relationTable'] ? 'RelationModelRepository' : 'SingleKeyModelRepository';
-        $variables['keywordColumns'] = [];
+        $modelName                    = $this->getModelName();
+        $variables                    = [];
+        $variables['modelName']       = $modelName;
+        $variables['className']       = $modelName.'Repository';
+        $variables['variableName']    = camel_case($modelName);
+        $variables['tableName']       = $this->table->getName();
+        $variables['relationTable']   = $this->detectRelationTable($this->table);
+        $variables['baseClass']       = $variables['relationTable'] ? 'RelationModelRepository' : 'SingleKeyModelRepository';
+        $variables['keywordColumns']  = [];
+        $variables['existingMethods'] = $this->getExistingMethods();
 
         foreach ($this->table->getColumns() as $column) {
             $name = $column->getName();
@@ -44,5 +47,23 @@ class RepositoryGenerator extends ModelBaseGenerator
         }
 
         return $variables;
+    }
+
+    protected function getExistingMethods(): array
+    {
+        if (!file_exists($this->getPath())) {
+            return [];
+        }
+
+        $class = new ClassLike($this->getPath());
+
+        $methods       =  $class->getMethods();
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        $result        = [];
+        foreach ($methods as $name => $method) {
+            $result[$name] = $prettyPrinter->prettyPrint([$method]);
+        }
+
+        return $result;
     }
 }

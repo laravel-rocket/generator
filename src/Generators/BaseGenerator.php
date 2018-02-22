@@ -5,6 +5,9 @@ use Illuminate\Config\Repository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Factory;
 use LaravelRocket\Generator\Services\FileService;
+use PhpParser\Error;
+use PhpParser\Lexer;
+use PhpParser\ParserFactory;
 
 class BaseGenerator
 {
@@ -64,5 +67,29 @@ class BaseGenerator
         if (file_exists($sourcePath)) {
             $this->fileService->copy($sourcePath, $destinationPath);
         }
+    }
+
+    /**
+     * @param string $filePath
+     *
+     * @return null|\PhpParser\Node[]
+     */
+    protected function parseFile(string $filePath)
+    {
+        $lexer = new Lexer([
+            'usedAttributes' => [
+                'comments', 'startLine', 'endLine',
+            ],
+        ]);
+
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
+
+        try {
+            $statements = $parser->parse(file_get_contents($filePath));
+        } catch (Error $e) {
+            return null;
+        }
+
+        return $statements;
     }
 }

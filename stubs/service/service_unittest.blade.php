@@ -5,10 +5,20 @@ use Tests\TestCase;
 class {!! $serviceName !!}Test extends TestCase
 {
 
+    /**
+     * @return \App\Services\{!! $serviceName !!}Interface
+     */
+    protected function getInstance()
+    {
+        /** @var \App\Services\{!! $serviceName !!}eInterface $service */
+        $service = \App::make(\App\Services\{!! $serviceName !!}Interface::class);
+
+        return $service;
+    }
+
     public function testGetInstance()
     {
-        /** @var  \App\Services\{!! $serviceName !!}Interface $service */
-        $service = \App::make(\App\Services\{!! $serviceName !!}Interface::class);
+        $service = $this->getInstance();
         $this->assertNotNull($service);
     }
 

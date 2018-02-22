@@ -23,4 +23,11 @@ interface {{ $modelName }}RepositoryInterface extends {{ $baseClass }}Interface
      * @return \App\Models\{{ $modelName }}
      */
     public function getBlankModel();
+
+@foreach( $existingMethods as $name => $method )
+@if( !in_array($name, ['getBlankModel']))
+{!! $method !!}
+@endif
+@endforeach
+
 }

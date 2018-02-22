@@ -7,6 +7,7 @@ use Illuminate\View\Factory;
 use LaravelRocket\Generator\Services\FileService;
 use PhpParser\Error;
 use PhpParser\Lexer;
+use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\ParserFactory;
 
@@ -87,6 +88,17 @@ class BaseFileUpdater
         return $method->getAttribute('endLine', -1);
     }
 
+    protected function getEndOfArrayItemArray(string $filePath, string $keyName): int
+    {
+        /** @var \PhpParser\Node\Stmt\ClassMethod|null $method */
+        $item = $this->getArrayItem($filePath, $keyName);
+        if (empty($method)) {
+            return -1;
+        }
+
+        return $item->getAttribute('endLine', -1);
+    }
+
     /**
      * @param string $data
      * @param string $filePath
@@ -120,11 +132,10 @@ class BaseFileUpdater
 
     /**
      * @param string $filePath
-     * @param string $methodName
      *
-     * @return null
+     * @return null|\PhpParser\Node[]
      */
-    protected function getMethodObject(string $filePath, string $methodName)
+    protected function parseFile(string $filePath)
     {
         $lexer = new Lexer([
             'usedAttributes' => [
@@ -140,6 +151,21 @@ class BaseFileUpdater
             return null;
         }
 
+        return $statements;
+    }
+
+    /**
+     * @param string $filePath
+     * @param string $methodName
+     *
+     * @return null
+     */
+    protected function getMethodObject(string $filePath, string $methodName)
+    {
+        $statements = $this->parseFile($filePath);
+        if (empty($statements)) {
+            return null;
+        }
         $method = $this->getFunction($methodName, $statements);
         if (empty($method)) {
             return null;
@@ -165,6 +191,38 @@ class BaseFileUpdater
                 if (!empty($return)) {
                     return $return;
                 }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $filePath
+     * @param string $keyName
+     *
+     * @return int
+     */
+    protected function getArrayKey(string $filePath, string $keyName): int
+    {
+        $statements = $this->parseFile($filePath);
+        if (empty($statements)) {
+            return null;
+        }
+
+        return $this->getArrayItem($keyName, $statements);
+    }
+
+    protected function getArrayItem(string $name, $statements)
+    {
+        foreach ($statements as $statement) {
+            print get_class($statement).PHP_EOL;
+            if (get_class($statement) == ArrayItem::class && $statement->key && $statement->key->value === $name) {
+                return $statement->value;
+            } elseif (property_exists($statement, 'stmts')) {
+                $this->travarse($statement->stmts);
+            } elseif (property_exists($statement, 'expr')) {
+                $this->travarse($statement->expr->items);
             }
         }
 

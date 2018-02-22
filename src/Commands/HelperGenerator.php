@@ -1,7 +1,9 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use LaravelRocket\Generator\FileUpdaters\Helpers\AppConfigFileUpdater;
 use LaravelRocket\Generator\FileUpdaters\Helpers\RegisterHelperFileUpdater;
+use LaravelRocket\Generator\Generators\Helpers\FacadeGenerator;
 use LaravelRocket\Generator\Generators\Helpers\HelperInterfaceGenerator;
 use LaravelRocket\Generator\Generators\Helpers\HelperUnitTestGenerator;
 use function ICanBoogie\singularize;
@@ -43,11 +45,13 @@ class HelperGenerator extends BaseCommand
             new \LaravelRocket\Generator\Generators\Helpers\HelperGenerator($this->config, $this->files, $this->view),
             new HelperInterfaceGenerator($this->config, $this->files, $this->view),
             new HelperUnitTestGenerator($this->config, $this->files, $this->view),
+            new FacadeGenerator($this->config, $this->files, $this->view),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
             new RegisterHelperFileUpdater($this->config, $this->files, $this->view),
+            new AppConfigFileUpdater($this->config, $this->files, $this->view),
         ];
 
         $name = $this->normalizeName($this->argument('name'));

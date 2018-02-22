@@ -6,6 +6,11 @@ use function ICanBoogie\singularize;
 
 class HelperGenerator extends NameBaseGenerator
 {
+    protected function canGenerate(): bool
+    {
+        return !file_exists($this->getPath());
+    }
+
     protected function normalizeName(string $name): string
     {
         if (ends_with(strtolower($name), 'helper')) {

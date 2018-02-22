@@ -1,7 +1,9 @@
 <?php
+
 namespace LaravelRocket\Generator\Tests;
 
 use PhpParser\Lexer;
+use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\ParserFactory;
 
 class ParseTest extends TestCase
@@ -19,17 +21,17 @@ class ParseTest extends TestCase
 
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
 
-        $statements = $parser->parse(file_get_contents(__FILE__));
-        print_r($statements);
-        $const      = $this->getConst($statements);
+        $statements = $parser->parse(file_get_contents(__DIR__ . '/data/test.php'));
+        $this->travarse($statements);
+        $const = $this->getConst($statements);
 
-        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
-        print $prettyPrinter->prettyPrint([$const]);
+        //       $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        //       print $prettyPrinter->prettyPrint([$const]);
 
-        foreach ($const->consts as $c) {
-//            print $prettyPrinter->prettyPrint([$c]).PHP_EOL;
-//            print_r($c->name);
-        }
+        //        foreach($const->consts as $c) {
+        //            print $prettyPrinter->prettyPrint([$c]).PHP_EOL;
+        //            print_r($c->name);
+        //        }
 
         $this->assertTrue(true);
     }
@@ -41,18 +43,32 @@ class ParseTest extends TestCase
      */
     protected function getConst($statements)
     {
-        foreach ($statements as $statement) {
-            if (get_class($statement) == \PhpParser\Node\Stmt\ClassConst::class) {
+        foreach($statements as $statement) {
+            if(get_class($statement) == \PhpParser\Node\Stmt\ClassConst::class) {
                 return $statement;
             }
-            if (property_exists($statement, 'stmts')) {
+            if(property_exists($statement, 'stmts')) {
                 $return = $this->getConst($statement->stmts);
-                if (!empty($return)) {
+                if(!empty($return)) {
                     return $return;
                 }
             }
         }
 
         return null;
+    }
+
+    protected function travarse($statements)
+    {
+        foreach($statements as $statement) {
+            print get_class($statement) . PHP_EOL;
+            if(get_class($statement) == ArrayItem::class && $statement->key && $statement->key->value == 'aliases') {
+                print_r($statement->value);
+            } elseif(property_exists($statement, 'stmts')) {
+                $this->travarse($statement->stmts);
+            } elseif(property_exists($statement, 'expr')) {
+                $this->travarse($statement->expr->items);
+            }
+        }
     }
 }
