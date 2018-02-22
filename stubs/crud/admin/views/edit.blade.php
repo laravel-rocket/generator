@@ -82,9 +82,9 @@
             </div>
             <div class="box-body">
 @foreach( $editableColumns as $column)
-            <div class="row">
+            <div class="row" data-column-name="{{ $column['name'] }}">
             <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif" data-column-name="{{ $column['name'] }}">
+                <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
 @if( $column['type'] == 'textarea')
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <textarea name="{{ $column['name'] }}" class="form-control" rows="5" placeholder="＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')">｛!!  old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} !!｝</textarea>
@@ -112,21 +112,21 @@
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
 @foreach($column['options'] as $option)
-                        <option value="{{ array_get($option, 'value') }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.options.{{ array_get($option, 'value') }}')</option>
+                        <option value="{{ array_get($option, 'value') }}" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == '{{ array_get($option, 'value') }}') ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == '{{ array_get($option, 'value') }}')) ) selected ＠endif >＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.options.{{ array_get($option, 'value') }}')</option>
 @endforeach
                     </select>
 @elseif( $column['type'] === 'country')
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
 ＠foreach(config('data.data.currency.currency_codes') as $code => $key)
-                        <option value="｛｛ $code ｝｝">｛｛ \DataHelper::getCountryName($code, $code) ｝｝</option>
+                        <option value="｛｛ $code ｝｝" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == '{{ $code }}') ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == '{{ $code }}')) ) selected ＠endif >｛｛ \DataHelper::getCountryName($code, $code) ｝｝</option>
 ＠endforeach
                     </select>
 @elseif( $column['type'] === 'currency')
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
 ＠foreach(config('data.data.currencies.currency_codes') as $code => $key)
-                        <option value="｛｛ $code ｝｝">｛｛ \DataHelper::getCurrencyName($code, $code) ｝｝</option>
+                        <option value="｛｛ $code ｝｝" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == '{{ $code }}') ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == '{{ $code }}')) ) selected ＠endif >｛｛ \DataHelper::getCurrencyName($code, $code) ｝｝</option>
 ＠endforeach
                     </select>
 @elseif( $column['type'] == 'relation')
