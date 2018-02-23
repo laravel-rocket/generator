@@ -112,7 +112,7 @@
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
 @foreach($column['options'] as $option)
-                        <option value="{{ array_get($option, 'value') }}" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == array_get($option, 'value')) ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == array_get($option, 'value') )) selected ＠endif >＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.options.{{ array_get($option, 'value') }}')</option>
+                        <option value="{{ array_get($option, 'value') }}" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == '{{ array_get($option, 'value') }}') ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == '{{ array_get($option, 'value') }}' )) selected ＠endif >＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.options.{{ array_get($option, 'value') }}')</option>
 @endforeach
                     </select>
 @elseif( $column['type'] === 'country')

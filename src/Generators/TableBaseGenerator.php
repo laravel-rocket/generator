@@ -343,6 +343,9 @@ class TableBaseGenerator extends BaseGenerator
             if (ends_with($name, '_name')) {
                 return $column->getName();
             }
+            if ($name === 'title') {
+                return $column->getName();
+            }
         }
 
         return 'id';

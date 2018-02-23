@@ -31,7 +31,7 @@
             </h3>
             ｛!! \PaginationHelper::render($offset, $limit, $count, $baseUrl, []) !!｝
         </div>
-        <div class="box-body">
+        <div class="box-body scroll">
             <table class="table table-bordered">
                 <tr>
                     <th style="width: 10px">ID</th>
@@ -45,7 +45,15 @@
                         <td>｛｛ $model->id ｝｝</td>
 @foreach( $listColumns as $column)
 @if( array_key_exists($column['name'], $belongsToRelations) )
+@if( $column['type'] === 'image' )
+@elseif( $column['type'] === 'file' )
+                                <td>
+＠if( $model->{{ $belongsToRelations[$column['name']]['name'] }} )
+                                    <a href="">｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() ｝｝</td>
+＠endif
+@else
                                 <td>｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }} ? $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝</td>
+@endif
 @elseif( $column['type'] == 'int' || $column['type'] == 'int')
                                 <td>｛｛ $model->present()->{{ $column['name'] }} ｝｝</td>
 @elseif( $column['type'] == 'boolean')

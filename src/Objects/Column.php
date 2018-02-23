@@ -6,6 +6,7 @@ class Column
     protected $uneditables     = ['id', 'remember_token', 'created_at', 'deleted_at', 'updated_at'];
     protected $unlistables     = ['id', 'remember_token', 'created_at', 'updated_at', 'password', 'deleted_at'];
     protected $unlistableTypes = ['text', 'mediumtext', 'longtext'];
+    protected $unshowables     = ['remember_token', 'password'];
 
     /** @var \TakaakiMizuno\MWBParser\Elements\Column|\Doctrine\DBAL\Schema\Column */
     protected $column;
@@ -67,7 +68,7 @@ class Column
      */
     public function isShowable(): bool
     {
-        return true;
+        return !in_array($this->column->getName(), $this->unshowables);
     }
 
     /**
