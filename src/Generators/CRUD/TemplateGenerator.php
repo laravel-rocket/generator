@@ -25,7 +25,7 @@ class TemplateGenerator extends CRUDBaseGenerator
 
         $variables = $this->getVariables();
 
-        foreach (['index', 'edit'] as $action) {
+        foreach (['index', 'show', 'edit'] as $action) {
             $path = $this->getActionPath($action);
             if (file_exists($path)) {
                 unlink($path);

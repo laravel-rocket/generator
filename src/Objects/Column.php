@@ -65,6 +65,14 @@ class Column
     /**
      * @return bool
      */
+    public function isShowable(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
     public function isQueryable(): bool
     {
         if (ends_with($this->getName(), 'name')) {

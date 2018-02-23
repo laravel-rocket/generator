@@ -244,6 +244,7 @@ class TableBaseGenerator extends BaseGenerator
         $columnInfo = [
             'editableColumns' => [],
             'listColumns'     => [],
+            'showColumns'     => [],
         ];
 
         $relations    = $this->getRelations();
@@ -269,7 +270,7 @@ class TableBaseGenerator extends BaseGenerator
             }
 
             if ($columnObject->isListable()) {
-                $columnInfo['listColumns'][] = [
+                $columnInfo['listColumns'][$name] = [
                     'name'     => $name,
                     'type'     => $type,
                     'relation' => $relation,
@@ -278,7 +279,16 @@ class TableBaseGenerator extends BaseGenerator
             }
 
             if ($columnObject->isEditable()) {
-                $columnInfo['editableColumns'][] = [
+                $columnInfo['editableColumns'][$name] = [
+                    'name'     => $name,
+                    'type'     => $type,
+                    'relation' => $relation,
+                    'options'  => $options,
+                ];
+            }
+
+            if ($columnObject->isShowable()) {
+                $columnInfo['showColumns'][$name] = [
                     'name'     => $name,
                     'type'     => $type,
                     'relation' => $relation,

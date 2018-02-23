@@ -63,8 +63,9 @@
 @endif
 @endforeach
                         <td>
-                            <a href="｛!! action('Admin\{{ $modelName }}Controller＠show', $model->id) !!｝" class="btn btn-block btn-primary btn-sm">＠lang('admin.pages.common.buttons.edit')</a>
-                            <a href="#" class="btn btn-block btn-danger btn-sm delete-button" data-delete-url="｛!! action('Admin\{{ $modelName }}Controller＠destroy', $model->id) !!｝">＠lang('admin.pages.common.buttons.delete')</a>
+                            <a href="｛!! action('Admin\{{ $modelName }}Controller＠show', $model->id) !!｝" class="btn btn-block btn-primary btn-sm"><i class="far fa-file-alt"></i> ＠lang('admin.pages.common.buttons.show')</a>
+                            <a href="｛!! action('Admin\{{ $modelName }}Controller＠edit', $model->id) !!｝" class="btn btn-block btn-primary btn-sm"><i class="fas fa-edit"></i> ＠lang('admin.pages.common.buttons.edit')</a>
+                            <a href="#" class="btn btn-block btn-danger btn-sm delete-button" data-delete-url="｛!! action('Admin\{{ $modelName }}Controller＠destroy', $model->id) !!｝"><i class="fas fa-trash-alt"></i> ＠lang('admin.pages.common.buttons.delete')</a>
                         </td>
                     </tr>
                 ＠endforeach

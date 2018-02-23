@@ -169,8 +169,7 @@ class {{ $modelName }}Controller extends Controller
             abort(404);
         }
 
-        return view('pages.admin.{{ $viewName }}.edit', [
-            'isNew' => false,
+        return view('pages.admin.{{ $viewName }}.show', [
             '{{ $variableName }}' => ${{ $variableName }},
         ]);
     }
@@ -183,7 +182,15 @@ class {{ $modelName }}Controller extends Controller
     */
     public function edit($id)
     {
-        return redirect()->action('Admin\{{ $modelName }}Controller＠show', [$id]);
+        ${{ $variableName }} = $this->{{ $variableName }}Repository->find($id);
+        if (empty( ${{ $variableName }} )) {
+            abort(404);
+        }
+
+        return view('pages.admin.{{ $viewName }}.edit', [
+            'isNew' => false,
+            '{{ $variableName }}' => ${{ $variableName }},
+        ]);
     }
 
     /**
