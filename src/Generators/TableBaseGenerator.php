@@ -244,7 +244,7 @@ class TableBaseGenerator extends BaseGenerator
         $columnInfo = [
             'editableColumns' => [],
             'listColumns'     => [],
-            'showColumns'     => [],
+            'showableColumns' => [],
         ];
 
         $relations    = $this->getRelations();
@@ -288,7 +288,7 @@ class TableBaseGenerator extends BaseGenerator
             }
 
             if ($columnObject->isShowable()) {
-                $columnInfo['showColumns'][$name] = [
+                $columnInfo['showableColumns'][$name] = [
                     'name'     => $name,
                     'type'     => $type,
                     'relation' => $relation,

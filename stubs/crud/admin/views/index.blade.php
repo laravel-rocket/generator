@@ -45,7 +45,7 @@
                         <td>｛｛ $model->id ｝｝</td>
 @foreach( $listColumns as $column)
 @if( array_key_exists($column['name'], $belongsToRelations) )
-                                <td>｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() ｝｝</td>
+                                <td>｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }} ? $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝</td>
 @elseif( $column['type'] == 'int' || $column['type'] == 'int')
                                 <td>｛｛ $model->present()->{{ $column['name'] }} ｝｝</td>
 @elseif( $column['type'] == 'boolean')
