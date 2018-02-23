@@ -24,9 +24,10 @@ class UnitTestGenerator extends CRUDBaseGenerator
                 $variables['testData']       = 'str_random(10)';
                 break;
             }
-            if (in_array($column->getType(), ['int', 'bigInt', 'decimal'])) {
+            if (in_array($column->getType(), ['int', 'bigint', 'decimal'])) {
                 $variables['testColumnName'] = $column->getName();
                 $variables['testData']       = 'rand(50,100)';
+                break;
             }
         }
 
