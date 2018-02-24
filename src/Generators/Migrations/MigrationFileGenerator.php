@@ -35,7 +35,7 @@ class MigrationFileGenerator extends BaseGenerator
 
         if ($this->generateAlterTableMigrationFile) {
             if (!empty($existingPath)) {
-                $filePath         = $this->getPath($table->getName(), $dateTime, true);
+                $filePath         = $this->getMigrationPath($table->getName(), $dateTime, true);
                 $isAlterMigration = true;
             } else {
                 $filePath = $this->getPath($table->getName(), $dateTime, false);
@@ -121,7 +121,7 @@ class MigrationFileGenerator extends BaseGenerator
      *
      * @return string
      */
-    protected function getPath($name, $dateTime, $isAlterMigration = false)
+    protected function getMigrationPath($name, $dateTime, $isAlterMigration = false)
     {
         $basePath = $this->getMigrationBasePath();
 
