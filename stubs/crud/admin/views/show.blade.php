@@ -25,7 +25,11 @@
 <div class="box box-primary">
     <div class="box-header with-border">
         <h3 class="box-title">｛｛ ${{ $variableName }}->present()->toString() ｝｝</h3>
-        <a href="｛!! action('Admin\{{ $modelName }}Controller＠edit', ${{ $variableName }}->id) !!｝" class="btn btn-block btn-primary btn-sm"><i class="fas fa-edit"></i> ＠lang('admin.pages.common.buttons.edit')</a>
+        <div class="box-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+                <a href="｛!! action('Admin\{{ $modelName }}Controller＠edit', ${{ $variableName }}->id) !!｝" class="btn btn-block btn-primary btn-sm"><i class="fas fa-edit"></i> ＠lang('admin.pages.common.buttons.edit')</a>
+            </div>
+        </div>
     </div>
     <div class="box-body">
         <table class="table">
