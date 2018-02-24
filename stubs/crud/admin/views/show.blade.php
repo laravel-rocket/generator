@@ -36,11 +36,26 @@
 @foreach( $showableColumns as $column)
         <tr data-column-name="{{ $column['name'] }}">
             <th>＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</th>
+                <td>
 @if( array_key_exists($column['name'], $belongsToRelations) )
-            <td>｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} ? ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝</td>
+@if( $column['type'] === 'image' )
+＠if( $model->{{ $belongsToRelations[$column['name']]['name'] }} )
+                <img src="｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝" class="img-thumbnail" width="50" height="50">
+＠else
+                <img src="｛｛ \URLHelper::asset('images/no-image.png', 'common') ｝｝" class="img-thumbnail" width="50" height="50">
+＠endif
+@elseif( $column['type'] === 'file' )
+＠if( $model->{{ $belongsToRelations[$column['name']]['name'] }} )
+                <a href="｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝">｛!! \FileHelper::getFileIconHTML($model->{{ $belongsToRelations[$column['name']]['name'] }}->mime_type) !!｝｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() ｝｝</a>
+＠endif
 @else
-            <td>｛｛ ${{ $variableName }}->{{ $column['name'] }} ｝｝</td>
+                ｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }} ? $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
 @endif
+                ｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} ? ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
+@else
+                ｛｛ ${{ $variableName }}->{{ $column['name'] }} ｝｝
+@endif
+                </td>
             <tr>
         </tr>
 @endforeach

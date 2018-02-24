@@ -49,7 +49,7 @@
 ＠if( $model->{{ $belongsToRelations[$column['name']]['name'] }} )
                                 <img src="｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝" class="img-thumbnail" width="50" height="50">
 ＠else
-                                <img src="｛｛ \URLHelper::asset('images/no-image.png', 'common'); ｝｝" class="img-thumbnail" width="50" height="50">
+                                <img src="｛｛ \URLHelper::asset('images/no-image.png', 'common') ｝｝" class="img-thumbnail" width="50" height="50">
 ＠endif
 @elseif( $column['type'] === 'file' )
 ＠if( $model->{{ $belongsToRelations[$column['name']]['name'] }} )
