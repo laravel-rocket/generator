@@ -14,7 +14,7 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
     ];
 
 @if( array_key_exists('getBlankModel', $existingMethods))
-    {!! \ArrayHelper::popWithKey($existingMethods, 'getBlankModel') !!}
+    {!! \ArrayHelper::popWithKey( 'getBlankModel', $existingMethods) !!}
 @else
     public function getBlankModel()
     {
@@ -23,7 +23,7 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
 @endif
 
 @if( array_key_exists('rules', $existingMethods))
-    {!! \ArrayHelper::popWithKey($existingMethods, 'rules') !!}
+    {!! \ArrayHelper::popWithKey('rules', $existingMethods) !!}
 @else
     public function rules()
     {
