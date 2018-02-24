@@ -35,7 +35,7 @@ class {{ $modelName }}Controller extends Controller
     {
         $this->{{ $variableName }}Repository = ${{ $variableName }}Repository;
 @if( $modelName !== 'File')
-        $this->fileService = $fileRepository;
+        $this->fileRepository = $fileRepository;
 @endif
         $this->fileService = $fileService;
     }
