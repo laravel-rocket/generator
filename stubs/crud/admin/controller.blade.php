@@ -14,16 +14,27 @@ class {{ $modelName }}Controller extends Controller
     /** @var \App\Repositories\{{ $modelName }}RepositoryInterface */
     protected ${{ $variableName }}Repository;
 
+@if( $modelName !== 'File')
+    /** @var \App\Repositories\FileRepositoryInterface */
+    protected $fileRepository;
+
+@endif
     /** @var \App\Services\FileServiceInterface */
     protected $fileService;
 
     public function __construct(
+@if( $modelName !== 'File')
+        FileRepositoryInterface $fileRepository,
+@endif
         FileServiceInterface $fileService,
         {{ $modelName }}RepositoryInterface ${{ $variableName }}Repository
     )
     {
         $this->{{ $variableName }}Repository = ${{ $variableName }}Repository;
-        $this->fileService      = $fileService;
+@if( $modelName !== 'File')
+        $this->fileService = $fileRepository;
+@endif
+        $this->fileService = $fileService;
     }
 
     /**
