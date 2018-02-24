@@ -8,6 +8,7 @@
 
 ＠section('scripts')
     <script src="｛｛ \URLHelper::asset('libs/moment/moment.min.js', 'admin') ｝｝"></script>
+    <script src="｛｛ \URLHelper::asset('libs/bootstrap-datepicker/js/bootstrap-datepicker.min.js', 'admin') ｝｝"></script>
     <script src="｛｛ \URLHelper::asset('libs/datetimepicker/js/bootstrap-datetimepicker.min.js', 'admin') ｝｝"></script>
     <script>
         $('.datetime-field').datetimepicker(｛'format': 'YYYY-MM-DD HH:mm:ss'｝);
@@ -118,14 +119,14 @@
 @elseif( $column['type'] === 'country')
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
-＠foreach(config('data.data.currency.currency_codes') as $code => $key)
+＠foreach(config('data.data.countries.country_codes.3digits', []) as $code => $key)
                         <option value="｛｛ $code ｝｝" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == $code) ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == $code) ) selected ＠endif >｛｛ \DataHelper::getCountryName($code, $code) ｝｝</option>
 ＠endforeach
                     </select>
 @elseif( $column['type'] === 'currency')
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
-＠foreach(config('data.data.currencies.currency_codes') as $code => $key)
+＠foreach(config('data.data.currencies.currency_codes', []) as $code => $key)
                         <option value="｛｛ $code ｝｝" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == $code) ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == $code ) ) selected ＠endif >｛｛ \DataHelper::getCurrencyName($code, $code) ｝｝</option>
 ＠endforeach
                     </select>
