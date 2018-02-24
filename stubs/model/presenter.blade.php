@@ -79,7 +79,7 @@ class {{ $modelName }}Presenter extends BasePresenter
 @endforeach
 
 @if( array_key_exists('toString' , $existingMethods))
-    {!! \ArrayHelper::popWithKey($existingMethods, 'toString')!!}
+    {!! \ArrayHelper::popWithKey('toString', $existingMethods)!!}
 @else
     public function toString()
     {

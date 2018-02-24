@@ -33,7 +33,7 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
 @endif
 
 @if( array_key_exists('messages', $existingMethods))
-    {!! \ArrayHelper::popWithKey($existingMethods, 'messages') !!}
+    {!! \ArrayHelper::popWithKey('messages', $existingMethods) !!}
 @else
     public function messages()
     {
@@ -43,7 +43,7 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
 @endif
 
 @if( array_key_exists('buildQueryByFilter', $existingMethods))
-    {!! \ArrayHelper::popWithKey($existingMethods, 'buildQueryByFilter') !!}
+    {!! \ArrayHelper::popWithKey('buildQueryByFilter', $existingMethods) !!}
 @else
     protected function buildQueryByFilter($query, $filter)
     {
