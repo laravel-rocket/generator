@@ -1,8 +1,6 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
-use LaravelRocket\Generator\Objects\ClassLike;
-
 class RepositoryGenerator extends ModelBaseGenerator
 {
     /**
@@ -47,23 +45,5 @@ class RepositoryGenerator extends ModelBaseGenerator
         }
 
         return $variables;
-    }
-
-    protected function getExistingMethods(): array
-    {
-        if (!file_exists($this->getPath())) {
-            return [];
-        }
-
-        $class = new ClassLike($this->getPath());
-
-        $methods       =  $class->getMethods();
-        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
-        $result        = [];
-        foreach ($methods as $name => $method) {
-            $result[$name] = $prettyPrinter->prettyPrint([$method]);
-        }
-
-        return $result;
     }
 }

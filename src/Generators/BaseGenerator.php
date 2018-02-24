@@ -4,6 +4,7 @@ namespace LaravelRocket\Generator\Generators;
 use Illuminate\Config\Repository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Factory;
+use LaravelRocket\Generator\Objects\ClassLike;
 use LaravelRocket\Generator\Services\FileService;
 use PhpParser\Error;
 use PhpParser\Lexer;
@@ -38,6 +39,30 @@ class BaseGenerator
         $this->view   = $view;
 
         $this->fileService = new FileService($this->config, $this->files, $this->view);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function canGenerate(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPath(): string
+    {
+        return '';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getView(): string
+    {
+        return '';
     }
 
     public function copyConfigFile($path)
@@ -91,5 +116,23 @@ class BaseGenerator
         }
 
         return $statements;
+    }
+
+    protected function getExistingMethods(): array
+    {
+        if (!file_exists($this->getPath())) {
+            return [];
+        }
+
+        $class = new ClassLike($this->getPath());
+
+        $methods       =  $class->getMethods();
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        $result        = [];
+        foreach ($methods as $name => $method) {
+            $result[$name] = $prettyPrinter->prettyPrint([$method]);
+        }
+
+        return $result;
     }
 }

@@ -53,30 +53,6 @@ class NameBaseGenerator extends BaseGenerator
     }
 
     /**
-     * @return bool
-     */
-    protected function canGenerate(): bool
-    {
-        return true;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getPath(): string
-    {
-        return '';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getView(): string
-    {
-        return '';
-    }
-
-    /**
      * @return array
      */
     protected function getVariables(): array

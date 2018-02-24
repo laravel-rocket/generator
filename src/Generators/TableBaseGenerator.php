@@ -87,22 +87,6 @@ class TableBaseGenerator extends BaseGenerator
     }
 
     /**
-     * @return string
-     */
-    protected function getPath(): string
-    {
-        return '';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getView(): string
-    {
-        return '';
-    }
-
-    /**
      * @return array
      */
     protected function getVariables(): array

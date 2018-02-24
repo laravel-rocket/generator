@@ -36,6 +36,7 @@ class PresenterGenerator extends ModelBaseGenerator
         $variables['tableName']            = $this->table->getName();
         $variables['relations']            = $this->getRelations();
         $variables['representativeColumn'] = $this->detectRepresentativeColumn();
+        $variables['existingMethods']      = $this->getExistingMethods();
 
         return $variables;
     }

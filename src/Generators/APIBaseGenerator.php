@@ -85,32 +85,8 @@ class APIBaseGenerator extends BaseGenerator
         return $data;
     }
 
-    /**
-     * @return bool
-     */
-    protected function canGenerate(): bool
-    {
-        return true;
-    }
-
     protected function preprocess()
     {
-    }
-
-    /**
-     * @return string
-     */
-    protected function getPath(): string
-    {
-        return '';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getView(): string
-    {
-        return '';
     }
 
     /**
