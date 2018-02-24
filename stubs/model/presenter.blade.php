@@ -27,7 +27,10 @@ class {{ $modelName }}Presenter extends BasePresenter
 
 @foreach( $relations as $relation )
 @if( array_key_exists($relation['name'] , $existingMethods))
-    {!! \ArrayHelper::popWithKey($relation['name'], $existingMethods) !!}
+    {!! $existingMethods[$relation['name']] !!}
+@php
+    unset($existingMethods[$relation['name']]);
+@endphp
 @else
 @if( $relation['type'] === 'belongsTo' || $relation['type'] === 'hasOne' )
     public function {{ $relation['name'] }}()
@@ -51,7 +54,10 @@ class {{ $modelName }}Presenter extends BasePresenter
 
 @foreach( $editableColumns as $editableColumn)
 @if( array_key_exists($editableColumn['name'] , $existingMethods))
-    {!! \ArrayHelper::popWithKey($editableColumn['name'], $existingMethods) !!}
+    {!! $existingMethods[$editableColumn['name']] !!}
+@php
+unset($existingMethods[$editableColumn['name']]);
+@endphp
 @else
 @if( $editableColumn['type'] == 'select')
     public function {{ $editableColumn['name'] }}()
@@ -79,7 +85,10 @@ class {{ $modelName }}Presenter extends BasePresenter
 @endforeach
 
 @if( array_key_exists('toString' , $existingMethods))
-    {!! \ArrayHelper::popWithKey('toString', $existingMethods)!!}
+    {!! $existingMethods['toString'] !!}
+@php
+    unset($existingMethods['toString']);
+@endphp
 @else
     public function toString()
     {

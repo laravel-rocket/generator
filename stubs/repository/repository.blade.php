@@ -14,7 +14,10 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
     ];
 
 @if( array_key_exists('getBlankModel', $existingMethods))
-    {!! \ArrayHelper::popWithKey( 'getBlankModel', $existingMethods) !!}
+    {!! $existingMethods['getBlankModel'] !!}
+@php
+unset($existingMethods['getBlankModel']);
+@endphp
 @else
     public function getBlankModel()
     {
@@ -23,7 +26,10 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
 @endif
 
 @if( array_key_exists('rules', $existingMethods))
-    {!! \ArrayHelper::popWithKey('rules', $existingMethods) !!}
+    {!! $existingMethods['rules'] !!}
+@php
+    unset($existingMethods['rules']);
+@endphp
 @else
     public function rules()
     {
@@ -33,7 +39,10 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
 @endif
 
 @if( array_key_exists('messages', $existingMethods))
-    {!! \ArrayHelper::popWithKey('messages', $existingMethods) !!}
+    {!! $existingMethods['messages'] !!}
+@php
+    unset($existingMethods['messages']);
+@endphp
 @else
     public function messages()
     {
@@ -43,7 +52,10 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
 @endif
 
 @if( array_key_exists('buildQueryByFilter', $existingMethods))
-    {!! \ArrayHelper::popWithKey('buildQueryByFilter', $existingMethods) !!}
+{!! $existingMethods['buildQueryByFilter'] !!}
+@php
+    unset($existingMethods['buildQueryByFilter']);
+@endphp
 @else
     protected function buildQueryByFilter($query, $filter)
     {
