@@ -41,34 +41,37 @@
                     <th style="width: 40px">&nbsp;</th>
                 </tr>
                 ＠foreach( $models as $model )
-                    <tr>
-                        <td>｛｛ $model->id ｝｝</td>
+                    <td>｛｛ $model->id ｝｝</td>
 @foreach( $listColumns as $column)
+                    <td>
 @if( array_key_exists($column['name'], $belongsToRelations) )
 @if( $column['type'] === 'image' )
-@elseif( $column['type'] === 'file' )
-                                <td>
 ＠if( $model->{{ $belongsToRelations[$column['name']]['name'] }} )
-                                    <a href="">｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() ｝｝</td>
+                                <img src="｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝" class="img-thumbnail" width="50" height="50">
+＠else
+                                <img src="｛｛ \URLHelper::asset('images/no-image.png', 'common'); ｝｝" class="img-thumbnail" width="50" height="50">
+＠endif
+@elseif( $column['type'] === 'file' )
+＠if( $model->{{ $belongsToRelations[$column['name']]['name'] }} )
+                                <a href="｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝">｛!! \FileHelper::getFileIconHTML($model->{{ $belongsToRelations[$column['name']]['name'] }}->mime_type) !!｝｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() ｝｝</a>
 ＠endif
 @else
-                                <td>｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }} ? $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝</td>
+                                ｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }} ? $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
 @endif
 @elseif( $column['type'] == 'int' || $column['type'] == 'int')
-                                <td>｛｛ $model->present()->{{ $column['name'] }} ｝｝</td>
+                                ｛｛ $model->present()->{{ $column['name'] }} ｝｝
 @elseif( $column['type'] == 'boolean')
-                                <td>
                                     ＠if( $model->{{ $column['name'] }} )
                                     <span class="badge bg-green">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.booleans.true')</span>
                                     ＠else
                                     <span class="badge bg-red">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.booleans.false')</span>
                                     ＠endif
-                                </td>
 @elseif( $column['type'] == 'relation')
-                                <td>｛｛ $model->{{ $column['relation'] }}->present()->{{ $column['name'] }} ｝｝</td>
+                                    ｛｛ $model->{{ $column['relation'] }}->present()->{{ $column['name'] }} ｝｝
 @else
-                                <td>｛｛ $model->present()->{{ $column['name'] }} ｝｝</td>
+                                    ｛｛ $model->present()->{{ $column['name'] }} ｝｝
 @endif
+                    </td>
 @endforeach
                         <td>
                             <a href="｛!! action('Admin\{{ $modelName }}Controller＠show', $model->id) !!｝" class="btn btn-block btn-primary btn-sm"><i class="far fa-file-alt"></i> ＠lang('admin.pages.common.buttons.show')</a>
