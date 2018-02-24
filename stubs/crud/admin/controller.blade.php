@@ -7,6 +7,9 @@ use App\Services\FileServiceInterface;
 use App\Models\{{ $modelName }};
 use App\Http\Requests\Admin\{{ $modelName }}Request;
 use LaravelRocket\Foundation\Http\Requests\PaginationRequest;
+@if( $modelName !== 'File')
+use App\Repositories\FileRepositoryInterface;
+@endif
 
 class {{ $modelName }}Controller extends Controller
 {
