@@ -40,16 +40,16 @@
 @if( array_key_exists($column['name'], $belongsToRelations) )
 @if( $column['type'] === 'image' )
 ＠if( $model->{{ $belongsToRelations[$column['name']]['name'] }} )
-                <img src="｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝" class="img-thumbnail" width="50" height="50">
+                <img src="｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝" class="img-thumbnail" width="50" height="50">
 ＠else
                 <img src="｛｛ \URLHelper::asset('images/no-image.png', 'common') ｝｝" class="img-thumbnail" width="50" height="50">
 ＠endif
 @elseif( $column['type'] === 'file' )
 ＠if( $model->{{ $belongsToRelations[$column['name']]['name'] }} )
-                <a href="｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝">｛!! \FileHelper::getFileIconHTML($model->{{ $belongsToRelations[$column['name']]['name'] }}->mime_type) !!｝｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() ｝｝</a>
+                <a href="｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝">｛!! \FileHelper::getFileIconHTML($model->{{ $belongsToRelations[$column['name']]['name'] }}->mime_type) !!｝｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() ｝｝</a>
 ＠endif
 @else
-                ｛｛ $model->{{ $belongsToRelations[$column['name']]['name'] }} ? $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
+                ｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} ? $model->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
 @endif
                 ｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} ? ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
 @else
