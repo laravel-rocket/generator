@@ -26,6 +26,9 @@ class {{ $modelName }}Presenter extends BasePresenter
     ];
 
 @foreach( $relations as $relation )
+@if( array_key_exists($relation['name'] , $existingMethods))
+    {!! \ArrayHelper::popWithKey($relation['name'], $existingMethods) !!}
+@else
 @if( $relation['type'] === 'belongsTo' || $relation['type'] === 'hasOne' )
     public function {{ $relation['name'] }}()
     {
@@ -43,9 +46,13 @@ class {{ $modelName }}Presenter extends BasePresenter
         return $model;
     }
 @endif
+@endif
 @endforeach
 
 @foreach( $editableColumns as $editableColumn)
+@if( array_key_exists($editableColumn['name'] , $existingMethods))
+    {!! \ArrayHelper::popWithKey($editableColumn['name'], $existingMethods) !!}
+@else
 @if( $editableColumn['type'] == 'select')
     public function {{ $editableColumn['name'] }}()
     {
@@ -68,10 +75,20 @@ class {{ $modelName }}Presenter extends BasePresenter
         return trans('tables/{{ $viewName }}/columns.{{ $editableColumn['name'] }}.booleans.'. $key);
     }
 @endif
+@endif
 @endforeach
 
+@if( array_key_exists('toString' , $existingMethods))
+    {!! \ArrayHelper::popWithKey($existingMethods, 'toString')!!}
+@else
     public function toString()
     {
         return $this->entity->present()->{{ $representativeColumn }};
     }
+@endif
+
+@foreach( $existingMethods as $name => $method )
+    {!! $method !!}
+@endforeach
+
 }

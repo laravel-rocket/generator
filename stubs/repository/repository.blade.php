@@ -14,7 +14,7 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
     ];
 
 @if( array_key_exists('getBlankModel', $existingMethods))
-    {!! $existingMethods['getBlankModel'] !!}
+    {!! \ArrayHelper::popWithKey($existingMethods, 'getBlankModel') !!}
 @else
     public function getBlankModel()
     {
@@ -23,7 +23,7 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
 @endif
 
 @if( array_key_exists('rules', $existingMethods))
-    {!! $existingMethods['rules'] !!}
+    {!! \ArrayHelper::popWithKey($existingMethods, 'rules') !!}
 @else
     public function rules()
     {
@@ -33,7 +33,7 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
 @endif
 
 @if( array_key_exists('messages', $existingMethods))
-    {!! $existingMethods['messages'] !!}
+    {!! \ArrayHelper::popWithKey($existingMethods, 'messages') !!}
 @else
     public function messages()
     {
@@ -43,7 +43,7 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
 @endif
 
 @if( array_key_exists('buildQueryByFilter', $existingMethods))
-{!! $existingMethods['buildQueryByFilter'] !!}
+    {!! \ArrayHelper::popWithKey($existingMethods, 'buildQueryByFilter') !!}
 @else
     protected function buildQueryByFilter($query, $filter)
     {
@@ -69,8 +69,6 @@ class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelNa
 @endif
 
 @foreach( $existingMethods as $name => $method )
-@if( !in_array($name, ['buildQueryByFilter','messages','rules','getBlankModel']))
 {!! $method !!}
-@endif
 @endforeach
 }
