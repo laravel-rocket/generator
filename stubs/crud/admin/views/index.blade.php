@@ -41,6 +41,7 @@
                     <th style="width: 40px">&nbsp;</th>
                 </tr>
                 ＠foreach( $models as $model )
+                <tr>
                     <td>｛｛ $model->id ｝｝</td>
 @foreach( $listColumns as $column)
                     <td>
