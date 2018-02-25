@@ -266,7 +266,7 @@ class {{ $modelName }}Controller extends Controller
                 if (!empty($oldFile)) {
                     $this->fileService->delete($oldFile);
                 }
-                $updates['{{ $fileColumn }}'] = $file->id;
+                $input['{{ $fileColumn }}'] = $file->id;
             }
         }
 @endforeach
@@ -284,7 +284,7 @@ class {{ $modelName }}Controller extends Controller
                 if (!empty($oldFile)) {
                     $this->fileService->delete($oldFile);
                 }
-                $updates['{{ $imageColumn }}'] = $file->id;
+                $input['{{ $imageColumn }}'] = $file->id;
             }
         }
 @endforeach
