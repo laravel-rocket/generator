@@ -38,13 +38,13 @@ class MigrationFileGenerator extends BaseGenerator
                 $filePath         = $this->getMigrationPath($table->getName(), $dateTime, true);
                 $isAlterMigration = true;
             } else {
-                $filePath = $this->getPath($table->getName(), $dateTime, false);
+                $filePath = $this->getMigrationPath($table->getName(), $dateTime, false);
             }
         } else {
             if (!empty($existingPath)) {
                 $filePath = $existingPath;
             } else {
-                $filePath = $this->getPath($table->getName(), $dateTime, false);
+                $filePath = $this->getMigrationPath($table->getName(), $dateTime, false);
             }
         }
 
