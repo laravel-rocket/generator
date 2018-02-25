@@ -37,9 +37,11 @@ class RepositoryGenerator extends ModelBaseGenerator
         $variables['keywordColumns']  = [];
         $variables['existingMethods'] = $this->getExistingMethods();
 
+        $targetColumns   = ['name', 'title', 'content', 'note', 'description'];
+        $targetPostfixes = ['_name', '_code'];
         foreach ($this->table->getColumns() as $column) {
             $name = $column->getName();
-            if ($name === 'name' || ends_with($name, '_name') || ends_with($name, '_code')) {
+            if (in_array($name, $targetColumns) || ends_with($name, $targetPostfixes)) {
                 $variables['keywordColumns'][] = $name;
             }
         }
