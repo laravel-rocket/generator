@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators;
 
 use Illuminate\Config\Repository;
@@ -24,19 +25,26 @@ class BaseGenerator
     /** @var \LaravelRocket\Generator\Services\FileService */
     protected $fileService;
 
+    /** @var bool */
+    protected $rebuild;
+
     /**
-     * @param \Illuminate\Config\Repository     $config
+     * @param \Illuminate\Config\Repository $config
      * @param \Illuminate\Filesystem\Filesystem $files
-     * @param \Illuminate\View\Factory          $view
+     * @param \Illuminate\View\Factory $view
+     * @param bool $rebuild
      */
     public function __construct(
         Repository $config,
         Filesystem $files,
-        Factory $view = null
-    ) {
-        $this->config = $config;
-        $this->files  = $files;
-        $this->view   = $view;
+        Factory $view = null,
+        bool $rebuild = false
+    )
+    {
+        $this->config  = $config;
+        $this->files   = $files;
+        $this->view    = $view;
+        $this->rebuild = $rebuild;
 
         $this->fileService = new FileService($this->config, $this->files, $this->view);
     }
@@ -67,7 +75,7 @@ class BaseGenerator
 
     public function copyConfigFile($path)
     {
-        if (is_array($path)) {
+        if(is_array($path)) {
             $path = implode(DIRECTORY_SEPARATOR, $path);
         }
 
@@ -75,21 +83,21 @@ class BaseGenerator
 
         $destinationPath = config_path($path);
 
-        if (file_exists($sourcePath)) {
+        if(file_exists($sourcePath)) {
             $this->fileService->copy($sourcePath, $destinationPath);
         }
     }
 
     public function copyLanguageFile($path)
     {
-        if (is_array($path)) {
+        if(is_array($path)) {
             $path = implode(DIRECTORY_SEPARATOR, $path);
         }
 
         $sourcePath      = implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'sources', 'resource', 'lang', 'en', $path]);
         $destinationPath = resource_path(implode(DIRECTORY_SEPARATOR, ['lang', 'en', $path]));
 
-        if (file_exists($sourcePath)) {
+        if(file_exists($sourcePath)) {
             $this->fileService->copy($sourcePath, $destinationPath);
         }
     }
@@ -111,7 +119,7 @@ class BaseGenerator
 
         try {
             $statements = $parser->parse(file_get_contents($filePath));
-        } catch (Error $e) {
+        } catch(Error $e) {
             return null;
         }
 
@@ -120,16 +128,16 @@ class BaseGenerator
 
     protected function getExistingMethods(): array
     {
-        if (!file_exists($this->getPath())) {
+        if(!file_exists($this->getPath())) {
             return [];
         }
 
         $class = new ClassLike($this->getPath());
 
-        $methods       =  $class->getMethods();
+        $methods       = $class->getMethods();
         $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
         $result        = [];
-        foreach ($methods as $name => $method) {
+        foreach($methods as $name => $method) {
             $result[$name] = $prettyPrinter->prettyPrint([$method]);
         }
 

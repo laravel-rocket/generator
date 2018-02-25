@@ -28,6 +28,10 @@ class TemplateGenerator extends CRUDBaseGenerator
         foreach (['index', 'show', 'edit'] as $action) {
             $path = $this->getActionPath($action);
             if (file_exists($path)) {
+                if( !$this->rebuild ){
+                    continue;
+                }
+
                 unlink($path);
             }
             $view = $this->getActionView($action);

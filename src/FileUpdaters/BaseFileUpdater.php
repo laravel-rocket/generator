@@ -25,15 +25,20 @@ class BaseFileUpdater
     /** @var \LaravelRocket\Generator\Services\FileService */
     protected $fileService;
 
+    /** @var bool */
+    protected $rebuild;
+
     /**
      * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
      * @param \Illuminate\View\Factory          $view
+     * @param bool $rebuild
      */
     public function __construct(
         Repository $config,
         Filesystem $files,
-        Factory $view = null
+        Factory $view = null,
+        bool $rebuild = false
     ) {
         $this->config = $config;
         $this->files  = $files;

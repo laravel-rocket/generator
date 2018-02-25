@@ -13,6 +13,13 @@ class CRUDBaseGenerator extends TableBaseGenerator
             }
         }
 
+        if( !$this->rebuild ){
+            $path = $this->getPath();
+            if( !empty($path) && file_exists($path) ){
+                return false;
+            }
+        }
+
         return !$this->detectRelationTable($this->table);
     }
 }

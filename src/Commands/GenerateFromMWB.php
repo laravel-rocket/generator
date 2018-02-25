@@ -117,28 +117,30 @@ class GenerateFromMWB extends MWBGenerator
 
     protected function generateModel()
     {
+        $rebuild = !!$this->input->hasOption('rebuild');
+
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
-            new ModelGenerator($this->config, $this->files, $this->view),
-            new ModelFactoryGenerator($this->config, $this->files, $this->view),
-            new ModelUnitTestGenerator($this->config, $this->files, $this->view),
-            new PresenterGenerator($this->config, $this->files, $this->view),
-            new RepositoryGenerator($this->config, $this->files, $this->view),
-            new RepositoryInterfaceGenerator($this->config, $this->files, $this->view),
-            new RepositoryUnitTestGenerator($this->config, $this->files, $this->view),
-            new LanguageFileGenerator($this->config, $this->files, $this->view),
-            new ConfigFileGenerator($this->config, $this->files, $this->view),
-            new AdminCRUDControllerGenerator($this->config, $this->files, $this->view),
-            new AdminCRUDRequestGenerator($this->config, $this->files, $this->view),
-            new AdminCRUDUnitTestGenerator($this->config, $this->files, $this->view),
-            new AdminCRUDTemplateGenerator($this->config, $this->files, $this->view),
+            new ModelGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ModelFactoryGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ModelUnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
+            new PresenterGenerator($this->config, $this->files, $this->view, $rebuild),
+            new RepositoryGenerator($this->config, $this->files, $this->view, $rebuild),
+            new RepositoryInterfaceGenerator($this->config, $this->files, $this->view, $rebuild),
+            new RepositoryUnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
+            new LanguageFileGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ConfigFileGenerator($this->config, $this->files, $this->view, $rebuild),
+            new AdminCRUDControllerGenerator($this->config, $this->files, $this->view, $rebuild),
+            new AdminCRUDRequestGenerator($this->config, $this->files, $this->view, $rebuild),
+            new AdminCRUDUnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
+            new AdminCRUDTemplateGenerator($this->config, $this->files, $this->view, $rebuild),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
-            new RegisterRepositoryFileUpdater($this->config, $this->files, $this->view),
-            new RouterFileUpdater($this->config, $this->files, $this->view),
-            new SideBarFileUpdater($this->config, $this->files, $this->view),
+            new RegisterRepositoryFileUpdater($this->config, $this->files, $this->view, $rebuild),
+            new RouterFileUpdater($this->config, $this->files, $this->view, $rebuild),
+            new SideBarFileUpdater($this->config, $this->files, $this->view, $rebuild),
         ];
 
         foreach ($this->tables as $table) {
