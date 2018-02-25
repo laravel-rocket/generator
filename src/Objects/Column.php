@@ -6,7 +6,7 @@ class Column
     protected $uneditables     = ['id', 'remember_token', 'created_at', 'deleted_at', 'updated_at'];
     protected $unlistables     = ['id', 'remember_token', 'created_at', 'updated_at', 'password', 'deleted_at'];
     protected $unlistableTypes = ['text', 'mediumtext', 'longtext'];
-    protected $unshowables     = ['remember_token', 'password'];
+    protected $unshowables     = ['deleted_at', 'remember_token', 'password'];
 
     /** @var \TakaakiMizuno\MWBParser\Elements\Column|\Doctrine\DBAL\Schema\Column */
     protected $column;

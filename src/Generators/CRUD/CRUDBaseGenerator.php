@@ -13,9 +13,9 @@ class CRUDBaseGenerator extends TableBaseGenerator
             }
         }
 
-        if( !$this->rebuild ){
+        if (!$this->rebuild) {
             $path = $this->getPath();
-            if( !empty($path) && file_exists($path) ){
+            if (!empty($path) && file_exists($path)) {
                 return false;
             }
         }

@@ -32,7 +32,7 @@ class BaseFileUpdater
      * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
      * @param \Illuminate\View\Factory          $view
-     * @param bool $rebuild
+     * @param bool                              $rebuild
      */
     public function __construct(
         Repository $config,

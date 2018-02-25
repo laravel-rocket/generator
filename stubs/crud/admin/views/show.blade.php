@@ -36,27 +36,26 @@
 @foreach( $showableColumns as $column)
         <tr data-column-name="{{ $column['name'] }}">
             <th>＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</th>
-                <td>
+            <td>
 @if( array_key_exists($column['name'], $belongsToRelations) )
 @if( $column['type'] === 'image' )
 ＠if( ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} )
-                <img src="｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝" class="img-thumbnail" width="50" height="50">
+            <img src="｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝" class="img-thumbnail" width="50" height="50">
 ＠else
-                <img src="｛｛ \URLHelper::asset('images/no-image.png', 'common') ｝｝" class="img-thumbnail" width="50" height="50">
+            <img src="｛｛ \URLHelper::asset('images/no-image.png', 'common') ｝｝" class="img-thumbnail" width="50" height="50">
 ＠endif
 @elseif( $column['type'] === 'file' )
 ＠if( ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} )
-                <a href="｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝">｛!! \FileHelper::getFileIconHTML(${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->mime_type) !!｝｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() ｝｝</a>
+            <a href="｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝">｛!! \FileHelper::getFileIconHTML(${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->mime_type) !!｝｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() ｝｝</a>
 ＠endif
 @else
-                ｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} ? ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
+            ｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} ? ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
 @endif
-                ｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} ? ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
+            ｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} ? ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
 @else
-                ｛｛ ${{ $variableName }}->{{ $column['name'] }} ｝｝
+            ｛｛ ${{ $variableName }}->{{ $column['name'] }} ｝｝
 @endif
-                </td>
-            <tr>
+            </td>
         </tr>
 @endforeach
         </table>
