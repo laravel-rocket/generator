@@ -49,11 +49,11 @@
             <a href="｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->url ｝｝">｛!! \FileHelper::getFileIconHTML(${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->mime_type) !!｝｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() ｝｝</a>
 ＠endif
 @else
-            ｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} ? ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
+            ${{ $variableName }}->present()->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
 @endif
-            ｛｛ ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }} ? ${{ $variableName }}->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
+            ${{ $variableName }}->present()->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
 @else
-            ｛｛ ${{ $variableName }}->{{ $column['name'] }} ｝｝
+            ｛｛ ${{ $variableName }}->present()->{{ $column['name'] }} ｝｝
 @endif
             </td>
         </tr>
