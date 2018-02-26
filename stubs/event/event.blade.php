@@ -4,7 +4,7 @@ namespace App\Events;
 use App\Models\{{ $model }};
 @endforeach
 
-class {{ $name }} extends Event
+class {{ $eventName }} extends Event
 {
 @foreach( $models as $model)
     /** @var {{ $model }} ${{ lcfirst($model) }} */
@@ -15,7 +15,7 @@ class {{ $name }} extends Event
      * Create a new event instance.
      *
 @foreach( $models as $model)
-     * {{ $model }} ${{ lcfirst($model) }}
+     * @param {{ $model }} ${{ lcfirst($model) }}
 @endforeach
      */
     public function __construct(

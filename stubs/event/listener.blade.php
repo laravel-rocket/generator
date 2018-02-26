@@ -11,7 +11,7 @@ use App\Repositories\{{ $model }}RepositoryInterface;
 use App\Services\{{ $service }}Interface;
 @endforeach
 
-class {{ $listenerName }}
+class {{ $listenerName }} extends EventListener
 {
 @foreach( $models as $model)
     /** @var {{ $model }}RepositoryInterface ${{ lcfirst($model) }}Repository */
@@ -19,8 +19,8 @@ class {{ $listenerName }}
 @endforeach
 
 @foreach( $services as $service)
-    /** @var {{ $service }}Interface ${{ lcfirst($service) }} */
-    protected ${{ lcfirst($service) }};
+    /** @var {{ $service }}ServiceInterface ${{ lcfirst($service) }}Service */
+    protected ${{ lcfirst($service) }}Service;
 @endforeach
 
     /**
@@ -30,22 +30,22 @@ class {{ $listenerName }}
      * @param {{ $model }}RepositoryInterface ${{ lcfirst($model) }}Repository
 @endforeach
 @foreach( $services as $service)
-    * @param {{ $service }}Interface ${{ lcfirst($service) }}
+    * @param {{ $service }}ServiceInterface ${{ lcfirst($service) }}Service
 @endforeach
      */
     public function __construct(
 @foreach( $models as $model)
-        {{ $model }}RepositoryInterface ${{ lcfirst($model) }}Repository{{ ($loop->last && count($service) == 0 ? '' : ',') }}
+        {{ $model }}RepositoryInterface ${{ lcfirst($model) }}Repository{{ ($loop->last && count($services) == 0 ? '' : ',') }}
 @endforeach
 @foreach( $services as $service)
-        {{ $service }}Interface ${{ lcfirst($service) }}{{ ($loop->last ? '' : ',') }}
+        {{ $service }}ServiceInterface ${{ lcfirst($service) }}Service{{ ($loop->last ? '' : ',') }}
 @endforeach
     ) {
 @foreach( $models as $model)
-        $this->{{ lcfirst($model) }} = ${{ lcfirst($model) }};
+        $this->{{ lcfirst($model) }}Repository = ${{ lcfirst($model) }}Repository;
 @endforeach
 @foreach( $services as $service)
-        $this->{{ lcfirst($service) }} = ${{ lcfirst($service) }};
+        $this->{{ lcfirst($service) }}Service = ${{ lcfirst($service) }}Service;
 @endforeach
     }
 

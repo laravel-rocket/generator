@@ -49,7 +49,7 @@ class EventGenerator extends BaseCommand
 
         $name = $this->normalizeName($this->argument('name'));
 
-        $this->output('Processing '.$name.'Service...', 'green');
+        $this->output('Processing Event Named '.$name.'...', 'green');
         foreach ($generators as $generator) {
             $generator->generate($name, $this->json);
         }

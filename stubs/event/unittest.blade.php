@@ -3,7 +3,7 @@ namespace Tests\Events;
 use App\Events\{{ $eventName}};
 use Tests\TestCase;
 
-class EventTest extends TestCase
+class {{ $eventName}}Test extends TestCase
 {
     protected $useDatabase = true;
 
@@ -11,7 +11,7 @@ class EventTest extends TestCase
     {
         /** @var \App\Events\{{ $eventName}} $event */
 @foreach( $models as $model )
-        ${{ lcfirst($model) }} = factory({{ $modelName }}::class)->create();
+        ${{ lcfirst($model) }} = factory({{ $model }}::class)->create();
 @endforeach
         $event = new {{ $eventName }}(
 @foreach( $models as $model )

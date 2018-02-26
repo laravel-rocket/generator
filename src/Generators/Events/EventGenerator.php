@@ -18,7 +18,7 @@ class EventGenerator extends NameBaseGenerator
     protected function getModels()
     {
         $directory = app_path('Models');
-        if (!file_exists($directory) || is_dir($directory)) {
+        if (!is_dir($directory)) {
             return [];
         }
         $models = [];

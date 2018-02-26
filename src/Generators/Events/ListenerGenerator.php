@@ -18,7 +18,7 @@ class ListenerGenerator extends NameBaseGenerator
     protected function getModels()
     {
         $directory = app_path('Models');
-        if (!file_exists($directory) || is_dir($directory)) {
+        if (!is_dir($directory)) {
             return [];
         }
         $models = [];
@@ -34,6 +34,25 @@ class ListenerGenerator extends NameBaseGenerator
         return $models;
     }
 
+    protected function getServices()
+    {
+        $directory = app_path('Services'.DIRECTORY_SEPARATOR.'Production');
+        if (!is_dir($directory)) {
+            return [];
+        }
+        $services = [];
+        $files    = scandir($directory);
+        foreach ($files as $file) {
+            if (in_array($file, ['..', '.'])) {
+                continue;
+            }
+            $serviceName = pathinfo($file, PATHINFO_FILENAME);
+            $services[]  = substr($serviceName, 0, strlen($serviceName) - 7);
+        }
+
+        return $services;
+    }
+
     protected function getRelatedModels()
     {
         $relatedModels = [];
@@ -47,6 +66,19 @@ class ListenerGenerator extends NameBaseGenerator
         return $relatedModels;
     }
 
+    protected function getRelatedServices()
+    {
+        $relatedServices = [];
+        $services        = $this->getServices();
+        foreach ($services as $service) {
+            if (starts_with($this->name, $service)) {
+                $relatedServices[] = $service;
+            }
+        }
+
+        return $relatedServices;
+    }
+
     /**
      * @return array
      */
@@ -57,6 +89,7 @@ class ListenerGenerator extends NameBaseGenerator
             'eventName'    => $eventName,
             'listenerName' => $eventName.'EventListener',
             'models'       => $this->getRelatedModels(),
+            'services'     => $this->getRelatedServices(),
         ];
 
         return $variables;

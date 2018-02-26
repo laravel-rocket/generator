@@ -20,7 +20,7 @@ class RegisterEventFileUpdater extends NameBaseFileUpdater
      */
     protected function getInsertPosition(): int
     {
-        return $this->getEndOfArrayItemArray($this->getTargetFilePath(), 'listen');
+        return $this->getEndOfProperty($this->getTargetFilePath(), 'listen');
     }
 
     /**
@@ -48,9 +48,10 @@ class RegisterEventFileUpdater extends NameBaseFileUpdater
     protected function getInsertData(): string
     {
         return <<< EOS
-        \App\Events\{$this->name}::class => [
-            \App\Listeners{$this->name}EventListener::class,
+        \App\Events\\{$this->name}::class => [
+            \App\Listeners\\{$this->name}EventListener::class,
         ],
+
 EOS;
     }
 }

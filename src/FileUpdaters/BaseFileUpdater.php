@@ -95,9 +95,19 @@ class BaseFileUpdater
 
     protected function getEndOfArrayItemArray(string $filePath, string $keyName): int
     {
-        /** @var \PhpParser\Node\Stmt\ClassMethod|null $method */
-        $item = $this->getArrayItem($filePath, $keyName);
-        if (empty($method)) {
+        $item = $this->getArrayKey($filePath, $keyName);
+        if (empty($item)) {
+            return -1;
+        }
+
+        return $item->getAttribute('endLine', -1);
+    }
+
+    protected function getEndOfProperty(string $filePath, string $keyName): int
+    {
+        /** @var \PhpParser\Node\Stmt\PropertyProperty|null $item */
+        $item = $this->getProperty($filePath, $keyName);
+        if (empty($item)) {
             return -1;
         }
 
@@ -192,9 +202,9 @@ class BaseFileUpdater
                 return $statement;
             }
             if (property_exists($statement, 'stmts')) {
-                $return = $this->getFunction($name, $statement->stmts);
-                if (!empty($return)) {
-                    return $return;
+                $result = $this->getFunction($name, $statement->stmts);
+                if (!empty($result)) {
+                    return $result;
                 }
             }
         }
@@ -206,9 +216,9 @@ class BaseFileUpdater
      * @param string $filePath
      * @param string $keyName
      *
-     * @return int
+     * @return \PhpParser\Node\Expr|null
      */
-    protected function getArrayKey(string $filePath, string $keyName): int
+    protected function getArrayKey(string $filePath, string $keyName)
     {
         $statements = $this->parseFile($filePath);
         if (empty($statements)) {
@@ -218,16 +228,66 @@ class BaseFileUpdater
         return $this->getArrayItem($keyName, $statements);
     }
 
+    /**
+     * @param string            $name
+     * @param \PhpParser\Node[] $statements
+     *
+     * @return \PhpParser\Node\Expr|null
+     */
     protected function getArrayItem(string $name, $statements)
     {
         foreach ($statements as $statement) {
-            print get_class($statement).PHP_EOL;
             if (get_class($statement) == ArrayItem::class && $statement->key && $statement->key->value === $name) {
                 return $statement->value;
             } elseif (property_exists($statement, 'stmts')) {
-                $this->travarse($statement->stmts);
+                $result = $this->getArrayItem($name, $statement->stmts);
             } elseif (property_exists($statement, 'expr')) {
-                $this->travarse($statement->expr->items);
+                $result = $this->getArrayItem($name, $statement->expr->items);
+            }
+            if (!empty($result)) {
+                return $result;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $filePath
+     * @param string $keyName
+     *
+     * @return \PhpParser\Node\Stmt\PropertyProperty|null
+     */
+    protected function getProperty(string $filePath, string $keyName)
+    {
+        $statements = $this->parseFile($filePath);
+        if (empty($statements)) {
+            return null;
+        }
+
+        return $this->getPropertyRecursive($keyName, $statements);
+    }
+
+    /**
+     * @param string            $name
+     * @param \PhpParser\Node[] $statements
+     *
+     * @return \PhpParser\Node\Stmt\PropertyProperty|null
+     */
+    protected function getPropertyRecursive(string $name, $statements)
+    {
+        foreach ($statements as $statement) {
+            if (get_class($statement) == \PhpParser\Node\Stmt\PropertyProperty::class && $statement->name === $name) {
+                return $statement;
+            } elseif (property_exists($statement, 'stmts')) {
+                $result = $this->getPropertyRecursive($name, $statement->stmts);
+            } elseif (property_exists($statement, 'expr')) {
+                $result = $this->getPropertyRecursive($name, $statement->expr->items);
+            } elseif (property_exists($statement, 'props')) {
+                $result = $this->getPropertyRecursive($name, $statement->props);
+            }
+            if (!empty($result)) {
+                return $result;
             }
         }
 
