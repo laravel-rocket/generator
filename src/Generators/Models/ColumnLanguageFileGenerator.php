@@ -4,7 +4,7 @@ namespace LaravelRocket\Generator\Generators\Models;
 use LaravelRocket\Generator\Objects\Column;
 use function ICanBoogie\pluralize;
 
-class LanguageFileGenerator extends ModelBaseGenerator
+class ColumnLanguageFileGenerator extends ModelBaseGenerator
 {
     /**
      * @return string

@@ -60,11 +60,11 @@
         </table>
     </div>
 </div>
-@foreach( $relations as $relation )
+@foreach( $relations as $key => $relation )
 @if( array_get($relation, 'type') == 'hasMany')
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title">{{ array_get($relation, 'name') }}</h3>
+            <h3 class="box-title">＠lang('tables/{{ $tableName }}/columns.{{ $key }}.name')</h3>
         </div>
         <div class="box-body">
             <table class="table">

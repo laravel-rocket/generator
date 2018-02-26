@@ -7,7 +7,7 @@ use LaravelRocket\Generator\Generators\CRUD\Admin\ControllerGenerator as AdminCR
 use LaravelRocket\Generator\Generators\CRUD\Admin\RequestGenerator as AdminCRUDRequestGenerator;
 use LaravelRocket\Generator\Generators\CRUD\Admin\TemplateGenerator as AdminCRUDTemplateGenerator;
 use LaravelRocket\Generator\Generators\CRUD\Admin\UnitTestGenerator as AdminCRUDUnitTestGenerator;
-use LaravelRocket\Generator\Generators\Models\LanguageFileGenerator;
+use LaravelRocket\Generator\Generators\Models\ColumnLanguageFileGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use function ICanBoogie\pluralize;
 use function ICanBoogie\singularize;
@@ -52,7 +52,7 @@ class AdminCRUDGenerator extends MWBGenerator
     {
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
-            new LanguageFileGenerator($this->config, $this->files, $this->view),
+            new ColumnLanguageFileGenerator($this->config, $this->files, $this->view),
             new AdminCRUDControllerGenerator($this->config, $this->files, $this->view),
             new AdminCRUDRequestGenerator($this->config, $this->files, $this->view),
             new AdminCRUDUnitTestGenerator($this->config, $this->files, $this->view),

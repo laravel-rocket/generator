@@ -152,6 +152,7 @@ class TableBaseGenerator extends BaseGenerator
                 'referenceTable'  => $foreignKey->getReferenceTableName(),
                 'name'            => $relationName,
                 'referenceModel'  => ucfirst(camel_case(singularize($foreignKey->getReferenceTableName()))),
+                'viewName'        => title_case(str_replace('_', ' ', snake_case($relationName))),
             ];
             $names[]         = $relationName;
         }
