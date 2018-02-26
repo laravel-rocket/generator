@@ -7,7 +7,7 @@ use App\Models\{{ $modelName }};
 class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelName }}RepositoryInterface
 {
 
-    protected $searchTargetColumns = [
+    protected $querySearchTargets = [
 @foreach( $keywordColumns as $index => $keywordColumn )
         '{{ $keywordColumn  }}',
 @endforeach
@@ -59,23 +59,6 @@ unset($existingMethods['getBlankModel']);
 @else
     protected function buildQueryByFilter($query, $filter)
     {
-        if( count($this->searchTargetColumns) > 0 ){
-            if (array_key_exists('query', $filter)) {
-                $searchWord = array_get($filter, 'query');
-                if (!empty($searchWord)) {
-                    $query = $query->where(function ($q) use ($searchWord) {
-                        $q = $q->where($this->searchKeys[0], 'LIKE', '%'.$searchWord.'%');
-                        foreach( $this->searchTargetColumns as $index => $column ){
-                            if( $index > 0 ){
-                                $q =$q->orWhere($column, 'LIKE', '%'.$searchWord.'%');
-                            }
-                        }
-                    });
-                }
-                unset($filter['query']);
-            }
-        }
-
         return parent::buildQueryByFilter($query, $filter);
     }
 @endif

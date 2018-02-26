@@ -117,7 +117,7 @@ class GenerateFromMWB extends MWBGenerator
 
     protected function generateModel()
     {
-        $rebuild = (bool) $this->input->hasOption('rebuild');
+        $rebuild = !empty($this->input->getOption('rebuild'));
 
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [

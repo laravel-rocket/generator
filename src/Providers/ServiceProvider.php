@@ -3,6 +3,7 @@ namespace LaravelRocket\Generator\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use LaravelRocket\Generator\Commands\AdminCRUDGenerator;
+use LaravelRocket\Generator\Commands\EventGenerator;
 use LaravelRocket\Generator\Commands\GenerateFromMWB;
 use LaravelRocket\Generator\Commands\HelperGenerator;
 use LaravelRocket\Generator\Commands\MigrationGenerator;
@@ -62,6 +63,10 @@ class ServiceProvider extends BaseServiceProvider
             return new Validate($app['config'], $app['files'], $app['view']);
         });
 
+        $this->app->singleton('command.rocket.make.event', function ($app) {
+            return new EventGenerator($app['config'], $app['files'], $app['view']);
+        });
+
         $this->commands(
             'command.rocket.generate.from-mwb'
         );
@@ -88,6 +93,10 @@ class ServiceProvider extends BaseServiceProvider
 
         $this->commands(
             'command.rocket.make.repository'
+        );
+
+        $this->commands(
+            'command.rocket.make.event'
         );
 
         $this->commands(

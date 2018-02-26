@@ -10,7 +10,7 @@ class ServiceGenerator extends BaseCommand
 {
     protected $name = 'rocket:make:service';
 
-    protected $signature = 'rocket:make:service {name} {--json=}';
+    protected $signature = 'rocket:make:service {name} {--rebuild} {--json=}';
 
     protected $description = 'Create Service';
 
@@ -38,16 +38,18 @@ class ServiceGenerator extends BaseCommand
 
     protected function generateService()
     {
+        $rebuild = !empty($this->input->getOption('rebuild'));
+
         /** @var \LaravelRocket\Generator\Generators\NameBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\Services\ServiceGenerator($this->config, $this->files, $this->view),
-            new ServiceInterfaceGenerator($this->config, $this->files, $this->view),
-            new ServiceUnitTestGenerator($this->config, $this->files, $this->view),
+            new \LaravelRocket\Generator\Generators\Services\ServiceGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ServiceInterfaceGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ServiceUnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
-            new RegisterServiceFileUpdater($this->config, $this->files, $this->view),
+            new RegisterServiceFileUpdater($this->config, $this->files, $this->view, $rebuild),
         ];
 
         $name = $this->normalizeName($this->argument('name'));
