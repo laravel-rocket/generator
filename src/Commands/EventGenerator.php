@@ -1,7 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use LaravelRocket\Generator\FileUpdaters\Helpers\RegisterEventFileUpdater;
+use LaravelRocket\Generator\FileUpdaters\Events\RegisterEventFileUpdater;
 use LaravelRocket\Generator\Generators\Events\ListenerGenerator;
 use LaravelRocket\Generator\Generators\Events\UnitTestGenerator;
 

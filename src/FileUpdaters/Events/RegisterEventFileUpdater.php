@@ -1,5 +1,5 @@
 <?php
-namespace LaravelRocket\Generator\FileUpdaters\Helpers;
+namespace LaravelRocket\Generator\FileUpdaters\Events;
 
 use LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater;
 
