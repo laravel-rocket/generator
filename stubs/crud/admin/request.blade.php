@@ -1,6 +1,5 @@
 namespace App\Http\Requests\Admin;
 
-use LaravelRocket\Foundation\Http\Requests\Request;
 use App\Repositories\{{ $modelName }}RepositoryInterface;
 
 class {{ $modelName }}Request extends Request
