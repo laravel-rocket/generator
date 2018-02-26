@@ -51,7 +51,6 @@
 @else
             ${{ $variableName }}->present()->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
 @endif
-            ${{ $variableName }}->present()->{{ $belongsToRelations[$column['name']]['name'] }}->present()->toString() : '' ｝｝
 @else
             ｛｛ ${{ $variableName }}->present()->{{ $column['name'] }} ｝｝
 @endif
