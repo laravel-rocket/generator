@@ -111,8 +111,8 @@
 @elseif( $column['type'] === 'select')
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
-＠foreach(\TypeHelper::getColumnTypes('{{ $tableName }}', '{{ $column['name'] }}') as $value => $name) as $option)
-                        <option value="｛｛ $value ｝｝" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == ｛｛ $value ｝｝') ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == '｛｛ $value ｝｝' )) selected ＠endif >＠lang($name)</option>
+＠foreach(\TypeHelper::getColumnTypes('{{ $tableName }}', '{{ $column['name'] }}')'' as $value => $name) as $option)
+                        <option value="｛｛ $value ｝｝" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == '｛｛ $value ｝｝') ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == '｛｛ $value ｝｝' )) selected ＠endif >＠lang($name)</option>
 ＠endforeach
                     </select>
 @elseif( $column['type'] === 'country')
