@@ -109,12 +109,11 @@
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label><br/>
                     <input id="{{ $column['name'] }}" name="{{ $column['name'] }}" type="file">
 @elseif( $column['type'] === 'select')
-                <div class="form-group ＠if ($errors->has('{{ $column['name'] }}')) has-error ＠endif">
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <select name="{{ $column['name'] }}" id="{{ $column['name'] }}" class="select2 form-control">
-@foreach($column['options'] as $option)
-                        <option value="{{ array_get($option, 'value') }}" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == '{{ array_get($option, 'value') }}') ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == '{{ array_get($option, 'value') }}' )) selected ＠endif >＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.options.{{ array_get($option, 'value') }}')</option>
-@endforeach
+＠foreach(\TypeHelper::getColumnTypes('{{ $tableName }}' as $value => $name) as $option)
+                        <option value="｛｛ $value ｝｝" ＠if( ( old('{{ $column['name'] }}') && old('{{ $column['name'] }}') == ｛｛ $value ｝｝') ||  ( !old('{{ $column['name'] }}') &&  ${{ $variableName }}->{{ $column['name'] }} == '｛｛ $value ｝｝' )) selected ＠endif >＠lang($name)</option>
+＠endforeach
                     </select>
 @elseif( $column['type'] === 'country')
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
