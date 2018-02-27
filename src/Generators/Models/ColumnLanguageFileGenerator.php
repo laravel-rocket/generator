@@ -22,7 +22,7 @@ class ColumnLanguageFileGenerator extends ModelBaseGenerator
      */
     protected function getView(): string
     {
-        return 'model.language';
+        return 'model.column_language';
     }
 
     /**
