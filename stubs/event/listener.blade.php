@@ -8,7 +8,7 @@ use App\Models\{{ $model }};
 use App\Repositories\{{ $model }}RepositoryInterface;
 @endforeach
 @foreach( $services as $service)
-use App\Services\{{ $service }}Interface;
+use App\Services\{{ $service }}ServiceInterface;
 @endforeach
 
 class {{ $listenerName }} extends EventListener
