@@ -27,7 +27,7 @@ class GenerateFromMWB extends MWBGenerator
 {
     protected $name = 'rocket:generate:from-mwb';
 
-    protected $signature = 'rocket:generate:from-mwb {--rebuild} {--file=} {--json=} ';
+    protected $signature = 'rocket:generate:from-mwb {--rebuild} {--file=} {--table=} {--json=} ';
 
     protected $description = 'Create Migrations/Models/Repositories';
 
@@ -49,6 +49,17 @@ class GenerateFromMWB extends MWBGenerator
         $success = $this->validateTableSchema();
         if (!$success) {
             return false;
+        }
+
+        $tableName = $this->option('table');
+        if (!empty($tableName)) {
+            $table = $this->findTableFromName($tableName);
+            if (empty($table)) {
+                $this->output('Table ( '.$tableName.' ) doesn\'t exist.', 'error');
+
+                return false;
+            }
+            $this->tables = [$table];
         }
 
         $this->databaseService = new DatabaseService($this->config, $this->files);
