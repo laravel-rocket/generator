@@ -132,7 +132,7 @@ class {{ $modelName }}Controller extends Controller
             $path                     = $file->getPathname();
             $file                     = $this->fileService->upload('default-file', $path, $mediaType, []);
             if( !empty($file) ){
-                $input[{{ $fileColumn }}] = $file->id;
+                $input['{{ $fileColumn }}'] = $file->id;
             }
         }
     @endforeach
