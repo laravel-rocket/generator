@@ -27,7 +27,7 @@ class GenerateFromMWB extends MWBGenerator
 {
     protected $name = 'rocket:generate:from-mwb';
 
-    protected $signature = 'rocket:generate:from-mwb {--rebuild} {--file=} {--json=} ';
+    protected $signature = 'rocket:generate:from-mwb {--rebuild} {--file=} {--table=} {--json=} ';
 
     protected $description = 'Create Migrations/Models/Repositories';
 
