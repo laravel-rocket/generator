@@ -51,6 +51,17 @@ class GenerateFromMWB extends MWBGenerator
             return false;
         }
 
+        $tableName = $this->option('table');
+        if (!empty($tableName)) {
+            $table = $this->findTableFromName($tableName);
+            if (empty($table)) {
+                $this->output('Table ( '.$tableName.' ) doesn\'t exist.', 'error');
+
+                return false;
+            }
+            $this->tables = [$table];
+        }
+
         $this->databaseService = new DatabaseService($this->config, $this->files);
         $this->databaseService->resetDatabase();
 
