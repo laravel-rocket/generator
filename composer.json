@@ -10,7 +10,7 @@
     }
   ],
   "require": {
-    "php": ">=7.0",
+    "php": ">=7.1.3",
     "symfony/yaml": "~3.3",
     "takaaki-mizuno/php-code-manipulator": "0.*",
     "takaaki-mizuno/swagger-parser": "0.*",
@@ -19,13 +19,13 @@
     "nikic/PHP-Parser": "~3.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "~6.0",
+    "phpunit/phpunit": "~7.0",
     "icanboogie/inflector": "^1.4",
-    "laravel/framework": "5.5.*",
-    "laravel-rocket/foundation": "2.0.*",
+    "laravel/framework": "5.6.*",
+    "laravel-rocket/foundation": "2.2.*",
     "friendsofphp/php-cs-fixer": "^2.8",
     "fzaninotto/faker": "~1.5",
-    "laravel/laravel": "5.5.*"
+    "laravel/laravel": "5.6.*"
   },
   "autoload": {
     "psr-4": {
