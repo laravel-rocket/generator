@@ -224,8 +224,8 @@ class Column
         }
         if (!is_null($this->getDefaultValue()) && $this->getDefaultValue() !== '') {
             $defaultValue = $this->getDefaultValue();
-            if ($defaultValue == "''") {
-                $defaultValue = '';
+            if (starts_with($defaultValue, "'") && ends_with($defaultValue, "'")) {
+                $defaultValue = substr($defaultValue, 1, strlen($defaultValue) - 2);
             }
             switch ($this->getType()) {
                 case 'tinyint':

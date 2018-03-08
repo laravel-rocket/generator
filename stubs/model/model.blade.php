@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * App\Models\{{ $className }}.
  *
- * @@method \App\Presenters\{{ $className }}Presenter present()
+ * ＠method \App\Presenters\{{ $className }}Presenter present()
  *
  */
 

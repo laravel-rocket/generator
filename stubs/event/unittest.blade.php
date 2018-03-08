@@ -1,6 +1,9 @@
 namespace Tests\Events;
 
 use App\Events\{{ $eventName}};
+@foreach( $models as $model )
+use App\Models\{{ $model }};
+@endforeach
 use Tests\TestCase;
 
 class {{ $eventName}}Test extends TestCase
