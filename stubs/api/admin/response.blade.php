@@ -4,8 +4,8 @@ class {{ $className }} extends Response
 {
     protected $columns = [
 @foreach( $table->getColumns() as $column )
-@if( !$column->hasRelation() ))
-        '{{ $column->getAPIName() }}' => {{ $column->getAPIName() }},
+@if( !$column->hasRelation() )
+        '{{ $column->getAPIName() }}' => {{ $column->getDefaultValue() }},
 @else
         '{{ $column->getAPIName() }}' => null,
 @endif
@@ -23,7 +23,7 @@ class {{ $className }} extends Response
         if(!empty($model)) {
             $modelArray = [
 @foreach( $table->getColumns() as $column )
-@if( !$column->hasRelation() ))
+@if( !$column->hasRelation() )
                 '{{ $column->getAPIName() }}' => $model->{{ $column->getName() }},
 
 @endif

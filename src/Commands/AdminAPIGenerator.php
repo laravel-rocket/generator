@@ -4,6 +4,7 @@ namespace LaravelRocket\Generator\Commands;
 use LaravelRocket\Generator\FileUpdaters\APIs\Admin\RouterFileUpdater;
 use LaravelRocket\Generator\Generators\APIs\Admin\ControllerGenerator;
 use LaravelRocket\Generator\Generators\APIs\Admin\ListResponseGenerator;
+use LaravelRocket\Generator\Generators\APIs\Admin\RequestGenerator;
 use LaravelRocket\Generator\Generators\APIs\Admin\ResponseGenerator;
 use LaravelRocket\Generator\Generators\APIs\Admin\UnitTestGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
@@ -54,6 +55,7 @@ class AdminAPIGenerator extends MWBGenerator
             new ListResponseGenerator($this->config, $this->files, $this->view),
             new ControllerGenerator($this->config, $this->files, $this->view),
             new UnitTestGenerator($this->config, $this->files, $this->view),
+            new RequestGenerator($this->config, $this->files, $this->view),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */

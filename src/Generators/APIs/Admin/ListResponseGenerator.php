@@ -12,7 +12,7 @@ class ListResponseGenerator extends BaseAdminAPIGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('Http/Response/Api/Admin/'.pluralize($modelName).'.php');
+        return app_path('Http/Responses/Api/Admin/'.pluralize($modelName).'.php');
     }
 
     /**
@@ -24,15 +24,10 @@ class ListResponseGenerator extends BaseAdminAPIGenerator
     }
 
     /**
-     * @return array
+     * @return string
      */
-    protected function getVariables(): array
+    protected function getClassName(): string
     {
-        $variables = parent::getVariables();
-
-        $modelName              = $this->getModelName();
-        $variables['className'] = pluralize($modelName);
-
-        return $variables;
+        return pluralize($this->getModelName());
     }
 }

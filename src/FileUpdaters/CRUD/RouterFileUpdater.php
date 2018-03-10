@@ -18,7 +18,7 @@ class RouterFileUpdater extends TableBaseFileUpdater
 
     protected function getTargetFilePath(): string
     {
-        return app_path('routers/admin.php');
+        return base_path('routes/admin.php');
     }
 
     /**

@@ -71,19 +71,19 @@ class {{ $modelName }}Controller extends Controller
     public function store(StoreRequest $request)
     {
         $input = $request->only([
-@foreach( $table->getColumns as $column )
+@foreach( $table->getColumns() as $column )
 @if( $column->isEditable() )
             '{{ $column->getName() }}',
 @endif
 @endforeach
-@foreach( $table->getRelations as $relation )
+@foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI() && !$relation->isFile())
             '{{ $relation->getName() }}',
 @endif
 @endforeach
         ]);
 
-@foreach( $table->getRelations as $relation )
+@foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI() && $relation->isFile())
         if ($request->hasFile('{{ $relation->getName() }}')) {
             $file      = $request->file('{{ $relation->getName() }}');
@@ -145,12 +145,12 @@ class {{ $modelName }}Controller extends Controller
         }
 
         $input = $request->only([
-@foreach( $table->getColumns as $column )
+@foreach( $table->getColumns() as $column )
 @if( $column->isEditable() )
         '{{ $column->getName() }}',
 @endif
 @endforeach
-@foreach( $table->getRelations as $relation )
+@foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI() && !$relation->isFile())
         '{{ $relation->getName() }}',
 @endif
@@ -158,7 +158,7 @@ class {{ $modelName }}Controller extends Controller
         ]);
 
 
-@foreach( $table->getRelations as $relation )
+@foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI() && $relation->isFile())
         if ($request->hasFile('{{ $relation->getName() }}')) {
             $file      = $request->file('{{ $relation->getName() }}');

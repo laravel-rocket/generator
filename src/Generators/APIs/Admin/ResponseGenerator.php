@@ -10,7 +10,7 @@ class ResponseGenerator extends BaseAdminAPIGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('Http/Response/Api/Admin/'.$modelName.'.php');
+        return app_path('Http/Responses/Api/Admin/'.$modelName.'.php');
     }
 
     /**

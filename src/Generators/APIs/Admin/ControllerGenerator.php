@@ -10,7 +10,7 @@ class ControllerGenerator extends BaseAdminAPIGenerator
     {
         $modelName = $this->getModelName();
 
-        return app_path('Http/Controller/Api/Admin/'.$modelName.'Controller.php');
+        return app_path('Http/Controllers/Api/Admin/'.$modelName.'Controller.php');
     }
 
     /**
@@ -18,6 +18,6 @@ class ControllerGenerator extends BaseAdminAPIGenerator
      */
     protected function getView(): string
     {
-        return 'api.admin.controllers.controller';
+        return 'api.admin.controller';
     }
 }
