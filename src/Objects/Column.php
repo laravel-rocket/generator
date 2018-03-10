@@ -11,10 +11,34 @@ class Column
     /** @var \TakaakiMizuno\MWBParser\Elements\Column|\Doctrine\DBAL\Schema\Column */
     protected $column;
 
-    /** @var \TakaakiMizuno\MWBParser\Elements\Column|\Doctrine\DBAL\Schema\Column */
-    public function __construct($column)
+    /** @var bool */
+    protected $hasRelation = false;
+
+    /**
+     * Column constructor.
+     *
+     * @param \TakaakiMizuno\MWBParser\Elements\Column|\Doctrine\DBAL\Schema\Column $column
+     * @param \TakaakiMizuno\MWBParser\Elements\Table|null                          $table
+     */
+    public function __construct($column, $table = null)
     {
         $this->column = $column;
+        if (!empty($table)) {
+            foreach ($table->getForeignKey() as $foreignKey) {
+                $columns          = $foreignKey->getColumns();
+                $referenceColumns = $foreignKey->getReferenceColumns();
+                if (count($columns) == 0) {
+                    continue;
+                }
+                if (count($referenceColumns) == 0) {
+                    continue;
+                }
+                if ($columns[0]->getName() === $column->getName()) {
+                    $this->hasRelation = true;
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -23,6 +47,14 @@ class Column
     public function getName()
     {
         return $this->column->getName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getAPIName()
+    {
+        return camel_case($this->column->getName());
     }
 
     /**
@@ -69,6 +101,22 @@ class Column
     public function isShowable(): bool
     {
         return !in_array($this->column->getName(), $this->unshowables);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAPIReturnable(): bool
+    {
+        return $this->isEditable() || $this->isShowable() || $this->isListable();
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasRelation(): bool
+    {
+        return $this->hasRelation;
     }
 
     /**

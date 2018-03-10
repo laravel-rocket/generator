@@ -62,7 +62,7 @@ class ParseTest extends TestCase
         foreach ($statements as $statement) {
             print get_class($statement).PHP_EOL;
             if (get_class($statement) == ArrayItem::class && $statement->key && $statement->key->value == 'aliases') {
-                print_r($statement->value);
+//                print_r($statement->value);
             } elseif (property_exists($statement, 'stmts')) {
                 $this->travarse($statement->stmts);
             } elseif (property_exists($statement, 'expr')) {

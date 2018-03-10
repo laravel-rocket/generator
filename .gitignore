@@ -34,3 +34,4 @@ public/static/swagger-ui
 /stubs/old/
 
 *.bak
+db.mwb.beforefix

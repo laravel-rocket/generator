@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\CRUD;
 
+use LaravelRocket\Generator\Objects\Table;
+
 class UnitTestGenerator extends CRUDBaseGenerator
 {
     /**
@@ -15,44 +17,9 @@ class UnitTestGenerator extends CRUDBaseGenerator
         $variables['className']    = $modelName.'Repository';
         $variables['tableName']    = $this->table->getName();
 
-        $found = false;
-        foreach ($this->table->getColumns() as $column) {
-            if (in_array($column->getName(), ['remember_token', 'id', 'deleted_at', 'created_at', 'updated_at'])) {
-                continue;
-            }
-            if (in_array($column->getType(), ['varchar', 'text', 'mediumtext', 'longtext'])) {
-                $variables['testColumnName'] = $column->getName();
-                $variables['testData']       = 'str_random(10)';
-                $found                       = true;
-                break;
-            }
-        }
+        $tableObject = new Table($this->table, $this->tables);
 
-        if (!$found) {
-            foreach ($this->table->getColumns() as $column) {
-                if (in_array($column->getName(), ['remember_token', 'id', 'deleted_at', 'created_at', 'updated_at'])) {
-                    continue;
-                }
-                if (in_array($column->getType(), ['int', 'bigint', 'decimal'])) {
-                    $variables['testColumnName'] = $column->getName();
-                    $variables['testData']       = 'rand(50,100)';
-                    break;
-                }
-            }
-        }
-
-        if (!$found) {
-            foreach ($this->table->getColumns() as $column) {
-                if (in_array($column->getName(), ['remember_token', 'id', 'deleted_at', 'created_at', 'updated_at'])) {
-                    continue;
-                }
-                $variables['testColumnName'] = $column->getName();
-                $variables['testData']       = 'rand(50,100)';
-                break;
-            }
-        }
-
-        return $variables;
+        return array_merge($variables, $tableObject->getTestColumn());
     }
 
     protected function getFillableColumns()

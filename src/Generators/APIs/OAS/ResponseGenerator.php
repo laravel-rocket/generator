@@ -1,5 +1,5 @@
 <?php
-namespace LaravelRocket\Generator\Generators\APIs;
+namespace LaravelRocket\Generator\Generators\APIs\OAS;
 
 use LaravelRocket\Generator\Generators\APIBaseGenerator;
 use function ICanBoogie\pluralize;
