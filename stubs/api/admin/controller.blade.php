@@ -3,14 +3,15 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Exceptions\Api\Admin\APIErrorException;
 use App\Http\Controllers\Controller;
 
-use App\Http\Requests\Admin\{{ $modelName }}Request;
-use App\Http\Requests\Api\Admin\{{ $modelName }}\IndexRequest;
-use App\Http\Requests\Api\Admin\{{ $modelName }}\StoreRequest;
-use App\Http\Requests\Api\Admin\{{ $modelName }}\UpdateRequest;
+use App\Http\Requests\Api\Admin\{{ $requestNameSpace }}\IndexRequest;
+use App\Http\Requests\Api\Admin\{{ $requestNameSpace }}\StoreRequest;
+use App\Http\Requests\Api\Admin\{{ $requestNameSpace }}\UpdateRequest;
 use App\Http\Responses\Api\Admin\{{ $modelName }};
 use App\Http\Responses\Api\Admin\{{ \ICanBoogie\pluralize($modelName) }};
 use App\Http\Responses\Api\Admin\Status;
 use App\Repositories\{{ $modelName }}RepositoryInterface;
+use App\Services\AdminUserServiceInterface;
+use App\Services\FileServiceInterface;
 
 class {{ $modelName }}Controller extends Controller
 {
@@ -131,7 +132,7 @@ class {{ $modelName }}Controller extends Controller
 
     /**
      * @param int                                                   $id
-     * @param \App\Http\Requests\Api\Admin\{{ $modelName }}s\UpdateRequest $request
+     * @param UpdateRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      *

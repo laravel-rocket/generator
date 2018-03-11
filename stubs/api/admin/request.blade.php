@@ -1,6 +1,6 @@
-namespace App\Http\Requests\Api\Admin\{{ $nameSpace }};
+namespace App\Http\Requests\Api\Admin\{{ $requestNameSpace }};
 
-use App\Http\Requests\Api\Admin\{{ $baseClass }}
+use App\Http\Requests\Api\Admin\{{ $baseClass }};
 
 class {{ $className }} extends {{ $baseClass }}
 {

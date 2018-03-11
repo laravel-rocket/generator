@@ -41,7 +41,7 @@ class RequestGenerator extends BaseAdminAPIGenerator
 
         $variables = $this->getVariables();
 
-        foreach (['index', 'show', 'store', 'update', 'destroy'] as $action) {
+        foreach (['index', 'show', 'store', 'update'] as $action) {
             $path = $this->getActionPath($action);
             if (file_exists($path)) {
                 if (!$this->rebuild) {
@@ -55,9 +55,9 @@ class RequestGenerator extends BaseAdminAPIGenerator
             if (file_exists($path)) {
                 unlink($path);
             }
-            $variables = array_merge($variables, $this->getActionVariables($action));
+            $actionVariables = array_merge($variables, $this->getActionVariables($action));
 
-            $this->fileService->render($view, $path, $variables, false, true);
+            $this->fileService->render($view, $path, $actionVariables, true, false);
         }
 
         return true;
@@ -71,12 +71,10 @@ class RequestGenerator extends BaseAdminAPIGenerator
     protected function getActionVariables(string $action): array
     {
         $modelName = $this->getModelName();
-        $nameSpace = ucfirst($modelName);
 
         $variables = [
             'className' => ucfirst(camel_case($action)).'Request',
             'baseClass' => $action === 'index' ? 'PaginationRequest' : 'Request',
-            'nameSpace' => $nameSpace,
         ];
 
         return $variables;
