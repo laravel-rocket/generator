@@ -4,10 +4,17 @@ class {{ $className }} extends Response
 {
     protected $columns = [
 @foreach( $table->getColumns() as $column )
-@if( !$column->hasRelation() )
+@if( !$column->hasRelation() && $column->isAPIReturnable())
         '{{ $column->getAPIName() }}' => {!! $column->getDefaultAPIResponse() !!},
+@endif
+@endforeach
+@foreach( $table->getRelations() as $relation )
+@if( $relation->shouldIncludeInAPI())
+@if( $relation->isMultipleSelection())
+        '{{ $column->getAPIName() }}' => [],
 @else
         '{{ $column->getAPIName() }}' => null,
+@endif
 @endif
 @endforeach
     ];
@@ -23,7 +30,7 @@ class {{ $className }} extends Response
         if(!empty($model)) {
             $modelArray = [
 @foreach( $table->getColumns() as $column )
-@if( !$column->hasRelation() )
+@if( !$column->hasRelation() && $column->isAPIReturnable())
                 '{{ $column->getAPIName() }}' => $model->{{ $column->getName() }},
 @endif
 @endforeach
@@ -32,9 +39,9 @@ class {{ $className }} extends Response
 @if( $relation->isMultipleSelection())
                 '{{ $relation->getName() }}' => !empty($model->{{ $relation->getName() }}) ? {{ ucfirst(camel_case($relation->getName())) }}::updateWithModel($model->{{ camel_case($relation->getName()) }} : null,
 @elseif( $relation->isImage() )
-                '{{ $relation->getName() }}' => Image::updateWithModel($model->{{ camel_case($relation->getName()) }},
+                '{{ $relation->getName() }}' => Image::updateWithModel($model->{{ camel_case($relation->getName()) }}),
 @else
-                '{{ $relation->getName() }}' => {{ ucfirst(camel_case(\ICanBoogie\singularize($relation->getReferenceModel()))) }}::updateWithModel($model->{{ camel_case($relation->getName()) }},
+                '{{ $relation->getName() }}' => {{ ucfirst(camel_case(\ICanBoogie\singularize($relation->getReferenceModel()))) }}::updateWithModel($model->{{ camel_case($relation->getName()) }}),
 @endif
 @endif
 @endforeach

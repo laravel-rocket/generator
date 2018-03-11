@@ -78,6 +78,7 @@ class RouterFileUpdater extends TableBaseFileUpdater
             Route::resource('$viewName', '{$modelName}Controller')->only([
                 'index', 'show', 'store', 'update', 'destroy',
             ]);
+
 EOS;
     }
 }

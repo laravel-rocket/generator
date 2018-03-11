@@ -254,7 +254,7 @@ class Column
             } elseif ($this->isString()) {
                 $defaultValue = "''";
             } else {
-                $defaultValue = "''";
+                $defaultValue = 'null';
             }
         }
 
