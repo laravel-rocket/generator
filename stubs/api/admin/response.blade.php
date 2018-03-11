@@ -11,9 +11,9 @@ class {{ $className }} extends Response
 @foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI())
 @if( $relation->isMultipleSelection())
-        '{{ $column->getAPIName() }}' => [],
+        '{{ $relation->getAPIName() }}' => [],
 @else
-        '{{ $column->getAPIName() }}' => null,
+        '{{ $relation->getAPIName() }}' => null,
 @endif
 @endif
 @endforeach

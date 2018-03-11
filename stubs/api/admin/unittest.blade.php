@@ -35,7 +35,7 @@ class {{ $modelName }}ControllerTest extends TestCase
     {
         ${{ $variableName }} = factory(\App\Models\{{ $modelName }}::class)->make();
         $this->action('POST', 'Api\Admin\{{ $modelName }}Controller@store', ${{ $variableName }}->toArray());
-        $this->assertResponseStatus(302);
+        $this->assertResponseStatus(201);
     }
 
     public function testUpdateModel()
@@ -50,7 +50,7 @@ class {{ $modelName }}ControllerTest extends TestCase
         ${{ $variableName }}->{{ $testColumnName }} = $testData;
 
         $this->action('PUT', 'Api\Admin\{{ $modelName }}Controller@update', [$id], ${{ $variableName }}->toArray());
-        $this->assertResponseStatus(302);
+        $this->assertResponseStatus(200);
 
         $new{{ $modelName }} = \App\Models\{{ $modelName }}::find($id);
         $this->assertEquals($testData, $new{{ $modelName }}->{{ $testColumnName }});
@@ -63,7 +63,7 @@ class {{ $modelName }}ControllerTest extends TestCase
         $id = ${{ $variableName }}->id;
 
         $this->action('DELETE', 'Api\Admin\{{ $modelName }}Controller@destroy', [$id]);
-        $this->assertResponseStatus(302);
+        $this->assertResponseStatus(200);
 
         $check{{ $modelName }} = \App\Models\{{ $modelName }}::find($id);
         $this->assertNull($check{{ $modelName }});

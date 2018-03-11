@@ -108,7 +108,7 @@ class {{ $modelName }}Controller extends Controller
             throw new APIErrorException('unknown', '{{ $modelName }} Creation Failed');
         }
 
-        return {{ $modelName }}::updateWithModel(${{ $variableName }})->response();
+        return {{ $modelName }}::updateWithModel(${{ $variableName }})->withStatus(201)->response();
     }
 
     /**
