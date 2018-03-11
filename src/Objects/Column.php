@@ -165,6 +165,20 @@ class Column
     /**
      * @return bool
      */
+    public function isTimestamp(): bool
+    {
+        switch ($this->getType()) {
+            case 'timestamp':
+            case 'timestamp_f':
+                return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     public function isUnixTimestamp(): bool
     {
         switch ($this->getType()) {

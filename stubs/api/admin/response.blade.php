@@ -31,7 +31,11 @@ class {{ $className }} extends Response
             $modelArray = [
 @foreach( $table->getColumns() as $column )
 @if( !$column->hasRelation() && $column->isAPIReturnable())
+@if( $column->isTimestamp())
+                '{{ $column->getAPIName() }}' => $model->{{ $column->getName() }} ? $model->{{ $column->getName() }}->timestamp : null,
+@else
                 '{{ $column->getAPIName() }}' => $model->{{ $column->getName() }},
+@endif
 @endif
 @endforeach
 @foreach( $table->getRelations() as $relation )
