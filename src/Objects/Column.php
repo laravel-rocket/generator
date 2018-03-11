@@ -116,6 +116,10 @@ class Column
      */
     public function isAPIReturnable(): bool
     {
+        if (in_array($this->getName(), $this->unshowables)) {
+            return false;
+        }
+
         return $this->isEditable() || $this->isShowable() || $this->isListable();
     }
 

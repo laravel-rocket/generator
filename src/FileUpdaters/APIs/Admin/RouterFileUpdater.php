@@ -58,8 +58,8 @@ class RouterFileUpdater extends TableBaseFileUpdater
         }
 
         foreach ($lines as $index => $line) {
-            if (strpos($line, '\\'.$modelName.'Controller') !== false) {
-                return $index;
+            if (strpos($line, "'".$modelName.'Controller') !== false) {
+                return $index + 1;
             }
         }
 
