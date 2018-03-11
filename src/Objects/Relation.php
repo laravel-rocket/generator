@@ -56,12 +56,12 @@ class Relation
 
     public function isImage()
     {
-        return ends_with($this->name, 'image');
+        return ends_with(strtolower($this->name), 'image');
     }
 
     public function isFile()
     {
-        return ends_with($this->name, 'file') || ends_with($this->name, 'image');
+        return ends_with(strtolower($this->name), 'file') || ends_with(strtolower($this->name), 'image');
     }
 
     public function getViewName()
@@ -81,7 +81,7 @@ class Relation
 
     public function isMultipleSelection()
     {
-        return $this->type === self::TYPE_HAS_MANY || self::TYPE_BELONGS_TO_MANY;
+        return $this->type === self::TYPE_HAS_MANY || $this->type === self::TYPE_BELONGS_TO_MANY;
     }
 
     public function shouldIncludeInAPI()
@@ -112,5 +112,21 @@ class Relation
         }
 
         return self::EDIT_TYPE_SELECT_SINGLE;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAPIName()
+    {
+        return camel_case($this->getName());
+    }
+
+    /**
+     * @return string
+     */
+    public function getQueryName()
+    {
+        return snake_case($this->getName());
     }
 }

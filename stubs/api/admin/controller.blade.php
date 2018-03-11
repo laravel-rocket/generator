@@ -73,13 +73,13 @@ class {{ $modelName }}Controller extends Controller
     {
         $input = $request->only([
 @foreach( $table->getColumns() as $column )
-@if( $column->isEditable() )
+@if( $column->isEditable() && !$column->hasRelation())
             '{{ $column->getName() }}',
 @endif
 @endforeach
 @foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI() && !$relation->isFile())
-            '{{ $relation->getName() }}',
+            '{{ $relation->getColumn()->getName() }}',
 @endif
 @endforeach
         ]);
@@ -147,13 +147,13 @@ class {{ $modelName }}Controller extends Controller
 
         $input = $request->only([
 @foreach( $table->getColumns() as $column )
-@if( $column->isEditable() )
+@if( $column->isEditable() && !$column->hasRelation())
         '{{ $column->getName() }}',
 @endif
 @endforeach
 @foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI() && !$relation->isFile())
-        '{{ $relation->getName() }}',
+        '{{ $relation->getColumn()->getName() }}',
 @endif
 @endforeach
         ]);

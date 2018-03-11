@@ -54,7 +54,15 @@ class Column
      */
     public function getAPIName()
     {
-        return camel_case($this->column->getName());
+        return camel_case($this->getName());
+    }
+
+    /**
+     * @return string
+     */
+    public function getQueryName()
+    {
+        return snake_case($this->getName());
     }
 
     /**

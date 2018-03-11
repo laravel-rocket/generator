@@ -29,7 +29,7 @@ class BaseAdminAPIGenerator extends TableBaseGenerator
             'modelName'        => $modelName,
             'variableName'     => lcfirst($modelName),
             'className'        => $this->getClassName(),
-            'requestNamespace' => $modelName,
+            'requestNameSpace' => $modelName,
         ];
 
         return array_merge($variables, $tableObject->getTestColumn());
