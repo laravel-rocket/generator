@@ -5,7 +5,7 @@ class {{ $className }} extends Response
     protected $columns = [
 @foreach( $table->getColumns() as $column )
 @if( !$column->hasRelation() )
-        '{{ $column->getAPIName() }}' => {{ $column->getDefaultValue() }},
+        '{{ $column->getAPIName() }}' => {{ $column->getDefaultAPIResponse() }},
 @else
         '{{ $column->getAPIName() }}' => null,
 @endif

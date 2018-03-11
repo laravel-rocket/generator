@@ -86,8 +86,8 @@ class {{ $modelName }}Controller extends Controller
 
 @foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI() && $relation->isFile())
-        if ($request->hasFile('{{ $relation->getName() }}')) {
-            $file      = $request->file('{{ $relation->getName() }}');
+        if ($request->hasFile('{{ $relation->getQueryName() }}')) {
+            $file      = $request->file('{{ $relation->getQueryName() }}');
             $mediaType = $file->getClientMimeType();
             $path      = $file->getPathname();
 @if( $relation->isImage() )
@@ -161,8 +161,8 @@ class {{ $modelName }}Controller extends Controller
 
 @foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI() && $relation->isFile())
-        if ($request->hasFile('{{ $relation->getName() }}')) {
-            $file      = $request->file('{{ $relation->getName() }}');
+        if ($request->hasFile('{{ $relation->getQueryName() }}')) {
+            $file      = $request->file('{{ $relation->getQueryName() }}');
             $mediaType = $file->getClientMimeType();
             $path      = $file->getPathname();
 @if( $relation->isImage() )

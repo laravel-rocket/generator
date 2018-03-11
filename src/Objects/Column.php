@@ -142,6 +142,77 @@ class Column
     /**
      * @return bool
      */
+    public function isBoolean(): bool
+    {
+        switch ($this->getType()) {
+            case 'tinyint':
+                return true;
+            case 'bigint':
+            case 'int':
+                if (starts_with($this->getName(), 'is_') || starts_with($this->getName(), 'has_')) {
+                    return true;
+                }
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUnixTimestamp(): bool
+    {
+        switch ($this->getType()) {
+            case 'int':
+                if (ends_with($this->getName(), '_at')) {
+                    return true;
+                }
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNumber(): bool
+    {
+        if ($this->isBoolean() || $this->isUnixTimestamp()) {
+            return false;
+        }
+        switch ($this->getType()) {
+            case 'bigint':
+            case 'int':
+            case 'decimal':
+                return true;
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isString(): bool
+    {
+        switch ($this->getType()) {
+            case 'varchar':
+            case 'text':
+            case 'mediumtext':
+            case 'longtext':
+                return true;
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     public function isNullable(): bool
     {
         if (get_class($this->column) == \Doctrine\DBAL\Schema\Column::class) {
@@ -161,6 +232,29 @@ class Column
         }
 
         return $this->column->getDefaultValue();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultAPIResponse()
+    {
+        $defaultValue = ''.$this->getDefaultValue();
+        if (empty($defaultValue)) {
+            if ($this->isNullable()) {
+                $defaultValue = 'null';
+            } elseif ($this->isBoolean()) {
+                $defaultValue = 'false';
+            } elseif ($this->isUnixTimestamp() || $this->isNumber()) {
+                $defaultValue = '0';
+            } elseif ($this->isString()) {
+                $defaultValue = "''";
+            } else {
+                $defaultValue = "''";
+            }
+        }
+
+        return $defaultValue;
     }
 
     /**

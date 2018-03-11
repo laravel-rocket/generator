@@ -9,8 +9,8 @@ class {{ $modelName }}ControllerTest extends TestCase
 
     public function testGetInstance()
     {
-        /** @var  \App\Http\Controllers\Api\Api\Admin\{{ $modelName }}Controller $controller */
-        $controller = \App::make(\App\Http\Controllers\Api\Api\Admin\{{ $modelName }}Controller::class);
+        /** @var  \App\Http\Controllers\Api\Admin\{{ $modelName }}Controller $controller */
+        $controller = \App::make(\App\Http\Controllers\Api\Admin\{{ $modelName }}Controller::class);
         $this->assertNotNull($controller);
     }
 
