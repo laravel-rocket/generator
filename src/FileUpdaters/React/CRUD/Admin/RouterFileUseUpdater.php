@@ -34,7 +34,7 @@ class RouterFileUseUpdater extends TableBaseFileUpdater
 
         foreach ($lines as $index => $line) {
             if (strpos($line, 'class App') !== false) {
-                return $index - 1;
+                return $index;
             }
         }
 
