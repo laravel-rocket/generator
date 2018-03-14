@@ -52,6 +52,19 @@ class Table
     }
 
     /**
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return title_case(str_replace('_', '', $this->table->getName()));
+    }
+
+    public function getPathName()
+    {
+        return kebab_case($this->table->getName());
+    }
+
+    /**
      * @return \LaravelRocket\Generator\Objects\Column[]
      */
     public function getColumns()
@@ -301,5 +314,29 @@ class Table
         }
 
         return false;
+    }
+
+    public function getIconClass()
+    {
+        $mappings = [
+            'admin_users'   => 'fa fa-user-secret',
+            'users'         => 'fa fa-users',
+            'images'        => 'fa fa-images',
+            'companies'     => 'fa fa-building',
+            'schedules'     => 'fa fa-calendar',
+            'locations'     => 'fa fa-map-marker',
+            'notifications' => 'fa fa-bell',
+            'tags'          => 'fa fa-tags',
+            'articles'      => 'fa fa-pencil',
+        ];
+
+        $name = $this->getName();
+        foreach ($mappings as $mapping => $iconClass) {
+            if (ends_with($name, $mapping)) {
+                return $iconClass;
+            }
+        }
+
+        return 'fa fa-file';
     }
 }

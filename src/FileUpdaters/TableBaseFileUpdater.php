@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters;
 
+use LaravelRocket\Generator\Objects\Table;
 use function ICanBoogie\singularize;
 
 class TableBaseFileUpdater extends BaseFileUpdater
@@ -16,6 +17,11 @@ class TableBaseFileUpdater extends BaseFileUpdater
      * @var \TakaakiMizuno\MWBParser\Elements\Table[]
      */
     protected $tables;
+
+    /**
+     * @var Table
+     */
+    protected $tableObject;
 
     /**
      * @var \LaravelRocket\Generator\Objects\Definitions
@@ -58,8 +64,9 @@ class TableBaseFileUpdater extends BaseFileUpdater
      */
     public function setTargetTable($table, $tables)
     {
-        $this->table  = $table;
-        $this->tables = $tables;
+        $this->table       = $table;
+        $this->tables      = $tables;
+        $this->tableObject = new Table($table, $tables);
     }
 
     public function needGenerate()

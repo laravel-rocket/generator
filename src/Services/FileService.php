@@ -111,4 +111,9 @@ class FileService
         $this->prepareDirectory($destinationPath);
         copy($sourcePath, $destinationPath);
     }
+
+    public function save($destinationPath, $data)
+    {
+        $this->files->put($destinationPath, $data);
+    }
 }

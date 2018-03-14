@@ -1,13 +1,12 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\RouterFileUpdater;
-use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\SideBarFileUpdater;
-use LaravelRocket\Generator\Generators\CRUD\Admin\ControllerGenerator as AdminCRUDControllerGenerator;
-use LaravelRocket\Generator\Generators\CRUD\Admin\RequestGenerator as AdminCRUDRequestGenerator;
-use LaravelRocket\Generator\Generators\CRUD\Admin\TemplateGenerator as AdminCRUDTemplateGenerator;
-use LaravelRocket\Generator\Generators\CRUD\Admin\UnitTestGenerator as AdminCRUDUnitTestGenerator;
-use LaravelRocket\Generator\Generators\Models\ColumnLanguageFileGenerator;
+use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\RouterFileUpdater;
+use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\SideBarFileUpdater;
+use LaravelRocket\Generator\Generators\React\CRUD\Admin\ColumnGenerator;
+use LaravelRocket\Generator\Generators\React\CRUD\Admin\InfoGenerator;
+use LaravelRocket\Generator\Generators\React\CRUD\Admin\RepositoryGenerator;
+use LaravelRocket\Generator\Generators\React\CRUD\Admin\ViewGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use function ICanBoogie\pluralize;
 use function ICanBoogie\singularize;
@@ -52,11 +51,10 @@ class AdminCRUDGenerator extends MWBGenerator
     {
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
-            new ColumnLanguageFileGenerator($this->config, $this->files, $this->view),
-            new AdminCRUDControllerGenerator($this->config, $this->files, $this->view),
-            new AdminCRUDRequestGenerator($this->config, $this->files, $this->view),
-            new AdminCRUDUnitTestGenerator($this->config, $this->files, $this->view),
-            new AdminCRUDTemplateGenerator($this->config, $this->files, $this->view),
+            new RepositoryGenerator($this->config, $this->files, $this->view),
+            new ViewGenerator($this->config, $this->files, $this->view),
+            new InfoGenerator($this->config, $this->files, $this->view),
+            new ColumnGenerator($this->config, $this->files, $this->view),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */
