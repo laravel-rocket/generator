@@ -15,7 +15,7 @@ class AdminCRUDGenerator extends MWBGenerator
 {
     protected $name = 'rocket:make:crud:admin';
 
-    protected $signature = 'rocket:make:crud:admin {name} {--file=} {--json=}';
+    protected $signature = 'rocket:make:crud:admin {name}  {--rebuild} {--file=} {--json=}';
 
     protected $description = 'Create Admin CRUD';
 
@@ -49,12 +49,14 @@ class AdminCRUDGenerator extends MWBGenerator
 
     protected function generate()
     {
+        $rebuild = !empty($this->input->getOption('rebuild'));
+
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
-            new RepositoryGenerator($this->config, $this->files, $this->view),
-            new ViewGenerator($this->config, $this->files, $this->view),
-            new InfoGenerator($this->config, $this->files, $this->view),
-            new ColumnGenerator($this->config, $this->files, $this->view),
+            new RepositoryGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ViewGenerator($this->config, $this->files, $this->view, $rebuild),
+            new InfoGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ColumnGenerator($this->config, $this->files, $this->view, $rebuild),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */

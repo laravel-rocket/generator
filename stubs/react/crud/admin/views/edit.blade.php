@@ -1,6 +1,6 @@
 import React from "react";
 
-import AdminUserRepository from "../../repositories/{{ $modelName }}Repository";
+import {{ $modelName }}Repository from "../../repositories/{{ $modelName }}Repository";
 import columns from './_columns'
 import info from "./_info";
 import {withRouter} from 'react-router-dom'
@@ -14,7 +14,7 @@ class {{ $modelName }}Edit extends Edit {
   }
 
   setRepository() {
-    this.repository = new {{ $modelName }}rRepository();
+    this.repository = new {{ $modelName }}Repository();
   }
 
   setColumnInfo() {

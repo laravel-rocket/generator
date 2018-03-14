@@ -25,6 +25,9 @@ class TableBaseGenerator extends BaseGenerator
      */
     protected $json;
 
+    /** @var \LaravelRocket\Generator\Objects\Table */
+    protected $tableObject;
+
     /**
      * @param Table                                        $table
      * @param Table[]                                      $tables
@@ -60,8 +63,9 @@ class TableBaseGenerator extends BaseGenerator
      */
     public function setTargetTable($table, $tables)
     {
-        $this->table  = $table;
-        $this->tables = $tables;
+        $this->table       = $table;
+        $this->tables      = $tables;
+        $this->tableObject = new \LaravelRocket\Generator\Objects\Table($this->table, $this->tables, $this->json);
     }
 
     /**
@@ -247,7 +251,9 @@ class TableBaseGenerator extends BaseGenerator
 
             $columnObject = new Column($column);
 
-            list($type, $options) = $columnObject->getEditFieldType($relationHash, $columnDefinition);
+            $type    = $columnObject->getEditFieldType();
+            $options = $columnObject->getEditFieldOptions();
+
             $this->copyTypeRelatedFiles($type);
 
             if (array_key_exists($name, $relationHash)) {

@@ -22,7 +22,7 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
      */
     protected function getView(): string
     {
-        return 'react.crud.admin._info';
+        return 'react.crud.admin._columns';
     }
 
     /**
@@ -46,7 +46,7 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
             if ($column->isAPIReturnable()) {
                 $result['columns'][$column->getName()] = [
                     'name'     => $column->getDisplayName(),
-                    'type'     => $column->getType(),
+                    'type'     => $column->getEditFieldType(),
                     'editable' => $column->isEditable(),
                 ];
                 if ($column->isListable()) {

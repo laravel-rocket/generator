@@ -49,7 +49,10 @@ class ModelGenerator extends ModelBaseGenerator
         foreach ($this->table->getColumns() as $column) {
             $columnDefinition             = $this->json->getColumnDefinition($this->table->getName(), $column->getName());
             $columnObject                 = new Column($column);
-            list($ediFieldType, $options) = $columnObject->getEditFieldType([], $columnDefinition);
+
+            $ediFieldType = $columnObject->getEditFieldType();
+            $options      = $columnObject->getEditFieldOptions();
+
             $definitionType               = array_get($columnDefinition, 'type', '');
 
             if ($ediFieldType === 'boolean' || $definitionType == 'boolean') {

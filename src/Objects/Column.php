@@ -15,14 +15,32 @@ class Column
     protected $hasRelation = false;
 
     /**
+     * @var string
+     */
+    protected $editFieldType = 'string';
+
+    /**
+     * @var array
+     */
+    protected $editFieldOptions = [];
+
+    /**
+     * @var array
+     */
+    protected $definition = [];
+
+    /**
      * Column constructor.
      *
      * @param \TakaakiMizuno\MWBParser\Elements\Column|\Doctrine\DBAL\Schema\Column $column
      * @param \TakaakiMizuno\MWBParser\Elements\Table|null                          $table
+     * @param array                                                                 $definition
      */
-    public function __construct($column, $table = null)
+    public function __construct($column, $table = null, $definition = [])
     {
-        $this->column = $column;
+        $this->column     = $column;
+        $this->definition = $definition;
+
         if (!empty($table)) {
             foreach ($table->getForeignKey() as $foreignKey) {
                 $columns          = $foreignKey->getColumns();
@@ -39,6 +57,8 @@ class Column
                 }
             }
         }
+
+        $this->setEditFieldType();
     }
 
     /**
@@ -54,7 +74,7 @@ class Column
      */
     public function getDisplayName()
     {
-        return title_case(str_replace('_', '', $this->column->getName()));
+        return title_case(str_replace('_', ' ', $this->column->getName()));
     }
 
     /**
@@ -85,6 +105,22 @@ class Column
         }
 
         return $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEditFieldType()
+    {
+        return $this->editFieldType;
+    }
+
+    /**
+     * @return array
+     */
+    public function getEditFieldOptions()
+    {
+        return $this->editFieldOptions;
     }
 
     /**
@@ -283,65 +319,92 @@ class Column
         return $defaultValue;
     }
 
-    /**
-     * @param $relations
-     * @param array $definitions
-     *
-     * @return array
-     */
-    public function getEditFieldType($relations, $definitions): array
+    protected function setEditFieldType()
     {
         $name = $this->getName();
+        $type = empty($this->definition) ? '' : strtolower(array_get($this->definition, 'type', $this->getType()));
 
-        $type = strtolower(array_get($definitions, 'type', $this->getType()));
+        if (starts_with($type, 'bool') || (starts_with($name, 'is_') ||
+                starts_with($name, 'has_')) && ($type === 'int' || $type === 'tinyint')) {
+            $this->editFieldType    = 'boolean';
+            $this->editFieldOptions = [];
 
-        if (starts_with($type, 'bool') || (starts_with($name, 'is_') || starts_with($name, 'has_')) && ($type === 'int' || $type === 'tinyint')) {
-            return ['boolean', []];
+            return;
         }
 
         if (ends_with($name, 'image_id') && ($type === 'int' || $type === 'bigint')) {
-            return ['image', null];
+            $this->editFieldType    = 'image';
+            $this->editFieldOptions = [];
+
+            return;
         }
 
         if (ends_with($name, 'file_id') && ($type === 'int' || $type === 'bigint')) {
-            return ['file', null];
+            $this->editFieldType    = 'file';
+            $this->editFieldOptions = [];
+
+            return;
         }
 
         if (ends_with($name, 'type') || $type === 'type') {
-            return ['select', array_get($definitions, 'options', [])];
+            $this->editFieldType    = 'select';
+            $this->editFieldOptions = array_get($definitions, 'options', []);
+
+            return;
         }
 
         if ($name === 'password') {
-            return ['password', null];
+            $this->editFieldType    = 'password';
+            $this->editFieldOptions = [];
+
+            return;
         }
 
         if (ends_with($name, 'country_code') && $type === 'varchar') {
-            return ['country', null];
+            $this->editFieldType    = 'country';
+            $this->editFieldOptions = [];
+
+            return;
         }
 
         if (ends_with($name, 'currency_code') && $type === 'varchar') {
-            return ['currency', null];
+            $this->editFieldType    = 'currency';
+            $this->editFieldOptions = [];
+
+            return;
         }
 
         if ($type === 'date') {
-            return ['date', null];
+            $this->editFieldType    = 'date';
+            $this->editFieldOptions = [];
+
+            return;
         }
 
         if (ends_with($name, 'gender') && $type === 'varchar') {
-            return ['select', array_get($definitions, 'options', [[
+            $this->editFieldType    = 'select';
+            $this->editFieldOptions = array_get($definitions, 'options', [[
                 'name'  => 'Male',
                 'value' => 'male',
             ], [
                 'name'  => 'Female',
                 'value' => 'female',
-            ]])];
+            ]]);
+
+            return;
         }
 
         if (in_array($type, ['text', 'mediumtext', 'longtext', 'smalltext', 'tinytext'])) {
-            return ['textarea', null];
+            $this->editFieldType    = 'textarea';
+            $this->editFieldOptions = [];
+
+            return;
         }
 
-        return ['text', null];
+        $this->editFieldType    = 'text';
+        $this->editFieldOptions = [];
+
+        return;
     }
 
     /**

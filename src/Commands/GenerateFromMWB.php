@@ -1,13 +1,14 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\RouterFileUpdater;
-use LaravelRocket\Generator\FileUpdaters\CRUD\Admin\SideBarFileUpdater;
 use LaravelRocket\Generator\FileUpdaters\Models\RegisterRepositoryFileUpdater;
-use LaravelRocket\Generator\Generators\CRUD\Admin\ControllerGenerator as AdminCRUDControllerGenerator;
-use LaravelRocket\Generator\Generators\CRUD\Admin\RequestGenerator as AdminCRUDRequestGenerator;
-use LaravelRocket\Generator\Generators\CRUD\Admin\TemplateGenerator as AdminCRUDTemplateGenerator;
-use LaravelRocket\Generator\Generators\CRUD\Admin\UnitTestGenerator as AdminCRUDUnitTestGenerator;
+use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\RouterFileUpdater;
+use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\SideBarFileUpdater;
+use LaravelRocket\Generator\Generators\APIs\Admin\ControllerGenerator;
+use LaravelRocket\Generator\Generators\APIs\Admin\ListResponseGenerator;
+use LaravelRocket\Generator\Generators\APIs\Admin\RequestGenerator;
+use LaravelRocket\Generator\Generators\APIs\Admin\ResponseGenerator;
+use LaravelRocket\Generator\Generators\APIs\Admin\UnitTestGenerator;
 use LaravelRocket\Generator\Generators\Migrations\MigrationFileGenerator;
 use LaravelRocket\Generator\Generators\Models\ColumnLanguageFileGenerator;
 use LaravelRocket\Generator\Generators\Models\ConfigFileGenerator;
@@ -19,6 +20,9 @@ use LaravelRocket\Generator\Generators\Models\RelationLanguageFileGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryInterfaceGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryUnitTestGenerator;
+use LaravelRocket\Generator\Generators\React\CRUD\Admin\ColumnGenerator;
+use LaravelRocket\Generator\Generators\React\CRUD\Admin\InfoGenerator;
+use LaravelRocket\Generator\Generators\React\CRUD\Admin\ViewGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use LaravelRocket\Generator\Validators\Error;
 use LaravelRocket\Generator\Validators\Tables\TableSchemaValidator;
@@ -143,17 +147,31 @@ class GenerateFromMWB extends MWBGenerator
             new ColumnLanguageFileGenerator($this->config, $this->files, $this->view, $rebuild),
             new RelationLanguageFileGenerator($this->config, $this->files, $this->view),
             new ConfigFileGenerator($this->config, $this->files, $this->view, $rebuild),
-            new AdminCRUDControllerGenerator($this->config, $this->files, $this->view, $rebuild),
-            new AdminCRUDRequestGenerator($this->config, $this->files, $this->view, $rebuild),
-            new AdminCRUDUnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
-            new AdminCRUDTemplateGenerator($this->config, $this->files, $this->view, $rebuild),
+
+            //Admin API
+            new ResponseGenerator($this->config, $this->files, $this->view),
+            new ListResponseGenerator($this->config, $this->files, $this->view),
+            new ControllerGenerator($this->config, $this->files, $this->view),
+            new UnitTestGenerator($this->config, $this->files, $this->view),
+            new RequestGenerator($this->config, $this->files, $this->view),
+
+            // Admin CRUD
+            new \LaravelRocket\Generator\Generators\React\CRUD\Admin\RepositoryGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ViewGenerator($this->config, $this->files, $this->view, $rebuild),
+            new InfoGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ColumnGenerator($this->config, $this->files, $this->view, $rebuild),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
             new RegisterRepositoryFileUpdater($this->config, $this->files, $this->view, $rebuild),
-            new RouterFileUpdater($this->config, $this->files, $this->view, $rebuild),
-            new SideBarFileUpdater($this->config, $this->files, $this->view, $rebuild),
+
+            //Admin API
+            new \LaravelRocket\Generator\FileUpdaters\APIs\Admin\RouterFileUpdater($this->config, $this->files, $this->view),
+
+            // Admin CRUD
+            new RouterFileUpdater($this->config, $this->files, $this->view),
+            new SideBarFileUpdater($this->config, $this->files, $this->view),
         ];
 
         foreach ($this->tables as $table) {

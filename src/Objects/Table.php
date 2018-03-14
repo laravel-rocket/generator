@@ -24,18 +24,24 @@ class Table
     /** @var \LaravelRocket\Generator\Objects\Relation[] */
     protected $relationHash = [];
 
+    /** @var \LaravelRocket\Generator\Objects\Definitions|null */
+    protected $json;
+
     /**
      * Table constructor.
      *
-     * @param \TakaakiMizuno\MWBParser\Elements\Table   $table
-     * @param \TakaakiMizuno\MWBParser\Elements\Table[] $tables
+     * @param \TakaakiMizuno\MWBParser\Elements\Table      $table
+     * @param \TakaakiMizuno\MWBParser\Elements\Table[]    $tables
+     * @param \LaravelRocket\Generator\Objects\Definitions $json
      */
-    public function __construct($table, $tables)
+    public function __construct($table, $tables, $json = null)
     {
         $this->table = $table;
+        $this->json  = $json;
         $columns     = $table->getColumns();
         foreach ($columns as $column) {
-            $columnObject                               = new Column($column, $table);
+            $columnDefinition                           = empty($this->json) ? [] : $this->json->getColumnDefinition($table, $column);
+            $columnObject                               = new Column($column, $table, $columnDefinition);
             $this->columns[]                            = $columnObject;
             $this->columnHash[$columnObject->getName()] = $columnObject;
         }
@@ -56,7 +62,7 @@ class Table
      */
     public function getDisplayName()
     {
-        return title_case(str_replace('_', '', $this->table->getName()));
+        return title_case(str_replace('_', ' ', $this->table->getName()));
     }
 
     public function getPathName()

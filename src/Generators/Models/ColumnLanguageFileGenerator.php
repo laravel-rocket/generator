@@ -70,7 +70,8 @@ class ColumnLanguageFileGenerator extends ModelBaseGenerator
 
             $columnObject = new Column($column);
 
-            list($type, $options) = $columnObject->getEditFieldType([], $columnDefinition);
+            $type    = $columnObject->getEditFieldType();
+            $options = $columnObject->getEditFieldOptions();
 
             switch ($type) {
                 case 'boolean':

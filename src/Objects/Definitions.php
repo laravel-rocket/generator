@@ -30,4 +30,9 @@ class Definitions
     {
         return $this->get(['tables', $table, 'columns', $column], []);
     }
+
+    public function getTableDefinition($table)
+    {
+        return $this->get(['tables', $table], []);
+    }
 }
