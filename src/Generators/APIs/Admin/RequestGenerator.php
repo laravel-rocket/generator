@@ -57,7 +57,7 @@ class RequestGenerator extends BaseAdminAPIGenerator
             }
             $actionVariables = array_merge($variables, $this->getActionVariables($action));
 
-            $this->fileService->render($view, $path, $actionVariables, true, false);
+            $this->fileService->render($view, $path, $actionVariables);
         }
 
         return true;

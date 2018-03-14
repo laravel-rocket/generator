@@ -49,7 +49,7 @@ class TableBaseGenerator extends BaseGenerator
         if (file_exists($path)) {
             unlink($path);
         }
-        $this->fileService->render($view, $path, $variables, true, true);
+        $this->fileService->render($view, $path, $variables);
 
         return true;
     }

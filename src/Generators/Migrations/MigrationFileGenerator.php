@@ -63,7 +63,7 @@ class MigrationFileGenerator extends BaseGenerator
         $template = $isAlterMigration ? 'migration.alter' : 'migration.create';
 
         /* @var FileService $fileService */
-        $this->fileService->render($template, $filePath, $result, true);
+        $this->fileService->render($template, $filePath, $result);
 
         return true;
     }

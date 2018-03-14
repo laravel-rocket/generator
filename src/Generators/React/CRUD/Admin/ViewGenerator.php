@@ -37,7 +37,7 @@ class ViewGenerator extends ReactCRUDBaseGenerator
             }
             $view = $this->getActionView($action);
 
-            $this->fileService->render($view, $path, $variables, false, true);
+            $this->fileService->render($view, $path, $variables);
         }
 
         return true;

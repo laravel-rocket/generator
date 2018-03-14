@@ -71,12 +71,13 @@ class RouterFileUpdater extends TableBaseFileUpdater
         $modelName   = $this->getModelName();
         $pathName    = snake_case(pluralize($modelName));
         $tableObject = new Table($this->table, $this->tables);
+        $displayName = $tableObject->getDisplayName();
 
         return <<< EOS
-                  <PropsRoute path="/$pathName/:id/edit" name="$tableObject Edit" component={{$modelName}Edit} {...this.state}/>
-                  <PropsRoute path="/$pathName/create" name="$tableObject Create" component={{$modelName}rEdit} {...this.state}/>
-                  <PropsRoute path="/$pathName/:id" name="$tableObject Show" component={{$modelName}Show} {...this.state}/>
-                  <PropsRoute path="/$pathName" name="$tableObject" component={{$modelName}Index} {...this.state}/>
+                  <PropsRoute path="/$pathName/:id/edit" name="$displayName Edit" component={{$modelName}Edit} {...this.state}/>
+                  <PropsRoute path="/$pathName/create" name="$displayName Create" component={{$modelName}rEdit} {...this.state}/>
+                  <PropsRoute path="/$pathName/:id" name="$displayName Show" component={{$modelName}Show} {...this.state}/>
+                  <PropsRoute path="/$pathName" name="$displayName" component={{$modelName}Index} {...this.state}/>
 
 EOS;
     }

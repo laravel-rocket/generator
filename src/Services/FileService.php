@@ -77,11 +77,12 @@ class FileService
      * @param string $view
      * @param string $destinationPath
      * @param array  $variables
-     * @param bool   $addHeader
-     * @param bool   $isBladeTemplate
      */
-    public function render(string $view, string $destinationPath, array $variables = [], $addHeader=false, $isBladeTemplate=false)
+    public function render(string $view, string $destinationPath, array $variables = [])
     {
+        $addHeader      = ends_with($destinationPath, '.php');
+        $isBladeTemplate= ends_with($destinationPath, '.blade.php');
+
         \View::addLocation(resource_path('stubs'));
         \View::addLocation(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'stubs']));
 
