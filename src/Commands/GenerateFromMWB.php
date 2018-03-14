@@ -1,8 +1,10 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use LaravelRocket\Generator\FileUpdaters\APIs\Admin\RouterFileUpdater;
 use LaravelRocket\Generator\FileUpdaters\Models\RegisterRepositoryFileUpdater;
-use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\RouterFileUpdater;
+use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\RouterFileRouteUpdater;
+use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\RouterFileUseUpdater;
 use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\SideBarFileUpdater;
 use LaravelRocket\Generator\Generators\APIs\Admin\ControllerGenerator;
 use LaravelRocket\Generator\Generators\APIs\Admin\ListResponseGenerator;
@@ -167,10 +169,11 @@ class GenerateFromMWB extends MWBGenerator
             new RegisterRepositoryFileUpdater($this->config, $this->files, $this->view, $rebuild),
 
             //Admin API
-            new \LaravelRocket\Generator\FileUpdaters\APIs\Admin\RouterFileUpdater($this->config, $this->files, $this->view),
+            new RouterFileUpdater($this->config, $this->files, $this->view),
 
             // Admin CRUD
-            new RouterFileUpdater($this->config, $this->files, $this->view),
+            new RouterFileRouteUpdater($this->config, $this->files, $this->view),
+            new RouterFileUseUpdater($this->config, $this->files, $this->view),
             new SideBarFileUpdater($this->config, $this->files, $this->view),
         ];
 

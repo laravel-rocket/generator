@@ -1,7 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\RouterFileUpdater;
+use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\RouterFileRouteUpdater;
+use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\RouterFileUseUpdater;
 use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\SideBarFileUpdater;
 use LaravelRocket\Generator\Generators\React\CRUD\Admin\ColumnGenerator;
 use LaravelRocket\Generator\Generators\React\CRUD\Admin\InfoGenerator;
@@ -61,7 +62,8 @@ class AdminCRUDGenerator extends MWBGenerator
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
-            new RouterFileUpdater($this->config, $this->files, $this->view),
+            new RouterFileRouteUpdater($this->config, $this->files, $this->view),
+            new RouterFileUseUpdater($this->config, $this->files, $this->view),
             new SideBarFileUpdater($this->config, $this->files, $this->view),
         ];
 

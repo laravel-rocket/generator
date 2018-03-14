@@ -5,7 +5,7 @@ use LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater;
 use LaravelRocket\Generator\Objects\Table;
 use function ICanBoogie\pluralize;
 
-class RouterFileUpdater extends TableBaseFileUpdater
+class RouterFileRouteUpdater extends TableBaseFileUpdater
 {
     public function needGenerate()
     {
@@ -35,7 +35,7 @@ class RouterFileUpdater extends TableBaseFileUpdater
 
         foreach ($lines as $index => $line) {
             if (strpos($line, '</Switch>') !== false) {
-                return $index - 1;
+                return $index;
             }
         }
 
@@ -75,7 +75,7 @@ class RouterFileUpdater extends TableBaseFileUpdater
 
         return <<< EOS
                   <PropsRoute path="/$pathName/:id/edit" name="$displayName Edit" component={{$modelName}Edit} {...this.state}/>
-                  <PropsRoute path="/$pathName/create" name="$displayName Create" component={{$modelName}rEdit} {...this.state}/>
+                  <PropsRoute path="/$pathName/create" name="$displayName Create" component={{$modelName}Edit} {...this.state}/>
                   <PropsRoute path="/$pathName/:id" name="$displayName Show" component={{$modelName}Show} {...this.state}/>
                   <PropsRoute path="/$pathName" name="$displayName" component={{$modelName}Index} {...this.state}/>
 

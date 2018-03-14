@@ -40,7 +40,7 @@ class Table
         $this->json  = $json;
         $columns     = $table->getColumns();
         foreach ($columns as $column) {
-            $columnDefinition                           = empty($this->json) ? [] : $this->json->getColumnDefinition($table, $column);
+            $columnDefinition                           = empty($this->json) ? [] : $this->json->getColumnDefinition($table->getName(), $column->getName());
             $columnObject                               = new Column($column, $table, $columnDefinition);
             $this->columns[]                            = $columnObject;
             $this->columnHash[$columnObject->getName()] = $columnObject;
