@@ -56,7 +56,7 @@ class SideBarFileUpdater extends TableBaseFileUpdater
     {
         $pathName = $this->tableObject->getPathName();
         foreach (array_get($json, 'items', []) as $item) {
-            if (array_get($json, 'url', '') == '/'.$pathName) {
+            if (array_get($item, 'url', '') == '/'.$pathName) {
                 return true;
             }
         }

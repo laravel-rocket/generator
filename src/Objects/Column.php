@@ -12,7 +12,7 @@ class Column
     protected $column;
 
     /** @var bool */
-    protected $hasRelation = false;
+    protected $relation = false;
 
     /**
      * @var string
@@ -52,7 +52,13 @@ class Column
                     continue;
                 }
                 if ($columns[0]->getName() === $column->getName()) {
-                    $this->hasRelation = true;
+                    $this->relation = new Relation(
+                        Relation::TYPE_BELONGS_TO,
+                        $table->getName(),
+                        $column,
+                        $foreignKey->getReferenceTableName(),
+                        $referenceColumns[0]
+                    );
                     break;
                 }
             }
@@ -82,7 +88,12 @@ class Column
      */
     public function getAPIName()
     {
-        return camel_case($this->getName());
+        $name = $this->getName();
+        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+            $name = substr($name, 0, strlen($name) - 3);
+        }
+
+        return camel_case($name);
     }
 
     /**
@@ -90,7 +101,12 @@ class Column
      */
     public function getQueryName()
     {
-        return snake_case($this->getName());
+        $name = $this->getName();
+        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+            $name = substr($name, 0, strlen($name) - 3);
+        }
+
+        return snake_case($name);
     }
 
     /**
@@ -105,6 +121,24 @@ class Column
         }
 
         return $type;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFileRelation()
+    {
+        return $this->editFieldType === 'image' || $this->editFieldType === 'file';
+    }
+
+    public function hasImageRelation()
+    {
+        return $this->editFieldType === 'image';
+    }
+
+    public function getRelation()
+    {
+        return $this->relation;
     }
 
     /**
@@ -172,7 +206,7 @@ class Column
      */
     public function hasRelation(): bool
     {
-        return $this->hasRelation;
+        return !empty($this->relation);
     }
 
     /**
@@ -322,68 +356,70 @@ class Column
     protected function setEditFieldType()
     {
         $name = $this->getName();
-        $type = empty($this->definition) ? '' : strtolower(array_get($this->definition, 'type', $this->getType()));
+        $type = empty($this->definition) ? $this->getType() : strtolower(array_get($this->definition, 'type', $this->getType()));
+
+        $this->editFieldType    = 'text';
+        $this->editFieldOptions = [];
 
         if (starts_with($type, 'bool') || (starts_with($name, 'is_') ||
                 starts_with($name, 'has_')) && ($type === 'int' || $type === 'tinyint')) {
-            $this->editFieldType    = 'boolean';
-            $this->editFieldOptions = [];
+            $this->editFieldType = 'boolean';
 
             return;
         }
 
         if (ends_with($name, 'image_id') && ($type === 'int' || $type === 'bigint')) {
-            $this->editFieldType    = 'image';
-            $this->editFieldOptions = [];
+            $this->editFieldType = 'image';
 
             return;
         }
 
         if (ends_with($name, 'file_id') && ($type === 'int' || $type === 'bigint')) {
-            $this->editFieldType    = 'file';
-            $this->editFieldOptions = [];
+            $this->editFieldType = 'file';
 
             return;
         }
 
         if (ends_with($name, 'type') || $type === 'type') {
             $this->editFieldType    = 'select';
-            $this->editFieldOptions = array_get($definitions, 'options', []);
+            $this->editFieldOptions = array_get($this->definition, 'options', []);
 
             return;
         }
 
         if ($name === 'password') {
-            $this->editFieldType    = 'password';
-            $this->editFieldOptions = [];
+            $this->editFieldType = 'password';
+
+            return;
+        }
+
+        if ($name === 'email') {
+            $this->editFieldType = 'email';
 
             return;
         }
 
         if (ends_with($name, 'country_code') && $type === 'varchar') {
-            $this->editFieldType    = 'country';
-            $this->editFieldOptions = [];
+            $this->editFieldType = 'country';
 
             return;
         }
 
         if (ends_with($name, 'currency_code') && $type === 'varchar') {
-            $this->editFieldType    = 'currency';
-            $this->editFieldOptions = [];
+            $this->editFieldType = 'currency';
 
             return;
         }
 
         if ($type === 'date') {
-            $this->editFieldType    = 'date';
-            $this->editFieldOptions = [];
+            $this->editFieldType = 'date';
 
             return;
         }
 
         if (ends_with($name, 'gender') && $type === 'varchar') {
             $this->editFieldType    = 'select';
-            $this->editFieldOptions = array_get($definitions, 'options', [[
+            $this->editFieldOptions = array_get($this->definition, 'options', [[
                 'name'  => 'Male',
                 'value' => 'male',
             ], [
@@ -395,14 +431,10 @@ class Column
         }
 
         if (in_array($type, ['text', 'mediumtext', 'longtext', 'smalltext', 'tinytext'])) {
-            $this->editFieldType    = 'textarea';
-            $this->editFieldOptions = [];
+            $this->editFieldType = 'textarea';
 
             return;
         }
-
-        $this->editFieldType    = 'text';
-        $this->editFieldOptions = [];
 
         return;
     }
@@ -507,5 +539,26 @@ class Column
         $line = '$table->dropColumn(\''.$this->column->getName().'\')';
 
         return $line;
+    }
+
+    /**
+     * @param string       $haystack
+     * @param array|string $needles
+     *
+     * @return bool
+     */
+    protected function hasPostFix($haystack, $needles)
+    {
+        if (!is_array($needles)) {
+            $needles = [$needles];
+        }
+
+        foreach ($needles as $needle) {
+            if ($haystack === $needle || ends_with($haystack, '_'.$needle)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

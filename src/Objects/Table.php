@@ -1,7 +1,6 @@
 <?php
 namespace LaravelRocket\Generator\Objects;
 
-use function ICanBoogie\pluralize;
 use function ICanBoogie\singularize;
 
 class Table
@@ -207,24 +206,24 @@ class Table
             if (count($referenceColumns) == 0) {
                 continue;
             }
-            $relationName = camel_case(preg_replace('/_id$/', '', $columns[0]->getName()));
-
-            if (in_array($relationName, $names)) {
-                continue;
-            }
 
             $column          = $columns[0];
             $referenceColumn = $referenceColumns[0];
 
-            $relations[] = new Relation(
-                $relationName,
+            $relation = new Relation(
                 Relation::TYPE_BELONGS_TO,
                 $this->table->getName(),
                 $column,
                 $foreignKey->getReferenceTableName(),
                 $referenceColumn
             );
-            $names[]     = $relationName;
+
+            if (in_array($relation->getName(), $names)) {
+                continue;
+            }
+
+            $relations[] = $relation;
+            $names[]     = $relation->getName();
         }
 
         foreach ($tables as $table) {
@@ -248,25 +247,20 @@ class Table
                 $column          = $columns[0];
                 $referenceColumn = $referenceColumns[0];
 
-                $relationName = pluralize(preg_replace('/_id$/', '', $columns[0]->getName()));
-                if ($foreignKey->getReferenceTableName() === $relationName) {
-                    $relationName = $table->getName();
-                }
-                $relationName = $foreignKey->hasMany() ? pluralize(camel_case($relationName)) : singularize(camel_case($relationName));
+                $relation = new Relation(
+                    $foreignKey->hasMany() ? Relation::TYPE_HAS_MANY : Relation::TYPE_HAS_ONE,
+                    $this->table->getName(),
+                    $referenceColumn,
+                    $table->getName(),
+                    $column
+                );
 
-                if ($this->table->getName() === $foreignKey->getReferenceTableName() && !in_array($relationName, $names)) {
-                    $relations[]             = new Relation(
-                        $relationName,
-                        $foreignKey->hasMany() ? Relation::TYPE_HAS_MANY : Relation::TYPE_HAS_ONE,
-                        $this->table->getName(),
-                        $referenceColumn,
-                        $table->getName(),
-                        $column
-                    );
+                if ($this->table->getName() === $foreignKey->getReferenceTableName() && !in_array($relation->getName(), $names)) {
+                    $relations[]             = $relation;
                     $relationTableColumns[0] = $column;
                     $relationTableNames[0]   = $foreignKey->getReferenceTableName();
                     $hasRelation             = true;
-                    $names[]                 = $relationName;
+                    $names[]                 = $relation->getName();
                 } else {
                     // Store for BelongsToMany Relations
                     $relationTableColumns[1] = $column;
@@ -274,18 +268,17 @@ class Table
                 }
             }
 
-            $relationName = camel_case($relationTableNames[1]);
-            if ($hasRelation && $this->detectRelationTable($table) && !in_array($relationName, $names)) {
-                $relations[] = new Relation(
-                    $relationName,
-                    Relation::TYPE_BELONGS_TO_MANY,
-                    $this->table->getName(),
-                    $relationTableColumns[0],
-                    $relationTableNames[1],
-                    $relationTableColumns[1],
-                    $table->getName()
-                );
-                $names[]     = $relationName;
+            $relation = new Relation(
+                Relation::TYPE_BELONGS_TO_MANY,
+                $this->table->getName(),
+                $relationTableColumns[0],
+                $relationTableNames[1],
+                $relationTableColumns[1],
+                $table->getName()
+            );
+            if ($hasRelation && $this->detectRelationTable($table) && !in_array($relation->getName(), $names)) {
+                $relations[] = $relation;
+                $names[]     = $relation->getName();
             }
         }
 

@@ -45,9 +45,11 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
         foreach ($tableObject->getColumns() as $column) {
             if ($column->isAPIReturnable()) {
                 $result['columns'][$column->getName()] = [
-                    'name'     => $column->getDisplayName(),
-                    'type'     => $column->getEditFieldType(),
-                    'editable' => $column->isEditable(),
+                    'name'      => $column->getDisplayName(),
+                    'type'      => $column->getEditFieldType(),
+                    'editable'  => $column->isEditable(),
+                    'queryName' => $column->getQueryName(),
+                    'apiName'   => $column->getAPIName(),
                 ];
                 if ($column->isListable()) {
                     $result['list'][] = $column->getName();
@@ -57,6 +59,32 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                 }
                 if ($column->isEditable()) {
                     $result['edit'][] = $column->getName();
+                }
+            }
+        }
+
+        foreach ($tableObject->getRelations() as $relation) {
+            if ($relation->shouldIncludeInAPI()) {
+                $options     = [];
+                $optionNames = [];
+
+                $result['columns'][$relation->getName()] = [
+                    'name'        => $relation->getDisplayName(),
+                    'type'        => $relation->getEditFieldType(),
+                    'editable'    => $relation->isEditable(),
+                    'queryName'   => $relation->getQueryName(),
+                    'apiName'     => $relation->getAPIName(),
+                    'options'     => $options,
+                    'optionNames' => $optionNames,
+                ];
+                if ($relation->isListable()) {
+                    $result['list'][] = $relation->getName();
+                }
+                if ($relation->isShowable()) {
+                    $result['show'][] = $relation->getName();
+                }
+                if ($relation->isEditable()) {
+                    $result['edit'][] = $relation->getName();
                 }
             }
         }

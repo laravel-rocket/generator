@@ -54,7 +54,7 @@ class RouterFileUseUpdater extends TableBaseFileUpdater
         }
 
         foreach ($lines as $index => $line) {
-            if (strpos($line, 'import '.$modelName.'Index}') !== false) {
+            if (strpos($line, 'import '.$modelName.'Index') !== false) {
                 return $index + 1;
             }
         }
