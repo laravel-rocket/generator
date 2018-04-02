@@ -12,9 +12,14 @@ class APIBaseGenerator extends BaseGenerator
     protected $name;
 
     /**
-     * @param \TakaakiMizuno\SwaggerParser\Objects\Base $definition
+     * @param \TakaakiMizuno\SwaggerParser\Objects\Base $object
      */
-    protected $definition;
+    protected $object;
+
+    /**
+     * @var \LaravelRocket\Generator\Objects\Table[]
+     */
+    protected $tables;
 
     /**
      * @param \TakaakiMizuno\SwaggerParser\Objects\V20\Document $osa
@@ -31,25 +36,27 @@ class APIBaseGenerator extends BaseGenerator
 
     /**
      * @param string                                            $name
-     * @param \TakaakiMizuno\SwaggerParser\Objects\Base         $definition
+     * @param \TakaakiMizuno\SwaggerParser\Objects\Base         $object
      * @param \TakaakiMizuno\SwaggerParser\Objects\V20\Document $osa
      * @param \LaravelRocket\Generator\Services\DatabaseService $databaseService
      * @param \LaravelRocket\Generator\Objects\Definitions      $json
+     * @param \TakaakiMizuno\MWBParser\Elements\Table[]         $tables
      *
      * @return bool
      */
-    public function generate($name, $definition, $osa, $databaseService, $json): bool
+    public function generate($name, $object, $osa, $databaseService, $json, $tables): bool
     {
         $this->json            = $json;
+        $this->tables          = $tables;
         $this->databaseService = $databaseService;
+
+        $this->setTarget($name, $object, $osa);
+        $this->setVersion();
+        $this->preprocess();
 
         if (!$this->canGenerate()) {
             return false;
         }
-
-        $this->setTarget($name, $definition, $osa);
-        $this->setVersion();
-        $this->preprocess();
 
         $variables = $this->getVariables();
 
@@ -66,19 +73,20 @@ class APIBaseGenerator extends BaseGenerator
 
     /**
      * @param string                                            $name
-     * @param \TakaakiMizuno\SwaggerParser\Objects\Base         $definition
+     * @param \TakaakiMizuno\SwaggerParser\Objects\Base         $object
      * @param \TakaakiMizuno\SwaggerParser\Objects\V20\Document $osa
      */
-    public function setTarget($name, $definition, $osa)
+    public function setTarget($name, $object, $osa)
     {
-        $this->name       = $name;
-        $this->definition = $definition;
-        $this->osa        = $osa;
+        $this->name   = $name;
+        $this->object = $object;
+        $this->osa    = $osa;
     }
 
     protected function getBasicVariables()
     {
         $data = [
+            'name'             => $this->name,
             'versionNamespace' => $this->versionNamespace,
         ];
 

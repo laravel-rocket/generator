@@ -1,13 +1,12 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use LaravelRocket\Generator\Generators\APIs\ResponseGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use LaravelRocket\Generator\Services\OASService;
 use LaravelRocket\Generator\Validators\APIs\APIValidator;
 use LaravelRocket\Generator\Validators\Error;
 
-class GenerateAPIFromOAS extends BaseCommand
+class GenerateAPIFromOAS extends MWBGenerator
 {
     protected $name = 'rocket:generate:api:from-oas';
 
@@ -27,6 +26,11 @@ class GenerateAPIFromOAS extends BaseCommand
      */
     public function handle()
     {
+        $this->tables = $this->getTablesFromMWBFile();
+        if ($this->tables === false) {
+            return false;
+        }
+
         $this->oas = $this->getAPISpecFromOASFile();
         if ($this->oas === false) {
             return false;
@@ -116,13 +120,13 @@ class GenerateAPIFromOAS extends BaseCommand
     {
         /** @var \LaravelRocket\Generator\Generators\APIBaseGenerator[] $generators */
         $generators = [
-            new ResponseGenerator($this->config, $this->files, $this->view),
+            new \LaravelRocket\Generator\Generators\APIs\OAS\ResponseGenerator($this->config, $this->files, $this->view),
         ];
 
         $definitions = $this->oas->definitions;
         foreach ($definitions as $name => $definition) {
             foreach ($generators as $generator) {
-                $generator->generate($name, $definition, $this->oas, $this->databaseService, $this->json);
+                $generator->generate($name, $definition, $this->oas, $this->databaseService, $this->json, $this->tables);
             }
         }
     }
