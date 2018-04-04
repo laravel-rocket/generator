@@ -123,13 +123,16 @@ class TableBaseGenerator extends BaseGenerator
     }
 
     /**
-     * @return array
+     * @return \LaravelRocket\Generator\Objects\Relation[]
      */
     public function getRelations(): array
     {
         return $this->tableObject->getRelations();
     }
 
+    /**
+     * @return array
+     */
     protected function getColumns()
     {
         $columnInfo = [
@@ -141,8 +144,8 @@ class TableBaseGenerator extends BaseGenerator
         $relations    = $this->getRelations();
         $relationHash = [];
         foreach ($relations as $relation) {
-            if ($relation['type'] === 'belongsTo') {
-                $relationHash[$relation['referenceColumn']->getName()] = $relation;
+            if ($relation->getType() === 'belongsTo') {
+                $relationHash[$relation->getReferenceColumn()->getName()] = $relation;
             }
         }
 
@@ -159,7 +162,7 @@ class TableBaseGenerator extends BaseGenerator
             $this->copyTypeRelatedFiles($type);
 
             if (array_key_exists($name, $relationHash)) {
-                $relation = camel_case($relationHash[$name]['name']);
+                $relation = camel_case($relationHash[$name]->getName());
             }
 
             if ($columnObject->isListable()) {
@@ -192,12 +195,14 @@ class TableBaseGenerator extends BaseGenerator
 
         $relationDefinitions = $this->json->get(['tables', $this->table->getName(), 'relations'], []);
         foreach ($relationDefinitions as $name => $relationDefinition) {
-            $columnInfo['editableColumns'][] = [
-                'name'     => $name,
-                'type'     => $type,
-                'relation' => $relation,
-                'options'  => $options,
-            ];
+            if (array_key_exists($name, $columnInfo['editableColumns'])) {
+                $columnInfo['editableColumns']['name']['type'] = array_get($relationDefinitions, 'type', '');
+            } else {
+                $columnInfo['editableColumns'][$name] = [
+                    'name' => $name,
+                    'type' => array_get($relationDefinitions, 'type', ''),
+                ];
+            }
         }
 
         return $columnInfo;

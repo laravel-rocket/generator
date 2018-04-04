@@ -26,19 +26,19 @@ class {{ $modelName }}Presenter extends BasePresenter
     ];
 
 @foreach( $relations as $relation )
-@if( array_key_exists($relation['name'] , $existingMethods))
-    {!! $existingMethods[$relation['name']] !!}
+@if( array_key_exists($relation->getName() , $existingMethods))
+    {!! $existingMethods[$relation->getName()] !!}
 @php
-    unset($existingMethods[$relation['name']]);
+    unset($existingMethods[$relation->getName()]);
 @endphp
 @else
-@if( $relation['type'] === 'belongsTo' || $relation['type'] === 'hasOne' )
-    public function {{ $relation['name'] }}()
+@if( $relation->getType() === 'belongsTo' || $relation->getType() === 'hasOne' )
+    public function {{ $relation->getName() }}()
     {
-        $model = $this->entity->{{ $relation['name'] }};
+        $model = $this->entity->{{ $relation->getName() }};
         if (!$model) {
-            $model      = new \App\Models\{{ $relation['referenceModel'] }}();
-@if( ends_with(strtolower($relation['name']), 'image'))
+            $model      = new \App\Models\{{ $relation->getReferenceModel() }}();
+@if( ends_with(strtolower($relation->getName()), 'image'))
 @if( $authenticatable )
             $model->url = \URLHelper::asset('images/user.png', 'common');
 @else

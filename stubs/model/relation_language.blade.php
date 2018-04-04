@@ -1,7 +1,7 @@
 return [
-@foreach( $relations as $key => $info )
-    '{{ array_get($info, 'name', $key) }}' => [
-        'name' => '{{ array_get($info, 'viewName', array_get($info, 'name', $key)) }}',
+@foreach( $relations as $key => $relation )
+    '{{ $relation->getName() }}' => [
+        'name' => '{{ $relation->getDisplayName() }}',
     ],
 @endforeach
 ];
