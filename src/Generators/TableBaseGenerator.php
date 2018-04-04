@@ -3,7 +3,6 @@ namespace LaravelRocket\Generator\Generators;
 
 use LaravelRocket\Generator\Objects\Column;
 use TakaakiMizuno\MWBParser\Elements\Table;
-use function ICanBoogie\pluralize;
 use function ICanBoogie\singularize;
 
 class TableBaseGenerator extends BaseGenerator
@@ -128,104 +127,7 @@ class TableBaseGenerator extends BaseGenerator
      */
     public function getRelations(): array
     {
-        $relations = [];
-        $names     = [];
-
-        foreach ($this->table->getForeignKey() as $foreignKey) {
-            $columns          = $foreignKey->getColumns();
-            $referenceColumns = $foreignKey->getReferenceColumns();
-            if (count($columns) == 0) {
-                continue;
-            }
-            if (count($referenceColumns) == 0) {
-                continue;
-            }
-            $relationName = camel_case(preg_replace('/_id$/', '', $columns[0]->getName()));
-
-            if (in_array($relationName, $names)) {
-                continue;
-            }
-
-            $column          = $columns[0];
-            $referenceColumn = $referenceColumns[0];
-            $relations[]     = [
-                'tableColumn'     => $column,
-                'type'            => 'belongsTo',
-                'column'          => $referenceColumn,
-                'referenceColumn' => $column,
-                'referenceTable'  => $foreignKey->getReferenceTableName(),
-                'name'            => $relationName,
-                'referenceModel'  => ucfirst(camel_case(singularize($foreignKey->getReferenceTableName()))),
-                'viewName'        => title_case(str_replace('_', ' ', snake_case($relationName))),
-            ];
-            $names[]         = $relationName;
-        }
-        foreach ($this->tables as $table) {
-            if ($this->table->getName() === $table->getName()) {
-                continue;
-            }
-            $relationTableColumns = ['', ''];
-            $relationTableNames   = ['', ''];
-
-            $hasRelation = false;
-
-            foreach ($table->getForeignKey() as $foreignKey) {
-                $columns          = $foreignKey->getColumns();
-                $referenceColumns = $foreignKey->getReferenceColumns();
-                if (count($columns) == 0) {
-                    continue;
-                }
-                if (count($referenceColumns) == 0) {
-                    continue;
-                }
-                $column          = $columns[0];
-                $referenceColumn = $referenceColumns[0];
-
-                $relationName = pluralize(preg_replace('/_id$/', '', $columns[0]->getName()));
-                if ($foreignKey->getReferenceTableName() === $relationName) {
-                    $relationName = $table->getName();
-                }
-                $relationName = $foreignKey->hasMany() ? pluralize(camel_case($relationName)) : singularize(camel_case($relationName));
-
-                if ($this->table->getName() === $foreignKey->getReferenceTableName() && !in_array($relationName, $names)) {
-                    $relations[]             = [
-                        'tableColumn'     => $referenceColumn,
-                        'type'            => $foreignKey->hasMany() ? 'hasMany' : 'hasOne',
-                        'column'          => $referenceColumn,
-                        'referenceColumn' => $column,
-                        'referenceTable'  => $table->getName(),
-                        'name'            => $relationName,
-                        'referenceModel'  => ucfirst(camel_case(singularize($table->getName()))),
-                    ];
-                    $relationTableColumns[0] = $column;
-                    $relationTableNames[0]   = $foreignKey->getReferenceTableName();
-                    $hasRelation             = true;
-                    $names[]                 = $relationName;
-                } else {
-                    $relationTableName       = $table->getName();
-                    $relationTableColumns[1] = $column;
-                    $relationTableNames[1]   = $foreignKey->getReferenceTableName();
-                }
-            }
-
-            $relationName = camel_case($relationTableNames[1]);
-
-            if ($hasRelation && $this->detectRelationTable($table) && !in_array($relationName, $names)) {
-                $relations[] = [
-                    'tableColumn'     => $relationTableColumns[0],
-                    'type'            => 'belongsToMany',
-                    'relationTable'   => $table->getName(),
-                    'column'          => $relationTableColumns[0],
-                    'referenceColumn' => $relationTableColumns[1],
-                    'referenceTable'  => $relationTableNames[1],
-                    'name'            => $relationName,
-                    'referenceModel'  => ucfirst(camel_case(singularize($relationTableNames[1]))),
-                ];
-                $names[]     = $relationName;
-            }
-        }
-
-        return $relations;
+        return $this->tableObject->getRelations();
     }
 
     protected function getColumns()

@@ -116,6 +116,14 @@ class Relation
     /**
      * @return string
      */
+    public function getReferenceTableName()
+    {
+        return $this->referenceTableName;
+    }
+
+    /**
+     * @return string
+     */
     public function getDisplayName()
     {
         return title_case(str_replace('_', ' ', snake_case($this->getName())));
@@ -127,6 +135,14 @@ class Relation
     public function getColumn()
     {
         return $this->column;
+    }
+
+    /**
+     * @return null|\TakaakiMizuno\MWBParser\Elements\Column
+     */
+    public function getReferenceColumn()
+    {
+        return $this->referenceColumn;
     }
 
     /**
