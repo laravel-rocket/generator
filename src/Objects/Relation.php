@@ -73,20 +73,20 @@ class Relation
     {
         switch ($this->type) {
             case self::TYPE_BELONGS_TO:
-                return camel_case(preg_replace('/_id$/', '', $this->column->getName()));
+                $this->name = camel_case(preg_replace('/_id$/', '', $this->column->getName()));
                 break;
             case self::TYPE_HAS_MANY:
-                return camel_case($this->referenceTableName);
+                $this->name = camel_case($this->referenceTableName);
                 break;
             case self::TYPE_HAS_ONE:
-                return camel_case(singularize($this->referenceTableName));
+                $this->name = camel_case(singularize($this->referenceTableName));
                 break;
             case self::TYPE_BELONGS_TO_MANY:
-                return camel_case($this->referenceTableName);
+                $this->name = camel_case($this->referenceTableName);
                 break;
         }
 
-        return camel_case($this->referenceTableName);
+        $this->name = camel_case($this->referenceTableName);
     }
 
     /**

@@ -151,11 +151,11 @@ class GenerateFromMWB extends MWBGenerator
             new ConfigFileGenerator($this->config, $this->files, $this->view, $rebuild),
 
             //Admin API
-            new ResponseGenerator($this->config, $this->files, $this->view),
-            new ListResponseGenerator($this->config, $this->files, $this->view),
-            new ControllerGenerator($this->config, $this->files, $this->view),
-            new UnitTestGenerator($this->config, $this->files, $this->view),
-            new RequestGenerator($this->config, $this->files, $this->view),
+            new ResponseGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ListResponseGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ControllerGenerator($this->config, $this->files, $this->view, $rebuild),
+            new UnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
+            new RequestGenerator($this->config, $this->files, $this->view, $rebuild),
 
             // Admin CRUD
             new \LaravelRocket\Generator\Generators\React\CRUD\Admin\RepositoryGenerator($this->config, $this->files, $this->view, $rebuild),

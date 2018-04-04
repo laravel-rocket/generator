@@ -22,7 +22,7 @@ class BaseAdminAPIGenerator extends TableBaseGenerator
     protected function getVariables(): array
     {
         $modelName   = $this->getModelName();
-        $tableObject = $this->tableObject;
+        $tableObject = new Table($this->table, $this->tables);
 
         $variables = [
             'table'            => $tableObject,
