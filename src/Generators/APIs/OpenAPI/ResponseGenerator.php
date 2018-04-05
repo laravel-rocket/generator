@@ -59,7 +59,7 @@ class ResponseGenerator extends APIBaseGenerator
                 return 'api.responses.array';
         }
 
-        return 'api.responses.array';
+        return 'api.oas.responses.array';
     }
 
     /**

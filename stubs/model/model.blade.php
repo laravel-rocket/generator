@@ -76,7 +76,7 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
 @if( $relation->getType() === 'belongsTo')
     public function {{ $relation->getName() }}()
     {
-        return $this->belongsTo(\App\Models\{{ $relation->getReferenceModel() }}::class, '{{ $relation->getReferenceColumn()->getName() }}', '{{ $relation->getColumn()->getName() }}');
+        return $this->belongsTo(\App\Models\{{ $relation->getReferenceModel() }}::class, '{{ $relation->getColumn()->getName() }}', '{{ $relation->getReferenceColumn()->getName() }}');
     }
 
 @elseif( $relation->getType() === 'hasMany')

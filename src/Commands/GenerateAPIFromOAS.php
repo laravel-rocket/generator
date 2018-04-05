@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use LaravelRocket\Generator\Objects\OpenAPI\Path;
 use LaravelRocket\Generator\Services\DatabaseService;
 use LaravelRocket\Generator\Services\OASService;
 use LaravelRocket\Generator\Validators\APIs\APIValidator;
@@ -15,6 +16,8 @@ class GenerateAPIFromOAS extends MWBGenerator
     protected $description = 'Create API from OAS file';
 
     protected $oas;
+
+    protected $controllers = [];
 
     /** @var DatabaseService $databaseService */
     protected $databaseService;
@@ -44,6 +47,10 @@ class GenerateAPIFromOAS extends MWBGenerator
 
         $this->databaseService = new DatabaseService($this->config, $this->files);
         $this->databaseService->resetDatabase();
+
+        $this->reorganizePath();
+        $this->generateFromDefinitions();
+        $this->styleCode();
 
         $this->databaseService->dropDatabase();
 
@@ -129,5 +136,58 @@ class GenerateAPIFromOAS extends MWBGenerator
                 $generator->generate($name, $definition, $this->oas, $this->databaseService, $this->json, $this->tables);
             }
         }
+    }
+
+    protected function generateControllers()
+    {
+        /** @var \LaravelRocket\Generator\Generators\APIBaseGenerator[] $generators */
+        $generators = [
+            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ControllerGenerator($this->config, $this->files, $this->view),
+        ];
+
+        foreach ($this->controllers as $name => $definition) {
+            foreach ($generators as $generator) {
+                $generator->generate($name, $definition, $this->oas, $this->databaseService, $this->json, $this->tables);
+            }
+        }
+    }
+
+    protected function reorganizePath()
+    {
+        $this->controllers = [];
+        $paths             = $definitions = $this->oas->paths;
+        foreach ($paths as $path => $methods) {
+            foreach ($methods as $method => $info) {
+                $pathObject = new Path($path, $method, $info);
+                foreach ($pathObject->getActions() as $action) {
+                    if (!$this->checkActionAlreadyExists($action)) {
+                        if (!array_key_exists($action->getController(), $this->controllers)) {
+                            $this->controllers[$action->getController()] = [];
+                        }
+                        $this->controllers[$action->getController()][$action->getMethod()] = $action;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param \LaravelRocket\Generator\Objects\OpenAPI\Action $action
+     *
+     * @return bool
+     */
+    protected function checkActionAlreadyExists($action)
+    {
+        $controllerName = $action->getController();
+        if (!array_key_exists($controllerName, $this->controllers)) {
+            return false;
+        }
+
+        if (!array_key_exists($action->getMethod(), $this->controllers[$controllerName])) {
+            return false;
+        }
+
+        return true;
     }
 }
