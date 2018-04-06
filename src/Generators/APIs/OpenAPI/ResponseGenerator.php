@@ -1,5 +1,5 @@
 <?php
-namespace LaravelRocket\Generator\Generators\APIs\OAS;
+namespace LaravelRocket\Generator\Generators\APIs\OpenAPI;
 
 use LaravelRocket\Generator\Generators\APIBaseGenerator;
 use LaravelRocket\Generator\Objects\OpenAPI\Definition;

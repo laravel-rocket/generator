@@ -13,6 +13,9 @@ class APIValidator extends BaseValidator
      */
     public function validate($oas, $json)
     {
-        return [];
+        $success = true;
+        $errors  = [];
+
+        return [$success, $errors];
     }
 }

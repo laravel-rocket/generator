@@ -11,7 +11,7 @@ class GenerateAPIFromOAS extends MWBGenerator
 {
     protected $name = 'rocket:generate:api:from-oas';
 
-    protected $signature = 'rocket:generate:api:from-oas {--file=} {--json=}';
+    protected $signature = 'rocket:generate:api:from-oas {--rebuild} {--osa=} {--file=} {--json=}';
 
     protected $description = 'Create API from OAS file';
 
@@ -59,7 +59,7 @@ class GenerateAPIFromOAS extends MWBGenerator
 
     protected function getAPISpecFromOASFile()
     {
-        $file    = $this->option('file');
+        $file    = $this->option('osa');
         $default = false;
         if (empty($file)) {
             $default = true;
@@ -127,7 +127,7 @@ class GenerateAPIFromOAS extends MWBGenerator
     {
         /** @var \LaravelRocket\Generator\Generators\APIBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\APIs\OAS\ResponseGenerator($this->config, $this->files, $this->view),
+            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ResponseGenerator($this->config, $this->files, $this->view),
         ];
 
         $definitions = $this->oas->definitions;
