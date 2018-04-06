@@ -121,10 +121,10 @@ class Definition
                 $properties = $allOf->properties;
                 if (!empty($properties)) {
                     foreach ($properties as $key => $property) {
-                        if ($key === 'items') {
-                            $ref = $property->items['$ref'];
-                            $ref = str_replace('#/definitions/', '', $ref);
-
+                        if ($key === 'items' && $property->type === 'array') {
+                            $reference          = $property->items;
+                            $ref                = $reference->{'$ref'};
+                            $ref                = str_replace('#/definitions/', '', $ref);
                             $this->listItemName = $ref;
                         }
                     }

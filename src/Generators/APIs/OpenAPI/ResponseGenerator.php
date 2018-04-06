@@ -72,7 +72,7 @@ class ResponseGenerator extends APIBaseGenerator
         $variables                  = $this->getBasicVariables();
         $variables['properties']    = $this->definition->getProperties();
         $variables['className']     = $this->name;
-        $variables['modelName']     = $this->table->getModelName();
+        $variables['modelName']     = $this->definition->getModelName();
         $variables['listClassName'] = $this->definition->getListItemName();
 
         return $variables;
