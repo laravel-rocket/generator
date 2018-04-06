@@ -34,6 +34,9 @@ class Definition
     /** @var \TakaakiMizuno\SwaggerParser\Objects\V20\Document */
     protected $osa;
 
+    /** @var string */
+    protected $listItemName;
+
     /**
      * Definition constructor.
      *
@@ -91,6 +94,8 @@ class Definition
         if ($this->getType() !== self::TYPE_LIST) {
             return '';
         }
+
+        return $this->listItemName;
     }
 
     /**
@@ -114,6 +119,16 @@ class Definition
                 }
 
                 $properties = $allOf->properties;
+                if (!empty($properties)) {
+                    foreach ($properties as $key => $property) {
+                        if ($key === 'items') {
+                            $ref = $property->items['$ref'];
+                            $ref = str_replace('#/definitions/', '', $ref);
+
+                            $this->listItemName = $ref;
+                        }
+                    }
+                }
             }
         }
         if ($this->type === self::TYPE_OBJECT) {
