@@ -5,6 +5,7 @@ use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use LaravelRocket\Generator\Commands\AdminAPIGenerator;
 use LaravelRocket\Generator\Commands\AdminCRUDGenerator;
 use LaravelRocket\Generator\Commands\EventGenerator;
+use LaravelRocket\Generator\Commands\GenerateAPIFromOAS;
 use LaravelRocket\Generator\Commands\GenerateFromMWB;
 use LaravelRocket\Generator\Commands\HelperGenerator;
 use LaravelRocket\Generator\Commands\MigrationGenerator;
@@ -30,6 +31,10 @@ class ServiceProvider extends BaseServiceProvider
     {
         $this->app->singleton('command.rocket.generate.from-mwb', function ($app) {
             return new GenerateFromMWB($app['config'], $app['files'], $app['view']);
+        });
+
+        $this->app->singleton('command.rocket.generate.api.from-oas', function ($app) {
+            return new GenerateAPIFromOAS($app['config'], $app['files'], $app['view']);
         });
 
         $this->app->singleton('command.rocket.validate.from-mwb', function ($app) {
@@ -77,7 +82,7 @@ class ServiceProvider extends BaseServiceProvider
         );
 
         $this->commands(
-            'command.rocket.validate.from-mwb'
+            'command.rocket.generate.api.from-oas'
         );
 
         $this->commands(
