@@ -59,6 +59,14 @@ class Table
     /**
      * @return string
      */
+    public function getModelName(): string
+    {
+        return ucfirst(camel_case(singularize($this->table->getName())));
+    }
+
+    /**
+     * @return string
+     */
     public function getDisplayName()
     {
         return title_case(str_replace('_', ' ', $this->table->getName()));

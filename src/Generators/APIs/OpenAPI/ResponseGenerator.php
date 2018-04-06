@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\APIs\OpenAPI;
 
 use LaravelRocket\Generator\Generators\APIBaseGenerator;
@@ -22,7 +23,7 @@ class ResponseGenerator extends APIBaseGenerator
     {
         $skipResponses = ['List'];
 
-        if (in_array($this->name, $skipResponses)) {
+        if(in_array($this->name, $skipResponses)) {
             return false;
         }
 
@@ -42,7 +43,7 @@ class ResponseGenerator extends APIBaseGenerator
      */
     protected function getPath(): string
     {
-        return app_path('Http/Response/Api/'.$this->versionNamespace.'/'.$this->definition->getName().'.php');
+        return app_path('Http/Responses/Api/' . $this->versionNamespace . '/' . $this->definition->getName() . '.php');
     }
 
     /**
@@ -50,13 +51,13 @@ class ResponseGenerator extends APIBaseGenerator
      */
     protected function getView(): string
     {
-        switch ($this->type) {
+        switch ($this->definition->getType()) {
             case 'model':
-                return 'api.responses.model';
+                return 'api.oas.responses.model';
             case 'list':
-                return 'api.responses.list';
+                return 'api.oas.responses.list';
             case 'array':
-                return 'api.responses.array';
+                return 'api.oas.responses.array';
         }
 
         return 'api.oas.responses.array';
@@ -71,7 +72,9 @@ class ResponseGenerator extends APIBaseGenerator
     {
         $variables               = $this->getBasicVariables();
         $variables['properties'] = $this->definition->getProperties();
-
+        $variables['className']  = $this->name;
+        $variables['modelName']  = $this->table->getModelName();
+        $variables['listClassName'] =
         return $variables;
     }
 }

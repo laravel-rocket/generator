@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
+use LaravelRocket\Generator\Objects\Table;
 use function ICanBoogie\pluralize;
 
 class Definition
@@ -74,6 +75,25 @@ class Definition
     }
 
     /**
+     * @return string
+     */
+    public function getModelName(): string
+    {
+        if ($this->getType() !== self::TYPE_MODEL) {
+            return '';
+        }
+
+        return $this->table->getModelName();
+    }
+
+    public function getListItemName(): string
+    {
+        if ($this->getType() !== self::TYPE_LIST) {
+            return '';
+        }
+    }
+
+    /**
      * @return array
      */
     public function getProperties()
@@ -85,11 +105,15 @@ class Definition
     {
         $this->type = self::TYPE_OBJECT;
 
-        if (!empty($this->object->allOf)) {
+        $allOf = $this->object->allOf;
+        if (!empty($allOf)) {
             foreach ($this->object->allOf as $allOf) {
-                if (!empty($allOf->{'$ref'}) && $allOf->{'$ref'} === '#/definitions/List') {
+                $check = $allOf->{'$ref'};
+                if (!empty($check) && $check === '#/definitions/List') {
                     $this->type = self::TYPE_LIST;
                 }
+
+                $properties = $allOf->properties;
             }
         }
         if ($this->type === self::TYPE_OBJECT) {
@@ -97,7 +121,7 @@ class Definition
             foreach ($this->tables as $table) {
                 if ($tableCandidateName === $table->getName()) {
                     $this->type  = self::TYPE_MODEL;
-                    $this->table = $table;
+                    $this->table = new Table($table, $this->tables, $this->json);
                 }
             }
         }
@@ -110,10 +134,12 @@ class Definition
 
     protected function parseObject($object)
     {
-        $result = [];
-
-        if (!empty($object->allOf)) {
-        } elseif (!empty($object->properties)) {
+        $result     = [];
+        $allOf      = $object->allOf;
+        $properties = $object->properties;
+        if (!empty($allOf)) {
+            $result = $this->parseAllOf($object->allOf);
+        } elseif (!empty($properties)) {
             $result = $this->parseProperties($object->properties);
         }
 

@@ -4,7 +4,7 @@ class {{ $className }} extends Response
 {
     protected $columns = [
 @foreach( $properties as $property)
-        '{{ $property['name'] }}' => {{ $property['default'] }},
+        '{{ $property['name'] }}' => {!! $property['default'] !!},
 @endforeach
     ];
 
@@ -19,7 +19,7 @@ class {{ $className }} extends Response
         if (!empty($body)) {
             $modelArray = [
 @foreach( $properties as $property)
-                '{{ $property['name'] }}' => array_get($array, '{{ $property['name'] }}', {{ $property['default'] }}),
+                '{{ $property['name'] }}' => array_get($array, '{!! $property['name'] !!}', {!! $property['default'] !!}),
 @endforeach
             ];
             $response = new static($modelArray, 200);

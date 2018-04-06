@@ -83,6 +83,11 @@ class APIBaseGenerator extends BaseGenerator
         $this->osa    = $osa;
     }
 
+    protected function canGenerate(): bool
+    {
+        return $this->rebuild || !file_exists($this->getPath());
+    }
+
     protected function getBasicVariables()
     {
         $data = [

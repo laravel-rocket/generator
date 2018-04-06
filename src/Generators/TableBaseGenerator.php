@@ -86,7 +86,7 @@ class TableBaseGenerator extends BaseGenerator
      */
     protected function getModelName(): string
     {
-        return ucfirst(camel_case(singularize($this->table->getName())));
+        return $this->tableObject->getModelName();
     }
 
     /**
