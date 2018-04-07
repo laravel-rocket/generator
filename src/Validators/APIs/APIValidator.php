@@ -6,12 +6,12 @@ use LaravelRocket\Generator\Validators\BaseValidator;
 class APIValidator extends BaseValidator
 {
     /**
-     * @param array                                        $oas
-     * @param \LaravelRocket\Generator\Objects\Definitions $json
+     * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec
+     * @param \LaravelRocket\Generator\Objects\Definitions         $json
      *
      * @return array
      */
-    public function validate($oas, $json)
+    public function validate($spec, $json)
     {
         $success = true;
         $errors  = [];

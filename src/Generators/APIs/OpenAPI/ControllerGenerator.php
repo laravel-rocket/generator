@@ -5,6 +5,9 @@ use LaravelRocket\Generator\Generators\APIBaseGenerator;
 
 class ControllerGenerator extends APIBaseGenerator
 {
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Controller */
+    protected $controller;
+
     /**
      * @return bool
      */
@@ -18,6 +21,7 @@ class ControllerGenerator extends APIBaseGenerator
      */
     protected function preprocess()
     {
+        $this->controller = $this->spec->findController($this->name);
     }
 
     /**
@@ -43,9 +47,9 @@ class ControllerGenerator extends APIBaseGenerator
      */
     protected function getVariables(): array
     {
-        $variables              = $this->getBasicVariables();
-        $variables['className'] = $this->name.'Controller';
-        $variables              = array_merge($variables, $this->info);
+        $variables               = $this->getBasicVariables();
+        $variables['className']  = $this->name.'Controller';
+        $variables['controller'] = $this->controller;
 
         return $variables;
     }

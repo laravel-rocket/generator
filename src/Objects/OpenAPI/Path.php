@@ -17,18 +17,23 @@ class Path
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\Action[] */
     protected $actions;
 
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec */
+    protected $spec;
+
     /**
      * Path constructor.
      *
      * @param string $path
      * @param string $method
      * @param $data
+     * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec
      */
-    public function __construct($path, $method, $data)
+    public function __construct($path, $method, $data, $spec)
     {
         $this->path   = $path;
         $this->method = $method;
         $this->data   = $data;
+        $this->spec   = $spec;
 
         $this->parseElements();
         $this->parseActions();
@@ -49,6 +54,6 @@ class Path
 
     protected function parseActions()
     {
-        $this->actions = Action::getAllCandidates($this->elements, $this->method, $this->path, $this->data);
+        $this->actions = Action::getAllCandidates($this->elements, $this->method, $this->path, $this->data, $this->spec);
     }
 }

@@ -15,7 +15,8 @@ class GenerateAPIFromOAS extends MWBGenerator
 
     protected $description = 'Create API from OAS file';
 
-    protected $oas;
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec */
+    protected $spec;
 
     protected $controllers = [];
 
@@ -34,11 +35,12 @@ class GenerateAPIFromOAS extends MWBGenerator
             return false;
         }
 
-        $this->oas = $this->getAPISpecFromOASFile();
-        if ($this->oas === false) {
+        $this->getAppJson();
+
+        $this->spec = $this->getAPISpecFromOASFile();
+        if ($this->spec === null) {
             return false;
         }
-        $this->getAppJson();
 
         $success = $this->validateAPIDefinition();
         if (!$success) {
@@ -58,6 +60,9 @@ class GenerateAPIFromOAS extends MWBGenerator
         return true;
     }
 
+    /**
+     * @return bool|\LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec
+     */
     protected function getAPISpecFromOASFile()
     {
         $file    = $this->option('osa');
@@ -78,7 +83,7 @@ class GenerateAPIFromOAS extends MWBGenerator
         }
 
         $parser = new OASService();
-        $oas    = $parser->parse($file);
+        $oas    = $parser->parse($file, $this->tables, $this->json);
         if (empty($oas)) {
             return false;
         }
@@ -92,7 +97,7 @@ class GenerateAPIFromOAS extends MWBGenerator
 
         /** @var bool $success */
         /** @var \LaravelRocket\Generator\Validators\Error[] $errors */
-        list($success, $errors) = $validator->validate($this->oas, $this->json);
+        list($success, $errors) = $validator->validate($this->spec, $this->json);
 
         $this->output('API Validation Result');
         if (count($errors) > 0) {
@@ -131,10 +136,9 @@ class GenerateAPIFromOAS extends MWBGenerator
             new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ResponseGenerator($this->config, $this->files, $this->view),
         ];
 
-        $definitions = $this->oas->definitions;
-        foreach ($definitions as $name => $definition) {
+        foreach ($this->spec->getDefinitions() as $definition) {
             foreach ($generators as $generator) {
-                $generator->generate($name, null, $definition, $this->oas, $this->databaseService, $this->json, $this->tables);
+                $generator->generate($definition->getName(), $this->spec, $this->databaseService, $this->json, $this->tables);
             }
         }
     }
@@ -148,48 +152,37 @@ class GenerateAPIFromOAS extends MWBGenerator
 
         foreach ($this->controllers as $name => $definition) {
             foreach ($generators as $generator) {
-                $generator->generate($name, $definition, null, $this->oas, $this->databaseService, $this->json, $this->tables);
+                $generator->generate($name, $this->spec, $this->databaseService, $this->json, $this->tables);
             }
         }
     }
 
-    protected function reorganizePath()
+    protected function generateResponse()
     {
-        $this->controllers = [];
-        $paths             = $definitions = $this->oas->paths;
-        foreach ($paths as $path => $pathInfo) {
-            $methods = $pathInfo->getMethods();
-            foreach ($methods as $method => $info) {
-                $pathObject = new Path($path, $method, $info);
-                foreach ($pathObject->getActions() as $action) {
-                    if (!$this->checkActionAlreadyExists($action)) {
-                        if (!array_key_exists($action->getController(), $this->controllers)) {
-                            $this->controllers[$action->getController()] = [];
-                        }
-                        $this->controllers[$action->getController()][$action->getMethod()] = $action;
-                        break;
-                    }
-                }
+        /** @var \LaravelRocket\Generator\Generators\APIBaseGenerator[] $generators */
+        $generators = [
+            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ControllerGenerator($this->config, $this->files, $this->view),
+        ];
+
+        foreach ($this->controllers as $controller) {
+            foreach ($generators as $generator) {
+                $generator->generate($controller->getName(), $this->spec, $this->databaseService, $this->json, $this->tables);
             }
         }
     }
 
-    /**
-     * @param \LaravelRocket\Generator\Objects\OpenAPI\Action $action
-     *
-     * @return bool
-     */
-    protected function checkActionAlreadyExists($action)
+    protected function generateRequests()
     {
-        $controllerName = $action->getController();
-        if (!array_key_exists($controllerName, $this->controllers)) {
-            return false;
-        }
+        /** @var \LaravelRocket\Generator\Generators\APIBaseGenerator[] $generators */
+        $generators = [
+            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\RequestGenerator($this->config, $this->files, $this->view),
+        ];
 
-        if (!array_key_exists($action->getMethod(), $this->controllers[$controllerName])) {
-            return false;
+        foreach ($this->controllers as $controller) {
+            $request = $controller->getRequiredRequestNames();
+            foreach ($generators as $generator) {
+                $generator->generate($request->getName, $this->spec, $this->databaseService, $this->json, $this->tables);
+            }
         }
-
-        return true;
     }
 }

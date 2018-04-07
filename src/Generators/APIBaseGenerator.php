@@ -34,28 +34,26 @@ class APIBaseGenerator extends BaseGenerator
     /** @var \LaravelRocket\Generator\Services\DatabaseService $database */
     protected $databaseService;
 
-    /** @var mixed */
-    protected $info;
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec */
+    protected $spec;
 
     /**
-     * @param string                                            $name
-     * @param mixed                                             $info
-     * @param \TakaakiMizuno\SwaggerParser\Objects\Base         $object
-     * @param \TakaakiMizuno\SwaggerParser\Objects\V20\Document $osa
-     * @param \LaravelRocket\Generator\Services\DatabaseService $databaseService
-     * @param \LaravelRocket\Generator\Objects\Definitions      $json
-     * @param \TakaakiMizuno\MWBParser\Elements\Table[]         $tables
+     * @param string                                               $name
+     * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec
+     * @param \LaravelRocket\Generator\Services\DatabaseService    $databaseService
+     * @param \LaravelRocket\Generator\Objects\Definitions         $json
+     * @param \TakaakiMizuno\MWBParser\Elements\Table[]            $tables
      *
      * @return bool
      */
-    public function generate($name, $info, $object, $osa, $databaseService, $json, $tables): bool
+    public function generate($name, $spec, $databaseService, $json, $tables): bool
     {
-        $this->info            = $info;
+        $this->spec            = $spec;
         $this->json            = $json;
         $this->tables          = $tables;
         $this->databaseService = $databaseService;
 
-        $this->setTarget($name, $object, $osa);
+        $this->setTarget($name, $spec);
         $this->setVersion();
         $this->preprocess();
 
@@ -77,15 +75,13 @@ class APIBaseGenerator extends BaseGenerator
     }
 
     /**
-     * @param string                                            $name
-     * @param \TakaakiMizuno\SwaggerParser\Objects\Base         $object
-     * @param \TakaakiMizuno\SwaggerParser\Objects\V20\Document $osa
+     * @param string                                               $name
+     * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec
      */
-    public function setTarget($name, $object, $osa)
+    public function setTarget($name, $spec)
     {
-        $this->name   = $name;
-        $this->object = $object;
-        $this->osa    = $osa;
+        $this->name = $name;
+        $this->spec = $spec;
     }
 
     protected function canGenerate(): bool

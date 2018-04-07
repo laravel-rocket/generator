@@ -3,7 +3,7 @@ namespace LaravelRocket\Generator\Generators\APIs\OpenAPI;
 
 use LaravelRocket\Generator\Generators\APIBaseGenerator;
 
-class ResponseGenerator extends APIBaseGenerator
+class RequestGenerator extends APIBaseGenerator
 {
     /** @var string */
     protected $type;
@@ -11,15 +11,15 @@ class ResponseGenerator extends APIBaseGenerator
     /** @var \LaravelRocket\Generator\Objects\Table */
     protected $table;
 
-    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Definition */
-    protected $definition;
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Request */
+    protected $request;
 
     /**
      * @return bool
      */
     protected function canGenerate(): bool
     {
-        $skipResponses = ['List'];
+        $skipResponses = ['PaginationRequest', 'Request'];
 
         if (in_array($this->name, $skipResponses)) {
             return false;
@@ -33,7 +33,14 @@ class ResponseGenerator extends APIBaseGenerator
      */
     protected function preprocess()
     {
-        $this->definition = $this->spec->findDefinition($this->name);
+        foreach ($this->spec->getControllers() as $controller) {
+            $request = $controller->findRequest($this->name);
+            if (!empty($request)) {
+                $this->request = $request;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -41,7 +48,7 @@ class ResponseGenerator extends APIBaseGenerator
      */
     protected function getPath(): string
     {
-        return app_path('Http/Responses/Api/'.$this->versionNamespace.'/'.$this->definition->getName().'.php');
+        return app_path('Http/Requests/Api/'.$this->versionNamespace.'/'.$this->request->getName().'.php');
     }
 
     /**
@@ -49,16 +56,7 @@ class ResponseGenerator extends APIBaseGenerator
      */
     protected function getView(): string
     {
-        switch ($this->definition->getType()) {
-            case 'model':
-                return 'api.oas.responses.model';
-            case 'list':
-                return 'api.oas.responses.list';
-            case 'array':
-                return 'api.oas.responses.array';
-        }
-
-        return 'api.oas.responses.array';
+        return 'api.oas.request';
     }
 
     /**
@@ -69,10 +67,8 @@ class ResponseGenerator extends APIBaseGenerator
     protected function getVariables(): array
     {
         $variables                  = $this->getBasicVariables();
-        $variables['properties']    = $this->definition->getProperties();
-        $variables['className']     = $this->name;
-        $variables['modelName']     = $this->definition->getModelName();
-        $variables['listClassName'] = $this->definition->getListItemName();
+        $variables['request']       = $this->request;
+        $variables['className']     = $this->request->getName();
 
         return $variables;
     }

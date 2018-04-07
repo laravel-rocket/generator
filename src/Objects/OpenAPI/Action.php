@@ -11,28 +11,58 @@ class Action
     /** @var string */
     protected $method;
 
-    protected $data;
+    /** @var \TakaakiMizuno\SwaggerParser\Objects\Base */
+    protected $info;
 
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] $elements */
     protected $elements;
 
     /** @var string */
-    protected $controller;
+    protected $controllerName;
 
     /** @var string[] */
     protected $params = [];
 
+    /** @var bool $usePagination */
+    protected $usePagination = false;
+
+    /** @var string $requestName */
+    protected $requestName = '';
+
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec */
+    protected $spec;
+
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Definition|null */
+    protected $response;
+
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Request */
+    protected $request;
+
+    /** @var string */
+    protected $repositoryName;
+
     /**
      * @param \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] $elements
      * @param string                                                 $httpMethod
+     * @param string                                                 $path
+     * @param \TakaakiMizuno\SwaggerParser\Objects\Base              $info
+     * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec   $spec
      *
      * @return array
      */
-    public static function getAllCandidates($elements, $httpMethod, $path, $data)
+    public static function getAllCandidates($elements, $httpMethod, $path, $info, $spec)
     {
         $httpMethod = strtolower($httpMethod);
         $actions    = [];
         $elements   = array_reverse($elements);
+
+        $params = [];
+        foreach ($elements as $element) {
+            if ($element->isVariable()) {
+                $params[] = $element->variableName();
+            }
+            $params = array_reverse($params);
+        }
 
         // GET/POST /users
         if ($elements[0]->isPlural()) {
@@ -40,11 +70,11 @@ class Action
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'index';
-                    $actions[] = new static($controller, $method, $path, $data);
+                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
                     break;
                 case 'post':
                     $method    = 'store';
-                    $actions[] = new static($controller, $method, $path, $data);
+                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
                     break;
             }
         }
@@ -55,16 +85,16 @@ class Action
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'show';
-                    $actions[] = new static($controller, $method, $path, $data, [$elements[0]->variableName()]);
+                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
                     break;
                 case 'put':
                 case 'patch':
                     $method    = 'update';
-                    $actions[] = new static($controller, $method, $path, $data, [$elements[0]->variableName()]);
+                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
                     break;
                 case 'delete':
                     $method    = 'destroy';
-                    $actions[] = new static($controller, $method, $path, $data, [$elements[0]->variableName()]);
+                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
                     break;
             }
         }
@@ -75,20 +105,20 @@ class Action
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'get'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $path, $data);
+                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
                     break;
                 case 'post':
                     $method    = 'post'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $path, $data);
+                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
                     break;
                 case 'put':
                 case 'patch':
                     $method    = 'put'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $path, $data);
+                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
                     break;
                 case 'delete':
                     $method    = 'delete'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $path, $data);
+                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
                     break;
             }
         }
@@ -102,24 +132,24 @@ class Action
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'index';
-                    $actions[] = new static($controllerOne, $method, $path, $data, [$elements[1]->variableName()]);
+                    $actions[] = new static($controllerOne, $method, $path, $info, $params, $spec);
                     $method    = 'get'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $path, $data);
+                    $actions[] = new static($controllerTwo, $method, $path, $info, $params, $spec);
                     break;
                 case 'post':
                     $method    = 'create';
-                    $actions[] = new static($controllerOne, $method, $path, $data, [$elements[1]->variableName()]);
+                    $actions[] = new static($controllerOne, $method, $path, $info, $params, $spec);
                     $method    = 'post'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $path, $data);
+                    $actions[] = new static($controllerTwo, $method, $path, $info, $params, $spec);
                     break;
                 case 'put':
                 case 'patch':
                     $method    = 'put'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $path, $data, [$elements[1]->variableName()]);
+                    $actions[] = new static($controllerTwo, $method, $path, $info, $params, $spec);
                     break;
                 case 'delete':
                     $method    = 'delete'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $path, $data, [$elements[1]->variableName()]);
+                    $actions[] = new static($controllerTwo, $method, $path, $info, $params, $spec);
                     break;
             }
         }
@@ -132,16 +162,16 @@ class Action
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'show';
-                    $actions[] = new static($controllerOne, $method, $path, $data, [$elements[2]->variableName(), $elements[0]->variableName()]);
+                    $actions[] = new static($controllerOne, $method, $path, $info, $params, $spec);
                     break;
                 case 'put':
                 case 'patch':
                     $method    = 'update';
-                    $actions[] = new static($controllerOne, $method, $path, $data, [$elements[2]->variableName(), $elements[0]->variableName()]);
+                    $actions[] = new static($controllerOne, $method, $path, $info, $params, $spec);
                     break;
                 case 'delete':
                     $method    = 'destroy';
-                    $actions[] = new static($controllerOne, $method, $path, $data, [$elements[2]->variableName(), $elements[0]->variableName()]);
+                    $actions[] = new static($controllerOne, $method, $path, $info, $params, $spec);
                     break;
             }
         }
@@ -152,28 +182,32 @@ class Action
     /**
      * Action constructor.
      *
-     * @param string   $controller
-     * @param string   $method
-     * @param string[] $params
-     * @param string   $path
-     * @param array    $data
+     * @param string                                               $controllerName
+     * @param string                                               $method
+     * @param string                                               $path
+     * @param \TakaakiMizuno\SwaggerParser\Objects\Base            $info
+     * @param string[]                                             $params
+     * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec
      */
-    public function __construct($controller, $method, $path, $data, $params = [])
+    public function __construct($controllerName, $method, $path, $info, $params = [], $spec)
     {
-        $this->controller = $controller;
-        $this->method     = $method;
-        $this->path       = $path;
-        $this->data       = $data;
+        $this->controllerName = $controllerName;
+        $this->method         = $method;
+        $this->path           = $path;
+        $this->info           = $info;
+        $this->spec           = $spec;
 
         $this->setParams($params);
+        $this->setRepository();
+        $this->setRequest();
     }
 
     /**
      * @return string
      */
-    public function getController()
+    public function getControllerName()
     {
-        return $this->controller;
+        return $this->controllerName;
     }
 
     /**
@@ -192,24 +226,78 @@ class Action
         return $this->path;
     }
 
+    /**
+     * @return string[]
+     */
     public function getParams()
     {
         return $this->params;
     }
 
     /**
-     * @return array
+     * @return \TakaakiMizuno\SwaggerParser\Objects\Base
      */
-    public function getData()
+    public function getInfo()
     {
-        return $this->data;
+        return $this->info;
     }
 
+    /**
+     * @return \LaravelRocket\Generator\Objects\OpenAPI\Definition
+     */
+    public function getResponse()
+    {
+        return $this->response;
+    }
+
+    /**
+     * @return \LaravelRocket\Generator\Objects\OpenAPI\Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRepositoryName()
+    {
+        return $this->repositoryName;
+    }
+
+    /**
+     * @param array $params
+     */
     protected function setParams($params)
     {
         $this->params = [];
         foreach ($params as $param) {
             $this->params[] = '$'.$param;
         }
+    }
+
+    protected function setRepository()
+    {
+        $responses = $this->info->responses;
+        foreach ($responses as $statusCode => $response) {
+            if (substr($statusCode, 0, 1) === '2') {
+                $ref            = $response->{$ref};
+                $this->response = $this->spec->findDefinition($ref);
+                if ($this->response->getType() === Definition::TYPE_MODEL) {
+                    $model                = $this->response->getModelName();
+                    $this->repositoryName = $model.'Repository';
+                }
+
+                return;
+            }
+        }
+
+        $this->response = null;
+    }
+
+    protected function setRequest()
+    {
+        $this->request = new Request($this->method, $this->info, $this->response, $this->spec);
     }
 }
