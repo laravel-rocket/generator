@@ -18,6 +18,9 @@ class Controller
     /** @var string[] */
     protected $requestNames = [];
 
+    /** @var string[] */
+    protected $responseNames = [];
+
     /**
      * Controller constructor.
      *
@@ -61,17 +64,47 @@ class Controller
         return null;
     }
 
+    /**
+     * @return string[]
+     */
     public function getRequiredRepositoryNames(): array
     {
         return $this->repositoryNames;
     }
 
+    /**
+     * @return string[]
+     */
     public function getRequiredRequestNames(): array
     {
         return $this->requestNames;
     }
 
-    public function setRepositoryNames()
+    /**
+     * @return string[]
+     */
+    public function getRequiredResponseNames(): array
+    {
+        return $this->responseNames;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return \LaravelRocket\Generator\Objects\OpenAPI\Request|null
+     */
+    public function findRequest(string $name)
+    {
+        foreach ($this->actions as $action) {
+            if ($action->getRequest()->getName() === $name) {
+                return $action->getRequest();
+            }
+        }
+
+        return null;
+    }
+
+    protected function setRepositoryNames()
     {
         $ret = [];
         foreach ($this->actions as $action) {
@@ -81,7 +114,7 @@ class Controller
         $this->repositoryNames = array_unique($ret);
     }
 
-    public function setRequestNames()
+    protected function setRequestNames()
     {
         $ret = [];
         foreach ($this->actions as $action) {
@@ -91,14 +124,13 @@ class Controller
         $this->requestNames = array_unique($ret);
     }
 
-    public function findRequest($name)
+    protected function setResponseNames()
     {
+        $ret = [];
         foreach ($this->actions as $action) {
-            if ($action->getRequest()->getName() === $name) {
-                return $action->getRequest();
-            }
+            $ret[] = $action->getResponse()->getName();
         }
 
-        return null;
+        $this->responseNames = array_unique($ret);
     }
 }

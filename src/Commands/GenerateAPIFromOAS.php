@@ -1,7 +1,6 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
-use LaravelRocket\Generator\Objects\OpenAPI\Path;
 use LaravelRocket\Generator\Services\DatabaseService;
 use LaravelRocket\Generator\Services\OASService;
 use LaravelRocket\Generator\Validators\APIs\APIValidator;
@@ -17,8 +16,6 @@ class GenerateAPIFromOAS extends MWBGenerator
 
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec */
     protected $spec;
-
-    protected $controllers = [];
 
     /** @var DatabaseService $databaseService */
     protected $databaseService;
@@ -50,9 +47,9 @@ class GenerateAPIFromOAS extends MWBGenerator
         $this->databaseService = new DatabaseService($this->config, $this->files);
         $this->databaseService->resetDatabase();
 
-        $this->reorganizePath();
         $this->generateFromDefinitions();
         $this->generateControllers();
+        $this->generateResponse();
         $this->styleCode();
 
         $this->databaseService->dropDatabase();
@@ -164,7 +161,7 @@ class GenerateAPIFromOAS extends MWBGenerator
             new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ControllerGenerator($this->config, $this->files, $this->view),
         ];
 
-        foreach ($this->controllers as $controller) {
+        foreach ($this->spec->getControllers() as $controller) {
             foreach ($generators as $generator) {
                 $generator->generate($controller->getName(), $this->spec, $this->databaseService, $this->json, $this->tables);
             }
@@ -178,10 +175,9 @@ class GenerateAPIFromOAS extends MWBGenerator
             new \LaravelRocket\Generator\Generators\APIs\OpenAPI\RequestGenerator($this->config, $this->files, $this->view),
         ];
 
-        foreach ($this->controllers as $controller) {
-            $request = $controller->getRequiredRequestNames();
+        foreach ($this->spec->getControllers() as $controller) {
             foreach ($generators as $generator) {
-                $generator->generate($request->getName, $this->spec, $this->databaseService, $this->json, $this->tables);
+                $generator->generate($controller->getName(), $this->spec, $this->databaseService, $this->json, $this->tables);
             }
         }
     }

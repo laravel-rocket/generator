@@ -282,7 +282,8 @@ class Action
         $responses = $this->info->responses;
         foreach ($responses as $statusCode => $response) {
             if (substr($statusCode, 0, 1) === '2') {
-                $ref            = $response->{$ref};
+                $schema         = $response->schema;
+                $ref            = $schema->{'$ref'};
                 $this->response = $this->spec->findDefinition($ref);
                 if ($this->response->getType() === Definition::TYPE_MODEL) {
                     $model                = $this->response->getModelName();

@@ -51,6 +51,14 @@ class OpenAPISpec
     }
 
     /**
+     * @return \TakaakiMizuno\SwaggerParser\Objects\V20\Document
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
      * @param string $name
      *
      * @return \LaravelRocket\Generator\Objects\OpenAPI\Definition|null
@@ -110,7 +118,7 @@ class OpenAPISpec
                 $pathObject = new Path($path, $method, $info, $this);
                 foreach ($pathObject->getActions() as $action) {
                     if (!$this->checkActionAlreadyExists($action, $controllers)) {
-                        if (!array_key_exists($action->getControllerName(), $this->controllers)) {
+                        if (!array_key_exists($action->getControllerName(), $controllers)) {
                             $this->controllers[$action->getControllerName()] = [];
                         }
                         $controllers[$action->getControllerName()][$action->getMethod()] = $action;
@@ -120,6 +128,7 @@ class OpenAPISpec
             }
         }
 
+        $this->controllers = [];
         foreach ($controllers as $name => $controller) {
             $this->controllers[] = new Controller($name, $controllers[$name], $this);
         }
@@ -134,7 +143,7 @@ class OpenAPISpec
     protected function checkActionAlreadyExists($action, $controllers)
     {
         $controllerName = $action->getControllerName();
-        if (!array_key_exists($controllerName, $this->controllers)) {
+        if (!array_key_exists($controllerName, $controllers)) {
             return false;
         }
 

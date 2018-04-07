@@ -113,7 +113,7 @@ class APIBaseGenerator extends BaseGenerator
 
     protected function setVersion()
     {
-        $version   = $this->osa->info->version;
+        $version   = $this->spec->getDocument()->info->version;
         $fragments = explode('.', $version);
         $major     = (int) $fragments[0];
         if ($major < 0) {
