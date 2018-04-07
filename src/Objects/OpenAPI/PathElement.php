@@ -78,7 +78,7 @@ class PathElement
 
     protected function detectVariable()
     {
-        if (preg_match('/^{([^}]+])}$/', $this->element, $matches)) {
+        if (preg_match('/^\{([^}]+)\}$/', $this->element, $matches)) {
             $this->isVariable   = true;
             $this->variableName = $matches[1];
         }

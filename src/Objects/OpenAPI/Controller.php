@@ -108,7 +108,9 @@ class Controller
     {
         $ret = [];
         foreach ($this->actions as $action) {
-            $ret[] = $action->getRepositoryName();
+            if (!empty($action->getRepositoryName())) {
+                $ret[] = $action->getRepositoryName();
+            }
         }
 
         $this->repositoryNames = array_unique($ret);

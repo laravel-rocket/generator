@@ -147,9 +147,9 @@ class GenerateAPIFromOAS extends MWBGenerator
             new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ControllerGenerator($this->config, $this->files, $this->view),
         ];
 
-        foreach ($this->controllers as $name => $definition) {
+        foreach ($this->spec->getControllers() as $controller) {
             foreach ($generators as $generator) {
-                $generator->generate($name, $this->spec, $this->databaseService, $this->json, $this->tables);
+                $generator->generate($controller->getName(), $this->spec, $this->databaseService, $this->json, $this->tables);
             }
         }
     }

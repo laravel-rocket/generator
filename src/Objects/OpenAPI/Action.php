@@ -81,7 +81,7 @@ class Action
 
         // GET/PUT/DELETE /users/{id}
         if (count($elements) >= 2 && $elements[0]->isVariable() && $elements[1]->isPlural()) {
-            $controller = title_case(snake_case(singularize($elements[0]->elementName())));
+            $controller = title_case(snake_case(singularize($elements[1]->elementName())));
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'show';
@@ -101,7 +101,7 @@ class Action
 
         // GET/POST/PUT/DELETE /users/info
         if (count($elements) >= 2 && !$elements[0]->isVariable() && $elements[1]->isPlural()) {
-            $controller = title_case(snake_case(singularize($elements[0]->elementName())));
+            $controller = title_case(snake_case(singularize($elements[1]->elementName())));
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'get'.ucfirst(camel_case($elements[0]->elementName()));

@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Exceptions\APIErrorException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\PaginationRequest;
+use App\Http\Requests\Api\V1\Request;
 use App\Services\APIUserServiceInterface;
 use App\Services\FileServiceInterface;
 @foreach( $controller->getRequiredRepositoryNames() as $name )
@@ -39,12 +40,12 @@ class {{ $className }} extends Controller
         $this->fileService        = $fileService;
     }
 
-@foreach( $controller->actions as $action )
+@foreach( $controller->getActions() as $action )
     /**
     * PATH: {{ $action->getMethod() }} {{ $action->getPath() }}
     * @return \Illuminate\Http\JsonResponse
     */
-    public function {{ $action->getMethod() }}({{ implode(',', $action->getParams() ) }}, {{ $action->getRequest()->getName() }} $request)
+    public function {{ $action->getMethod() }}({{ implode(',', $action->getParams() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
     {
     }
 @endforeach
