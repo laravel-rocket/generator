@@ -1,9 +1,7 @@
 namespace App\Http\Controllers\Api\{{ $versionNamespace }};
 
-use App\Exceptions\{{ $versionNamespace }}\APIErrorException;
+use App\Exceptions\Api\{{ $versionNamespace }}\APIErrorException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\{{ $versionNamespace }}\PaginationRequest;
-use App\Http\Requests\Api\{{ $versionNamespace }}\Request;
 use App\Services\APIUserServiceInterface;
 use App\Services\FileServiceInterface;
 @foreach( $controller->getRequiredRepositoryNames() as $name )
@@ -13,6 +11,7 @@ use App\Repositories\{{ $name }}Interface;
 use App\Http\Responses\Api\{{ $versionNamespace }}\{{ $name }};
 @endforeach
 @foreach( $controller->getRequiredRequestNames() as $name )
+
 use App\Http\Requests\Api\{{ $versionNamespace }}\{{ $name }};
 @endforeach
 

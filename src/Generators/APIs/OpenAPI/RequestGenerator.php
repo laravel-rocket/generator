@@ -48,7 +48,7 @@ class RequestGenerator extends APIBaseGenerator
      */
     protected function getPath(): string
     {
-        return app_path('Http/Requests/Api/'.$this->versionNamespace.'/'.$this->request->getName().'.php');
+        return app_path('Http/Requests/Api/'.$this->versionNamespace.'/'.$this->name.'.php');
     }
 
     /**

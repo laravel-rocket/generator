@@ -203,7 +203,7 @@ class Action
         $this->spec           = $spec;
 
         $this->setParams($params);
-        $this->setRepository();
+        $this->setResponse();
         $this->setRequest();
     }
 
@@ -290,7 +290,7 @@ class Action
         }
     }
 
-    protected function setRepository()
+    protected function setResponse()
     {
         $responses = $this->info->responses;
         foreach ($responses as $statusCode => $response) {

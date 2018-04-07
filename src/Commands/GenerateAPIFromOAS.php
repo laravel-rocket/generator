@@ -49,7 +49,7 @@ class GenerateAPIFromOAS extends MWBGenerator
 
         $this->generateFromDefinitions();
         $this->generateControllers();
-        $this->generateResponse();
+        $this->generateRequests();
         $this->styleCode();
 
         $this->databaseService->dropDatabase();
@@ -154,20 +154,6 @@ class GenerateAPIFromOAS extends MWBGenerator
         }
     }
 
-    protected function generateResponse()
-    {
-        /** @var \LaravelRocket\Generator\Generators\APIBaseGenerator[] $generators */
-        $generators = [
-            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ControllerGenerator($this->config, $this->files, $this->view),
-        ];
-
-        foreach ($this->spec->getControllers() as $controller) {
-            foreach ($generators as $generator) {
-                $generator->generate($controller->getName(), $this->spec, $this->databaseService, $this->json, $this->tables);
-            }
-        }
-    }
-
     protected function generateRequests()
     {
         /** @var \LaravelRocket\Generator\Generators\APIBaseGenerator[] $generators */
@@ -176,8 +162,10 @@ class GenerateAPIFromOAS extends MWBGenerator
         ];
 
         foreach ($this->spec->getControllers() as $controller) {
-            foreach ($generators as $generator) {
-                $generator->generate($controller->getName(), $this->spec, $this->databaseService, $this->json, $this->tables);
+            foreach ($controller->getRequiredRequestNames() as $requestName) {
+                foreach ($generators as $generator) {
+                    $generator->generate($requestName, $this->spec, $this->databaseService, $this->json, $this->tables);
+                }
             }
         }
     }
