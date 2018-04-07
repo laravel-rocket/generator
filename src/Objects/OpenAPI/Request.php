@@ -65,9 +65,9 @@ class Request
         switch ($this->method) {
             case 'post':
             case 'put':
-            $this->requestName = ucfirst($this->method).'Request';
+                $this->requestName = ucfirst($this->method).'Request';
                 break;
-            case 'default':
+            default:
                 $this->requestName = 'Request';
                 break;
         }

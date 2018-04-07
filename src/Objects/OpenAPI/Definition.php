@@ -37,6 +37,9 @@ class Definition
     /** @var string */
     protected $listItemName;
 
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Definition */
+    protected $listItem;
+
     /**
      * Definition constructor.
      *
@@ -89,6 +92,9 @@ class Definition
         return $this->table->getModelName();
     }
 
+    /**
+     * @return string
+     */
     public function getListItemName(): string
     {
         if ($this->getType() !== self::TYPE_LIST) {
@@ -96,6 +102,29 @@ class Definition
         }
 
         return $this->listItemName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getListItem(): string
+    {
+        if ($this->getType() !== self::TYPE_LIST) {
+            return null;
+        }
+
+        return $this->listItem;
+    }
+
+    /**
+     * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec
+     */
+    public function setListResponseItem($spec)
+    {
+        if ($this->getType() !== self::TYPE_LIST) {
+            return;
+        }
+        $this->listItem = $spec->findDefinition($this->listItemName);
     }
 
     /**

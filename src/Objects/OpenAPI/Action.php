@@ -11,6 +11,9 @@ class Action
     /** @var string */
     protected $method;
 
+    /** @var string */
+    protected $httpMethod;
+
     /** @var \TakaakiMizuno\SwaggerParser\Objects\Base */
     protected $info;
 
@@ -70,11 +73,11 @@ class Action
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'index';
-                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'post':
                     $method    = 'store';
-                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
             }
         }
@@ -85,16 +88,16 @@ class Action
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'show';
-                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'put':
                 case 'patch':
                     $method    = 'update';
-                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'delete':
                     $method    = 'destroy';
-                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
             }
         }
@@ -105,20 +108,20 @@ class Action
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'get'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'post':
                     $method    = 'post'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'put':
                 case 'patch':
                     $method    = 'put'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'delete':
                     $method    = 'delete'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
             }
         }
@@ -132,24 +135,24 @@ class Action
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'index';
-                    $actions[] = new static($controllerOne, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
                     $method    = 'get'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'post':
                     $method    = 'create';
-                    $actions[] = new static($controllerOne, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
                     $method    = 'post'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'put':
                 case 'patch':
                     $method    = 'put'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'delete':
                     $method    = 'delete'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
             }
         }
@@ -162,16 +165,16 @@ class Action
             switch ($httpMethod) {
                 case 'get':
                     $method    = 'show';
-                    $actions[] = new static($controllerOne, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'put':
                 case 'patch':
                     $method    = 'update';
-                    $actions[] = new static($controllerOne, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'delete':
                     $method    = 'destroy';
-                    $actions[] = new static($controllerOne, $method, $path, $info, $params, $spec);
+                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
             }
         }
@@ -184,15 +187,17 @@ class Action
      *
      * @param string                                               $controllerName
      * @param string                                               $method
+     * @param string                                               $httpMethod
      * @param string                                               $path
      * @param \TakaakiMizuno\SwaggerParser\Objects\Base            $info
      * @param string[]                                             $params
      * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec
      */
-    public function __construct($controllerName, $method, $path, $info, $params = [], $spec)
+    public function __construct($controllerName, $method, $httpMethod, $path, $info, $params = [], $spec)
     {
         $this->controllerName = $controllerName;
         $this->method         = $method;
+        $this->httpMethod     = $httpMethod;
         $this->path           = $path;
         $this->info           = $info;
         $this->spec           = $spec;
@@ -216,6 +221,14 @@ class Action
     public function getMethod()
     {
         return $this->method;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHttpMethod()
+    {
+        return $this->httpMethod;
     }
 
     /**
@@ -299,6 +312,6 @@ class Action
 
     protected function setRequest()
     {
-        $this->request = new Request($this->method, $this->info, $this->response, $this->spec);
+        $this->request = new Request($this->httpMethod, $this->info, $this->response, $this->spec);
     }
 }

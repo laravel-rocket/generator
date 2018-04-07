@@ -106,12 +106,20 @@ class OpenAPISpec
         foreach ($definitions as $name => $definition) {
             $this->definitions[] = new Definition($name, $definition, $this->json, $this->document, $this->tables);
         }
+
+        $res = [];
+        foreach ($this->definitions as $definition) {
+            $definition->setListResponseItem($this);
+            $res[] = $definition;
+        }
+
+        $this->definitions = $res;
     }
 
     protected function setControllers()
     {
-        $controllers       = [];
-        $paths             = $definitions = $this->document->paths;
+        $controllers = [];
+        $paths       = $definitions = $this->document->paths;
         foreach ($paths as $path => $pathInfo) {
             $methods = $pathInfo->getMethods();
             foreach ($methods as $method => $info) {
