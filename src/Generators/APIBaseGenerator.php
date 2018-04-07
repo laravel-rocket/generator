@@ -34,8 +34,12 @@ class APIBaseGenerator extends BaseGenerator
     /** @var \LaravelRocket\Generator\Services\DatabaseService $database */
     protected $databaseService;
 
+    /** @var mixed */
+    protected $info;
+
     /**
      * @param string                                            $name
+     * @param mixed                                             $info
      * @param \TakaakiMizuno\SwaggerParser\Objects\Base         $object
      * @param \TakaakiMizuno\SwaggerParser\Objects\V20\Document $osa
      * @param \LaravelRocket\Generator\Services\DatabaseService $databaseService
@@ -44,8 +48,9 @@ class APIBaseGenerator extends BaseGenerator
      *
      * @return bool
      */
-    public function generate($name, $object, $osa, $databaseService, $json, $tables): bool
+    public function generate($name, $info, $object, $osa, $databaseService, $json, $tables): bool
     {
+        $this->info            = $info;
         $this->json            = $json;
         $this->tables          = $tables;
         $this->databaseService = $databaseService;

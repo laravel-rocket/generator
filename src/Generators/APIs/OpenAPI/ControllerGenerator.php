@@ -35,4 +35,18 @@ class ControllerGenerator extends APIBaseGenerator
     {
         return 'api.oas.controller';
     }
+
+    /**
+     * @return array
+     *
+     * @throws \Exception
+     */
+    protected function getVariables(): array
+    {
+        $variables              = $this->getBasicVariables();
+        $variables['className'] = $this->name.'Controller';
+        $variables              = array_merge($variables, $this->info);
+
+        return $variables;
+    }
 }

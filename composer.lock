@@ -676,16 +676,16 @@
         },
         {
             "name": "takaaki-mizuno/swagger-parser",
-            "version": "0.0.5",
+            "version": "0.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/takaaki-mizuno/swagger-parser.git",
-                "reference": "7d1d71ab53d2cb0e79cd1a0ec546ba34713d5532"
+                "reference": "240e35003adadc5e8859f6f44d1ae744670baefd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/takaaki-mizuno/swagger-parser/zipball/7d1d71ab53d2cb0e79cd1a0ec546ba34713d5532",
-                "reference": "7d1d71ab53d2cb0e79cd1a0ec546ba34713d5532",
+                "url": "https://api.github.com/repos/takaaki-mizuno/swagger-parser/zipball/240e35003adadc5e8859f6f44d1ae744670baefd",
+                "reference": "240e35003adadc5e8859f6f44d1ae744670baefd",
                 "shasum": ""
             },
             "require": {
@@ -713,7 +713,7 @@
                 }
             ],
             "description": "Swagger Perser",
-            "time": "2018-04-06T22:46:59+00:00"
+            "time": "2018-04-07T02:24:38+00:00"
         }
     ],
     "packages-dev": [

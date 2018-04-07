@@ -19,8 +19,8 @@ class {{ $className }} extends Response
         if (!empty($model)) {
             $modelArray = [
 @foreach( $properties as $property)
-@if( array_key_exists('columnName', $property))
-                '{{ $property['name'] }}' => $model->{{ $property['columnName'] }},
+@if( array_key_exists('column', $property))
+                '{{ $property['name'] }}' => $model->{{ $property['column']->getName() }},
 @else
                 '{{ $property['name'] }}' => {!! $property['default'] !!},
 @endif

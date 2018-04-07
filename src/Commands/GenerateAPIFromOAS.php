@@ -50,6 +50,7 @@ class GenerateAPIFromOAS extends MWBGenerator
 
         $this->reorganizePath();
         $this->generateFromDefinitions();
+        $this->generateControllers();
         $this->styleCode();
 
         $this->databaseService->dropDatabase();
@@ -133,7 +134,7 @@ class GenerateAPIFromOAS extends MWBGenerator
         $definitions = $this->oas->definitions;
         foreach ($definitions as $name => $definition) {
             foreach ($generators as $generator) {
-                $generator->generate($name, $definition, $this->oas, $this->databaseService, $this->json, $this->tables);
+                $generator->generate($name, null, $definition, $this->oas, $this->databaseService, $this->json, $this->tables);
             }
         }
     }
@@ -147,7 +148,7 @@ class GenerateAPIFromOAS extends MWBGenerator
 
         foreach ($this->controllers as $name => $definition) {
             foreach ($generators as $generator) {
-                $generator->generate($name, $definition, $this->oas, $this->databaseService, $this->json, $this->tables);
+                $generator->generate($name, $definition, null, $this->oas, $this->databaseService, $this->json, $this->tables);
             }
         }
     }
@@ -156,7 +157,8 @@ class GenerateAPIFromOAS extends MWBGenerator
     {
         $this->controllers = [];
         $paths             = $definitions = $this->oas->paths;
-        foreach ($paths as $path => $methods) {
+        foreach ($paths as $path => $pathInfo) {
+            $methods = $pathInfo->getMethods();
             foreach ($methods as $method => $info) {
                 $pathObject = new Path($path, $method, $info);
                 foreach ($pathObject->getActions() as $action) {
