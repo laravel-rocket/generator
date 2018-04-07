@@ -105,9 +105,9 @@ class Definition
     }
 
     /**
-     * @return string
+     * @return \LaravelRocket\Generator\Objects\OpenAPI\Definition|null
      */
-    public function getListItem(): string
+    public function getListItem()
     {
         if ($this->getType() !== self::TYPE_LIST) {
             return null;

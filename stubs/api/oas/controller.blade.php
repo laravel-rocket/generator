@@ -1,16 +1,19 @@
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\{{ $versionNamespace }};
 
-use App\Exceptions\APIErrorException;
+use App\Exceptions\{{ $versionNamespace }}\APIErrorException;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\V1\PaginationRequest;
-use App\Http\Requests\Api\V1\Request;
+use App\Http\Requests\Api\{{ $versionNamespace }}\PaginationRequest;
+use App\Http\Requests\Api\{{ $versionNamespace }}\Request;
 use App\Services\APIUserServiceInterface;
 use App\Services\FileServiceInterface;
 @foreach( $controller->getRequiredRepositoryNames() as $name )
 use App\Repositories\{{ $name }}Interface;
 @endforeach
 @foreach( $controller->getRequiredResponseNames() as $name )
-use App\Http\Response\Api\V1\{{ $name }};
+use App\Http\Responses\Api\{{ $versionNamespace }}\{{ $name }};
+@endforeach
+@foreach( $controller->getRequiredRequestNames() as $name )
+use App\Http\Requests\Api\{{ $versionNamespace }}\{{ $name }};
 @endforeach
 
 class {{ $className }} extends Controller
@@ -44,7 +47,7 @@ class {{ $className }} extends Controller
     /**
     * PATH: {{ $action->getHttpMethod() }} {{ $action->getPath() }}
 @foreach( $action->getParams() as $param )
-    * @param $param
+    * @param {{ $param }}
 @endforeach
     * @param {{ $action->getRequest()->getName() }} $request
     *
