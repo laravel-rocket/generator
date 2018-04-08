@@ -73,7 +73,7 @@ class Request
         }
 
         $controllerRootName = str_replace('Controller', '', $this->controllerName);
-        switch ($this->method) {
+        switch ($this->httpMethod) {
             case 'post':
             case 'put':
                 $this->requestName = ucfirst($this->httpMethod).ucfirst($controllerRootName).'Request';

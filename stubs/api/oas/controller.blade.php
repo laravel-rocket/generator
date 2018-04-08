@@ -69,9 +69,9 @@ class {{ $className }} extends Controller
         }
 
         return {{ $action->getResponse()->getName() }}::updateListWithModel($models, $offset, $limit, $hasNext)->response();
-@elseif( $action->getMethod() === 'post' && $action->getResponse()->getType() === \LaravelRocket\Generator\Objects\OpenAPI\Definition::TYPE_MODEL )
+@elseif( $action->getHttpMethod() === 'post' && $action->getResponse()->getType() === \LaravelRocket\Generator\Objects\OpenAPI\Definition::TYPE_MODEL )
         $data = $request->only([
-@foreach($action->getResponse()->gerProperties as $property )
+@foreach($action->getResponse()->getProperties() as $property )
             '{{ $property['name'] }}',
 @endforeach
         ]);
@@ -87,16 +87,16 @@ class {{ $className }} extends Controller
             throw new APIErrorException('notFound', 'Not found');
         }
 
-@if( $action->getMethod() === 'put' || $action->getMethod() === 'patch' )
+@if( $action->getHttpMethod() === 'put' || $action->getHttpMethod() === 'patch' )
         $data = $request->only([
-        @foreach($action->getResponse()->gerProperties as $property )
+        @foreach($action->getResponse()->getProperties() as $property )
             '{{ $property['name'] }}',
         @endforeach
         ]);
         $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->update($model, $data);
 
         return {{ $action->getResponse()->getName() }}::updateWithModel($model)->response();
-@elseif( $action->getMethod() === 'delete')
+@elseif( $action->getHttpMethod() === 'delete')
         $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->delete($model);
 
         return Status::ok()->response();
@@ -105,8 +105,8 @@ class {{ $className }} extends Controller
 @endif
 @else
         $modelArray = [
-@foreach($action->getResponse()->gerProperties as $property )
-            '{{ $property['name'] }}' => $request->get('{{ $property['name'] }}', {{ $property['default'] }}),
+@foreach($action->getResponse()->getProperties() as $property )
+            '{{ $property['name'] }}' => $request->get('{{ $property['name'] }}',{!! $property['default'] !!}),
 @endforeach
         ];
         $response = new static($modelArray, 200);
