@@ -64,7 +64,7 @@ class RouterFileUpdater extends OpenAPIBaseFileUpdater
             if (strpos($line, '});') !== false) {
                 $indent = $indent - 1;
                 if ($indent == 1) {
-                    return $index;
+                    return $index + 1;
                 }
             }
         }
@@ -80,9 +80,10 @@ class RouterFileUpdater extends OpenAPIBaseFileUpdater
         $routeName  = $this->action->getRouteName();
         $pathName   = $this->action->getPath();
         $identifier = $this->action->getRouteIdentifier();
+        $httpMethod = $this->action->getHttpMethod();
 
         return <<< EOS
-        Route::post('$pathName', '$routeName')->name('$identifier');
+        Route::$httpMethod('$pathName', '$routeName')->name('$identifier');
 
 EOS;
     }

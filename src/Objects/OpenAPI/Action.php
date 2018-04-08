@@ -21,7 +21,7 @@ class Action
     protected $elements;
 
     /** @var string */
-    protected $controllerName;
+    protected $controllerName = '';
 
     /** @var string[] */
     protected $params = [];
@@ -42,7 +42,7 @@ class Action
     protected $request;
 
     /** @var string */
-    protected $repositoryName;
+    protected $repositoryName = '';
 
     /**
      * @param \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] $elements
