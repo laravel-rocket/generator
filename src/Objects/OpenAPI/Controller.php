@@ -35,14 +35,21 @@ class Controller
         $this->spec    = $spec;
 
         $this->setRepositoryNames();
+        $this->setResponseNames();
         $this->setRequestNames();
     }
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * @return \LaravelRocket\Generator\Objects\OpenAPI\Action[]
+     */
     public function getActions(): array
     {
         return $this->actions;

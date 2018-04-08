@@ -15,14 +15,37 @@ class NameBaseFileUpdater extends BaseFileUpdater
         return ucfirst(camel_case(singularize($name)));
     }
 
-    public function insert($name): bool
+    /**
+     * @return bool
+     */
+    protected function needGenerate()
+    {
+        $existingPosition = $this->getExistingPosition();
+        if ($existingPosition >= 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function preprocess()
+    {
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function insert(string $name): bool
     {
         $this->name = $this->normalizeName($name);
 
+        $this->preprocess();
+
         $filePath = $this->getTargetFilePath();
 
-        $existingPosition = $this->getExistingPosition();
-        if ($existingPosition >= 0) {
+        if (!$this->needGenerate()) {
             return false;
         }
 

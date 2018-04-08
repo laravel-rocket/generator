@@ -280,6 +280,14 @@ class Action
     }
 
     /**
+     * @return string
+     */
+    public function getRouteName()
+    {
+        return $this->controllerName.'@'.$this->method;
+    }
+
+    /**
      * @param array $params
      */
     protected function setParams($params)

@@ -113,12 +113,6 @@ class APIBaseGenerator extends BaseGenerator
 
     protected function setVersion()
     {
-        $version   = $this->spec->getDocument()->info->version;
-        $fragments = explode('.', $version);
-        $major     = (int) $fragments[0];
-        if ($major < 0) {
-            $major = 1;
-        }
-        $this->versionNamespace = 'V'.$major;
+        $this->versionNamespace = $this->spec->getVersionNamespace();
     }
 }

@@ -56,20 +56,28 @@ class Request
         $this->setParameters();
     }
 
-    public function getName()
+    /**
+     * @return string
+     */
+    public function getName(): string
     {
         return $this->requestName;
     }
 
+    /**
+     * @return \LaravelRocket\Generator\Objects\OpenAPI\Parameter[]
+     */
     public function getParameters()
     {
         return $this->parameters;
     }
 
-    public function setRequestName()
+    protected function setRequestName()
     {
         if ($this->response->getType() === Definition::TYPE_LIST) {
             $this->requestName = 'PaginationRequest';
+
+            return;
         }
 
         $controllerRootName = str_replace('Controller', '', $this->controllerName);
@@ -84,7 +92,7 @@ class Request
         }
     }
 
-    public function setParameters()
+    protected function setParameters()
     {
         $parameters = $this->info->parameters;
         foreach ($parameters as $parameter) {

@@ -20,6 +20,9 @@ class OpenAPISpec
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\Controller[] */
     protected $controllers;
 
+    /** @var string */
+    protected $versionNamespace;
+
     public function __construct($document, $tables, $json)
     {
         $this->document = $document;
@@ -28,6 +31,7 @@ class OpenAPISpec
 
         $this->setResponseDefinition();
         $this->setControllers();
+        $this->setVersion();
     }
 
     /**
@@ -59,6 +63,14 @@ class OpenAPISpec
     }
 
     /**
+     * @return string
+     */
+    public function getVersionNamespace(): string
+    {
+        return $this->versionNamespace;
+    }
+
+    /**
      * @param string $name
      *
      * @return \LaravelRocket\Generator\Objects\OpenAPI\Definition|null
@@ -82,6 +94,33 @@ class OpenAPISpec
     public function getControllers()
     {
         return $this->controllers;
+    }
+
+    /**
+     * @return \LaravelRocket\Generator\Objects\OpenAPI\Action[]
+     */
+    public function getActions()
+    {
+        $actions = [];
+        foreach ($this->controllers as $controller) {
+            foreach ($controller->getActions() as $action) {
+                $actions[$action->getPath()] = $action;
+            }
+        }
+
+        return $actions;
+    }
+
+    /**
+     * @param $path
+     *
+     * @return \LaravelRocket\Generator\Objects\OpenAPI\Action|null
+     */
+    public function fundAction($path)
+    {
+        $actions = $this->getActions();
+
+        return array_key_exists($path, $actions) ? $actions[$path] : null;
     }
 
     /**
@@ -160,5 +199,16 @@ class OpenAPISpec
         }
 
         return true;
+    }
+
+    protected function setVersion()
+    {
+        $version   = $this->getDocument()->info->version;
+        $fragments = explode('.', $version);
+        $major     = (int) $fragments[0];
+        if ($major < 0) {
+            $major = 1;
+        }
+        $this->versionNamespace = 'V'.$major;
     }
 }

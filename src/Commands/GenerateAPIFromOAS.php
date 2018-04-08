@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use LaravelRocket\Generator\FileUpdaters\APIs\OpenAPI\RouterFileUpdater;
 use LaravelRocket\Generator\Services\DatabaseService;
 use LaravelRocket\Generator\Services\OASService;
 use LaravelRocket\Generator\Validators\APIs\APIValidator;
@@ -20,6 +21,9 @@ class GenerateAPIFromOAS extends MWBGenerator
     /** @var DatabaseService $databaseService */
     protected $databaseService;
 
+    /** @var bool */
+    protected $rebuild = false;
+
     /**
      * Execute the console command.
      *
@@ -27,6 +31,8 @@ class GenerateAPIFromOAS extends MWBGenerator
      */
     public function handle()
     {
+        $this->rebuild = !empty($this->input->getOption('rebuild'));
+
         $this->tables = $this->getTablesFromMWBFile();
         if ($this->tables === false) {
             return false;
@@ -50,6 +56,7 @@ class GenerateAPIFromOAS extends MWBGenerator
         $this->generateFromDefinitions();
         $this->generateControllers();
         $this->generateRequests();
+        $this->insertRoutes();
         $this->styleCode();
 
         $this->databaseService->dropDatabase();
@@ -130,7 +137,7 @@ class GenerateAPIFromOAS extends MWBGenerator
     {
         /** @var \LaravelRocket\Generator\Generators\APIBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ResponseGenerator($this->config, $this->files, $this->view),
+            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ResponseGenerator($this->config, $this->files, $this->view, $this->rebuild),
         ];
 
         foreach ($this->spec->getDefinitions() as $definition) {
@@ -144,7 +151,7 @@ class GenerateAPIFromOAS extends MWBGenerator
     {
         /** @var \LaravelRocket\Generator\Generators\APIBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ControllerGenerator($this->config, $this->files, $this->view),
+            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\ControllerGenerator($this->config, $this->files, $this->view, $this->rebuild),
         ];
 
         foreach ($this->spec->getControllers() as $controller) {
@@ -158,7 +165,7 @@ class GenerateAPIFromOAS extends MWBGenerator
     {
         /** @var \LaravelRocket\Generator\Generators\APIBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\RequestGenerator($this->config, $this->files, $this->view),
+            new \LaravelRocket\Generator\Generators\APIs\OpenAPI\RequestGenerator($this->config, $this->files, $this->view, $this->rebuild),
         ];
 
         foreach ($this->spec->getControllers() as $controller) {
@@ -166,6 +173,19 @@ class GenerateAPIFromOAS extends MWBGenerator
                 foreach ($generators as $generator) {
                     $generator->generate($requestName, $this->spec, $this->databaseService, $this->json, $this->tables);
                 }
+            }
+        }
+    }
+
+    protected function insertRoutes()
+    {
+        $fileUpdaters = [
+            new RouterFileUpdater($this->config, $this->files, $this->view, $this->rebuild),
+        ];
+
+        foreach ($this->spec->getActions() as $action) {
+            foreach ($fileUpdaters as $generator) {
+                $generator->generate($action->getPath(), $this->spec, $this->databaseService, $this->json, $this->tables);
             }
         }
     }
