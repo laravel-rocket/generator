@@ -284,7 +284,7 @@ class Action
      */
     public function getRouteName()
     {
-        return $this->controllerName.'@'.$this->method;
+        return $this->controllerName.'Controller@'.$this->method;
     }
 
     /**

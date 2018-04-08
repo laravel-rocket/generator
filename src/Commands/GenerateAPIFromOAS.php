@@ -184,8 +184,8 @@ class GenerateAPIFromOAS extends MWBGenerator
         ];
 
         foreach ($this->spec->getActions() as $action) {
-            foreach ($fileUpdaters as $generator) {
-                $generator->generate($action->getPath(), $this->spec, $this->databaseService, $this->json, $this->tables);
+            foreach ($fileUpdaters as $fileUpdater) {
+                $fileUpdater->insert($action->getPath(), $this->spec, $this->databaseService, $this->json, $this->tables);
             }
         }
     }

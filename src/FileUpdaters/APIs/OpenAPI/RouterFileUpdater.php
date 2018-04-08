@@ -56,17 +56,15 @@ class RouterFileUpdater extends OpenAPIBaseFileUpdater
             return -1;
         }
 
-        $start = false;
-
         $indent = 0;
         foreach ($lines as $index => $line) {
             if (strpos($line, 'Route::group') !== false) {
                 $indent = $indent + 1;
             }
-            if (strpos($line, '});') !== false && $start === true) {
+            if (strpos($line, '});') !== false) {
                 $indent = $indent - 1;
                 if ($indent == 1) {
-                    return $index - 1;
+                    return $index;
                 }
             }
         }
@@ -85,6 +83,7 @@ class RouterFileUpdater extends OpenAPIBaseFileUpdater
 
         return <<< EOS
         Route::post('$pathName', '$routeName')->name('$methodName');
+
 EOS;
     }
 }
