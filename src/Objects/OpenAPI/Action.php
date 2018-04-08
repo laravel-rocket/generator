@@ -210,7 +210,7 @@ class Action
     /**
      * @return string
      */
-    public function getControllerName()
+    public function getControllerName(): string
     {
         return $this->controllerName;
     }
@@ -218,7 +218,7 @@ class Action
     /**
      * @return string
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->method;
     }
@@ -226,7 +226,7 @@ class Action
     /**
      * @return string
      */
-    public function getHttpMethod()
+    public function getHttpMethod(): string
     {
         return $this->httpMethod;
     }
@@ -234,7 +234,7 @@ class Action
     /**
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -274,7 +274,7 @@ class Action
     /**
      * @return string
      */
-    public function getRepositoryName()
+    public function getRepositoryName(): string
     {
         return $this->repositoryName;
     }
@@ -282,9 +282,17 @@ class Action
     /**
      * @return string
      */
-    public function getRouteName()
+    public function getRouteName(): string
     {
         return $this->controllerName.'Controller@'.$this->method;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteIdentifier(): string
+    {
+        return camel_case(lcfirst($this->controllerName)).'.'.$this->method;
     }
 
     /**

@@ -79,10 +79,10 @@ class RouterFileUpdater extends OpenAPIBaseFileUpdater
     {
         $routeName  = $this->action->getRouteName();
         $pathName   = $this->action->getPath();
-        $methodName = $this->action->getMethod();
+        $identifier = $this->action->getRouteIdentifier();
 
         return <<< EOS
-        Route::post('$pathName', '$routeName')->name('$methodName');
+        Route::post('$pathName', '$routeName')->name('$identifier');
 
 EOS;
     }
