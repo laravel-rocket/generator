@@ -312,6 +312,6 @@ class Action
 
     protected function setRequest()
     {
-        $this->request = new Request($this->httpMethod, $this->info, $this->response, $this->spec);
+        $this->request = new Request($this->controllerName, $this->method, $this->httpMethod, $this->info, $this->response, $this->spec);
     }
 }

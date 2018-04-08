@@ -51,6 +51,7 @@ class {{ $className }} extends Controller
     * @param {{ $action->getRequest()->getName() }} $request
     *
     * @return \Illuminate\Http\JsonResponse
+    * @throws \App\Exceptions\Api\{{ $versionNamespace }}\APIErrorException
     */
     public function {{ $action->getMethod() }}({{ implode(',', $action->getParams() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
     {
@@ -68,15 +69,45 @@ class {{ $className }} extends Controller
         }
 
         return {{ $action->getResponse()->getName() }}::updateListWithModel($models, $offset, $limit, $hasNext)->response();
+@elseif( $action->getMethod() === 'post' && $action->getResponse()->getType() === \LaravelRocket\Generator\Objects\OpenAPI\Definition::TYPE_MODEL )
+        $data = $request->only([
+@foreach($action->getResponse()->gerProperties as $property )
+            '{{ $property['name'] }}',
+@endforeach
+        ]);
+        $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->create($data);
+        if (empty($model) ) {
+            throw new APIErrorException('unknown', 'Creation Failed');
+        }
+
+        return {{ $action->getResponse()->getName() }}::updateWithModel($model)->response();
 @elseif( $action->getResponse()->getType() === \LaravelRocket\Generator\Objects\OpenAPI\Definition::TYPE_MODEL )
         $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->find($id);
         if (empty($model) ) {
             throw new APIErrorException('notFound', 'Not found');
         }
 
+@if( $action->getMethod() === 'put' || $action->getMethod() === 'patch' )
+        $data = $request->only([
+        @foreach($action->getResponse()->gerProperties as $property )
+            '{{ $property['name'] }}',
+        @endforeach
+        ]);
+        $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->update($model, $data);
+
         return {{ $action->getResponse()->getName() }}::updateWithModel($model)->response();
+@elseif( $action->getMethod() === 'delete')
+        $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->delete($model);
+
+        return Status::ok()->response();
+@else
+        return {{ $action->getResponse()->getName() }}::updateWithModel($model)->response();
+@endif
 @else
         $modelArray = [
+@foreach($action->getResponse()->gerProperties as $property )
+            '{{ $property['name'] }}' => $request->get('{{ $property['name'] }}', {{ $property['default'] }}),
+@endforeach
         ];
         $response = new static($modelArray, 200);
 

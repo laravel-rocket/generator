@@ -4,7 +4,13 @@ namespace LaravelRocket\Generator\Objects\OpenAPI;
 class Request
 {
     /** @var string */
+    protected $controllerName;
+
+    /** @var string */
     protected $method;
+
+    /** @var string */
+    protected $httpMethod;
 
     /** @var \TakaakiMizuno\SwaggerParser\Objects\Base */
     protected $info;
@@ -30,17 +36,21 @@ class Request
     /**
      * Path constructor.
      *
+     * @param string                                               $controllerName
      * @param string                                               $method
+     * @param string                                               $httpMethod
      * @param \TakaakiMizuno\SwaggerParser\Objects\Base            $info
      * @param \LaravelRocket\Generator\Objects\OpenAPI\Definition  $response
      * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec
      */
-    public function __construct($method, $info, $response, $spec)
+    public function __construct($controllerName, $method, $httpMethod, $info, $response, $spec)
     {
-        $this->method   = $method;
-        $this->info     = $info;
-        $this->spec     = $spec;
-        $this->response = $response;
+        $this->controllerName = $controllerName;
+        $this->method         = $method;
+        $this->httpMethod     = $httpMethod;
+        $this->info           = $info;
+        $this->spec           = $spec;
+        $this->response       = $response;
 
         $this->setRequestName();
         $this->setParameters();
@@ -62,10 +72,11 @@ class Request
             $this->requestName = 'PaginationRequest';
         }
 
+        $controllerRootName = str_replace('Controller', '', $this->controllerName);
         switch ($this->method) {
             case 'post':
             case 'put':
-                $this->requestName = ucfirst($this->method).'Request';
+                $this->requestName = ucfirst($this->httpMethod).ucfirst($controllerRootName).'Request';
                 break;
             default:
                 $this->requestName = 'Request';

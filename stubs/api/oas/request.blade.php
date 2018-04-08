@@ -20,7 +20,7 @@ class {{ $className }} extends Request
     public function rules()
     {
         return [
-@foreach( $request->getParameters as $parameter )
+@foreach( $request->getParameters() as $parameter )
 @if( $parameter->isInRequest() && $parameter->isRequired() )
             '{{ $parameter->getName() }}' => 'required',
 @endif
@@ -31,7 +31,7 @@ class {{ $className }} extends Request
     public function messages()
     {
         return [
-@foreach( $request->getParameters as $parameter )
+@foreach( $request->getParameters() as $parameter )
 @if( $parameter->isInRequest() && $parameter->isRequired() )
             '{{ $parameter->getName() }}.required' => trans('validation.required'),
 @endif
