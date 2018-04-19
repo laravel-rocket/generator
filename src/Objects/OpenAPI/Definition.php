@@ -162,6 +162,9 @@ class Definition
         }
         if ($this->type === self::TYPE_OBJECT) {
             $tableCandidateName = pluralize(snake_case($this->name));
+            if ($this->name === 'Me') {
+                $tableCandidateName = 'users';
+            }
             foreach ($this->tables as $table) {
                 if ($tableCandidateName === $table->getName()) {
                     $this->type  = self::TYPE_MODEL;
@@ -194,13 +197,15 @@ class Definition
     {
         $result = [];
         foreach ($entries as $entry) {
-            if (!empty($entry->{'$ref'})) {
-                $definition = $this->getDefinition($entry->{'$ref'});
+            $ref        = $entry->{'$ref'};
+            $properties = $entry->properties;
+            if (!empty($ref)) {
+                $definition = $this->getDefinition($ref);
                 if (!empty($definition)) {
                     $result = array_merge($result, $this->parseObject($definition));
                 }
-            } elseif (!empty($entry->properties)) {
-                $result = array_merge($result, $this->parseProperties($entry->properties));
+            } elseif (!empty($properties)) {
+                $result = array_merge($result, $this->parseProperties($properties));
             }
         }
 
@@ -213,10 +218,18 @@ class Definition
 
         if (is_array($properties)) {
             foreach ($properties as $name => $definition) {
+                $reference = $definition->{'$ref'};
+                if (!empty($reference)) {
+                    $parts     = explode('/', $name);
+                    $reference = $parts[count($parts) - 1];
+                }
+
                 $result[] = [
-                    'name'    => $name,
-                    'type'    => $definition->type,
-                    'default' => $this->getDefaultValue($definition->type),
+                    'name'       => $name,
+                    'type'       => $definition->type,
+                    'default'    => $this->getDefaultValue($definition->type),
+                    'cast'       => $this->getCast($definition->type),
+                    'definition' => $reference,
                 ];
             }
         }
@@ -231,19 +244,25 @@ class Definition
             if (!empty($column)) {
                 $this->properties[$index]['column'] = $column;
             }
+
+            $relation = $this->table->getRelation(camel_case($property['name']));
+            if (!empty($relation)) {
+                $this->properties[$index]['relation'] = $relation;
+            }
         }
     }
 
     protected function getDefinition($name)
     {
-        if (empty($this->osa->definitions)) {
+        $definition = $this->osa->definitions;
+        if (empty($definition)) {
             return null;
         }
 
         $parts = explode('/', $name);
         $name  = $parts[count($parts) - 1];
 
-        return array_get($this->osa->definitions, $name);
+        return array_get($definition, $name);
     }
 
     protected function getDefaultValue($type)
@@ -254,7 +273,11 @@ class Definition
                 $defaultValue = "''";
                 break;
             case 'integer':
+            case 'number':
                 $defaultValue = '0';
+                break;
+            case 'boolean':
+                $defaultValue = 'false';
                 break;
             case 'object':
                 $defaultValue = 'null';
@@ -265,5 +288,26 @@ class Definition
         }
 
         return $defaultValue;
+    }
+
+    protected function getCast($type)
+    {
+        $cast = '';
+        switch ($type) {
+            case 'string':
+                $cast = '(string)';
+                break;
+            case 'integer':
+                $cast = '(int)';
+                break;
+            case 'number':
+                $cast = '(float)';
+                break;
+            case 'boolean':
+                $cast = '(boolean)';
+                break;
+        }
+
+        return $cast;
     }
 }

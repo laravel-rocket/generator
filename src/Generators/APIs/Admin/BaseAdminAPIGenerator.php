@@ -22,17 +22,16 @@ class BaseAdminAPIGenerator extends TableBaseGenerator
     protected function getVariables(): array
     {
         $modelName   = $this->getModelName();
-        $tableObject = new Table($this->table, $this->tables);
 
         $variables = [
-            'table'            => $tableObject,
+            'table'            => $this->tableObject,
             'modelName'        => $modelName,
             'variableName'     => lcfirst($modelName),
             'className'        => $this->getClassName(),
             'requestNameSpace' => $modelName,
         ];
 
-        return array_merge($variables, $tableObject->getTestColumn());
+        return array_merge($variables, $this->tableObject->getTestColumn());
     }
 
     protected function getClassName(): string

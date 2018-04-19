@@ -17,8 +17,7 @@ class ViewGenerator extends ReactCRUDBaseGenerator
     {
         $this->json = $json;
 
-        $this->table  = $table;
-        $this->tables = $tables;
+        $this->setTargetTable($table, $tables);
 
         if (!$this->canGenerate()) {
             return false;
