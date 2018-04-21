@@ -90,8 +90,8 @@ class FileService
         if ($addHeader) {
             $data = '<?PHP'.PHP_EOL.PHP_EOL.$data;
         }
+        $data = str_replace('＠', '@', $data);
         if ($isBladeTemplate) {
-            $data = str_replace('＠', '@', $data);
             $data = str_replace('｛', '{', $data);
             $data = str_replace('｝', '}', $data);
         }

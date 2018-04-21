@@ -134,7 +134,7 @@ class ModelGenerator extends ModelBaseGenerator
         ];
 
         $excludes          = ['id', 'remember_token', 'created_at', 'deleted_at', 'updated_at'];
-        $timestampExcludes = ['created_at', 'updated_at'];
+        $timestampExcludes = ['created_at', 'updated_at', 'deleted_at'];
 
         foreach ($this->table->getColumns() as $column) {
             $name = $column->getName();

@@ -38,6 +38,7 @@ class {{ $modelName }}ControllerTest extends TestCase
         $this->assertResponseStatus(201);
     }
 
+@if( !empty($testColumnName))
     public function testUpdateModel()
     {
         $faker = \Faker\Factory::create();
@@ -56,6 +57,7 @@ class {{ $modelName }}ControllerTest extends TestCase
         $this->assertEquals($testData, $new{{ $modelName }}->{{ $testColumnName }});
     }
 
+@endif
     public function testDeleteModel()
     {
         ${{ $variableName }} = factory(\App\Models\{{ $modelName }}::class)->create();
