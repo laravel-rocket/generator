@@ -24,7 +24,7 @@ class {{ $className }} extends Response
 @elseif( $property['type'] === 'object' && array_key_exists('relation', $property ))
                 '{{ $property['name'] }}' => !empty($model->{{ $property['relation']->getName() }}) ? {{ $property['definition'] }}::updateWithModel($model->{{ $property['relation']->getName() }})->toArray() : null,
 @elseif( $property['type'] === 'array' && array_key_exists('relation', $property ))
-                '{{ $property['name'] }}' => {!! $property['default'] !!},
+                '{{ $property['name'] }}' => self::generateArray($model->{{ $property['relation']->getName() }}, {{ $property['definition'] }}::class),
 @else
                 '{{ $property['name'] }}' => {!! $property['default'] !!},
 @endif

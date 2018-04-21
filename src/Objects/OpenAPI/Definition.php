@@ -218,9 +218,15 @@ class Definition
 
         if (is_array($properties)) {
             foreach ($properties as $name => $definition) {
-                $reference = $definition->{'$ref'};
+                $reference = null;
+                if ($definition->type === 'object') {
+                    $reference = $definition->{'$ref'};
+                } elseif ($definition->type === 'array') {
+                    $reference = $definition->items->{'$ref'};
+                }
+
                 if (!empty($reference)) {
-                    $parts     = explode('/', $name);
+                    $parts     = explode('/', $reference);
                     $reference = $parts[count($parts) - 1];
                 }
 
@@ -243,11 +249,25 @@ class Definition
             $column = $this->table->getColumn(snake_case($property['name']));
             if (!empty($column)) {
                 $this->properties[$index]['column'] = $column;
+                continue;
             }
 
             $relation = $this->table->getRelation(camel_case($property['name']));
             if (!empty($relation)) {
                 $this->properties[$index]['relation'] = $relation;
+                continue;
+            }
+
+            $relation = $this->table->getRelation(camel_case($property['definition']));
+            if (!empty($relation)) {
+                $this->properties[$index]['relation'] = $relation;
+                continue;
+            }
+
+            $relation = $this->table->getRelation(camel_case(pluralize($property['definition'])));
+            if (!empty($relation)) {
+                $this->properties[$index]['relation'] = $relation;
+                continue;
             }
         }
     }

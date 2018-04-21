@@ -346,4 +346,9 @@ class Table
 
         return 'fa fa-file';
     }
+
+    public function getRepositoryName()
+    {
+        return $this->getModelName().'Repository';
+    }
 }

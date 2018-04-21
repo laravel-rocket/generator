@@ -8,19 +8,22 @@ class PathElement
     /** @var string */
     protected $element;
 
+    /** @var bool */
     protected $isVariable = false;
 
+    /** @var string */
     protected $variableName = '';
 
+    /** @var bool */
     protected $isPlural = false;
 
     /**
      * @param string $path
-     * @param string $httpMetod
+     * @param string $httpMethod
      *
      * @return static[]
      */
-    public static function parsePath($path, $httpMetod)
+    public static function parsePath($path, $httpMethod)
     {
         $elements       = [];
         $elementStrings = explode('/', $path);
@@ -28,7 +31,7 @@ class PathElement
             if (empty($elementString)) {
                 continue;
             }
-            $elements[] = new static($elementString, $httpMetod);
+            $elements[] = new static($elementString, $httpMethod);
         }
 
         return $elements;
@@ -37,7 +40,7 @@ class PathElement
     /**
      * @return bool
      */
-    public function isPlural()
+    public function isPlural(): bool
     {
         return $this->isPlural;
     }
@@ -45,7 +48,7 @@ class PathElement
     /**
      * @return bool
      */
-    public function isVariable()
+    public function isVariable(): bool
     {
         return $this->isVariable;
     }
@@ -53,12 +56,23 @@ class PathElement
     /**
      * @return string
      */
-    public function variableName()
+    public function variableName(): string
     {
         return $this->variableName;
     }
 
-    public function elementName()
+    /**
+     * @return bool
+     */
+    public function isPrimaryKeyVariable(): bool
+    {
+        return ($this->isVariable && $this->variableName === 'id') ? true : false;
+    }
+
+    /**
+     * @return string
+     */
+    public function elementName(): string
     {
         return $this->element;
     }

@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
+use LaravelRocket\Generator\Objects\Table;
+
 class OpenAPISpec
 {
     /**
@@ -82,6 +84,22 @@ class OpenAPISpec
         foreach ($this->definitions as $definition) {
             if ($definition->getName() === $name) {
                 return $definition;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return \LaravelRocket\Generator\Objects\Table|null
+     */
+    public function findTable(string $name)
+    {
+        foreach ($this->tables as $table) {
+            if ($table->getName() === $name) {
+                return new Table($table, $this->tables, $this->json);
             }
         }
 

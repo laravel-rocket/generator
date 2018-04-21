@@ -5,6 +5,41 @@ use function ICanBoogie\singularize;
 
 class Action
 {
+    public const CONTEXT_TYPE_LIST        = 'list';
+    public const CONTEXT_TYPE_SHOW        = 'show';
+    public const CONTEXT_TYPE_STORE       = 'store';
+    public const CONTEXT_TYPE_UPDATE      = 'update';
+    public const CONTEXT_TYPE_DESTROY     = 'destroy';
+    public const CONTEXT_TYPE_ME          = 'me';
+    public const CONTEXT_TYPE_ME_SUB_DATA = 'me_sub_data';
+    public const CONTEXT_TYPE_AUTH        = 'auth';
+    public const CONTEXT_TYPE_AUTH_SNS    = 'auth_sns';
+    public const CONTEXT_TYPE_UNKNOWN     = 'unknown';
+    public const CONTEXT_TYPE_PASSWORD    = 'password';
+
+    protected const SPECIAL_ACTIONS = [
+        'post:signin'          => [
+            'controller' => 'AuthController',
+            'action'     => 'postSignIn',
+        ],
+        'post:signup'          => [
+            'controller' => 'AuthController',
+            'action'     => 'postSignUp',
+        ],
+        'post:signout'         => [
+            'controller' => 'AuthController',
+            'action'     => 'postSignOut',
+        ],
+        'post:forgot-password' => [
+            'controller' => 'PasswordController',
+            'action'     => 'forgotPassword',
+        ],
+        'post:token/refresh'   => [
+            'controller' => 'AuthController',
+            'action'     => 'postRefreshToken',
+        ],
+    ];
+
     /** @var string */
     protected $path;
 
@@ -45,6 +80,18 @@ class Action
     protected $repositoryName = '';
 
     /**
+     * @var array
+     */
+    protected $actionContext = [
+        'type'             => self::CONTEXT_TYPE_UNKNOWN,
+        'targetRepository' => '',
+        'parentRepository' => '',
+        'parentFilters'    => [],
+        'targetFilters'    => [],
+        'data'             => [],
+    ];
+
+    /**
      * @param \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] $elements
      * @param string                                                 $httpMethod
      * @param string                                                 $path
@@ -58,6 +105,33 @@ class Action
         $httpMethod = strtolower($httpMethod);
         $actions    = [];
         $elements   = array_reverse($elements);
+
+        if (starts_with('/', $path)) {
+            $path = substr($path, 1);
+        }
+
+        $specialKey = implode(':', [$httpMethod, $path]);
+        if (array_key_exists($specialKey, self::SPECIAL_ACTIONS)) {
+            $actionInfo = self::SPECIAL_ACTIONS[$specialKey];
+
+            $actions[] = new static($actionInfo['controller'], $actionInfo['method'], $httpMethod, $path, $info, [], $spec);
+
+            return $actions;
+        }
+
+        // Check SNS SignIn
+        if ($httpMethod === 'post' && preg_match('/^signin\/([^\/]+)$/', $path, $matches)) {
+            $name      = camel_case($matches[1]);
+            $actions[] = new static(
+                ucfirst($name).'AuthControllerController',
+                'post'.ucfirst($name).'SignIn',
+                $httpMethod, $path, $info, [
+                'sns' => $name,
+            ], $spec
+            );
+
+            return $actions;
+        }
 
         $params = [];
         foreach ($elements as $element) {
@@ -197,8 +271,9 @@ class Action
     {
         $this->controllerName = $controllerName;
         $this->method         = $method;
-        $this->httpMethod     = $httpMethod;
+        $this->httpMethod     = strtolower($httpMethod);
         $this->path           = $path;
+        $this->elements       = PathElement::parsePath($this->path, $this->httpMethod);
         $this->info           = $info;
         $this->spec           = $spec;
 
@@ -329,5 +404,91 @@ class Action
     protected function setRequest()
     {
         $this->request = new Request($this->controllerName, $this->method, $this->httpMethod, $this->info, $this->response, $this->spec);
+    }
+
+    protected function guessActionContext()
+    {
+        /** @var \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] $elements */
+        $elements = array_reverse($this->elements);
+
+        if ($this->controllerName === 'AuthController' && $this->httpMethod === 'post') {
+            $this->actionContext = [
+                'type'             => static::CONTEXT_TYPE_AUTH,
+                'targetRepository' => $this->repositoryName,
+            ];
+        } elseif (ends_with($this->controllerName, 'AuthController') && $this->httpMethod === 'post') {
+            $this->actionContext = [
+                'type'             => static::CONTEXT_TYPE_AUTH_SNS,
+                'targetRepository' => $this->repositoryName,
+                'data'             => $this->params,
+            ];
+        } elseif ($elements[0]->elementName() === 'me') {
+            switch ($this->httpMethod) {
+                case 'get':
+                    $this->actionContext = [
+                        'type'             => static::CONTEXT_TYPE_ME,
+                        'targetRepository' => $this->repositoryName,
+                    ];
+                    break;
+                case 'put':
+                    $this->actionContext = [
+                        'type'             => static::CONTEXT_TYPE_ME,
+                        'targetRepository' => $this->repositoryName,
+                    ];
+            }
+        } elseif ($elements[0]->isPlural()) {
+            switch ($this->httpMethod) {
+                case 'get':
+                    $this->actionContext = [
+                        'type'             => static::CONTEXT_TYPE_LIST,
+                        'targetRepository' => $this->repositoryName,
+                    ];
+                    break;
+                case 'post':
+                    $this->actionContext = [
+                        'type'             => static::CONTEXT_TYPE_STORE,
+                        'targetRepository' => $this->repositoryName,
+                    ];
+            }
+        } elseif (count($elements) >= 2 && $elements[0]->isVariable() && $elements[1]->isPlural()) {
+            switch ($this->httpMethod) {
+                case 'get':
+                    $this->actionContext = [
+                        'type'             => static::CONTEXT_TYPE_SHOW,
+                        'targetRepository' => $this->repositoryName,
+                    ];
+                    break;
+                case 'put':
+                case 'patch':
+                    $this->actionContext = [
+                        'type'             => static::CONTEXT_TYPE_UPDATE,
+                        'targetRepository' => $this->repositoryName,
+                    ];
+                    break;
+                case 'delete':
+                    $this->actionContext = [
+                        'type'             => static::CONTEXT_TYPE_DESTROY,
+                        'targetRepository' => $this->repositoryName,
+                    ];
+                    break;
+            }
+            $this->actionContext['targetFilters'] = [$elements[0]->variableName() => '$'.$elements[0]->variableName()];
+        }
+
+        if (count($elements) >= 2 && $elements[1]->elementName() === 'me') {
+            $this->actionContext['parentRepository'] = 'UseRepository';
+            $this->actionContext['parentFilters']    = ['id' => '$authUser->id'];
+        } elseif (count($elements) >= 3 && $elements[0]->isPlural() && $elements[1]->isVariable() && $elements[2]->isPlural()) {
+            $table = $this->spec->findTable($elements[2]->elementName());
+            if (!empty($table)) {
+                $this->actionContext['parentRepository'] = $table->getRepositoryName();
+                $this->actionContext['parentFilters']    = [$elements[1]->variableName() => '$'.$elements[1]->variableName()];
+            }
+        }
+    }
+
+    public function getActionContext($name)
+    {
+        return array_get($this->actionContext, $name, '');
     }
 }
