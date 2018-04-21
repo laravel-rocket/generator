@@ -1,7 +1,7 @@
     /**
     * PATH: {{ $action->getHttpMethod() }} {{ $action->getPath() }}
 @foreach( $action->getParams() as $param )
-        * @param {{ $param }}
+        * @param mixed {{ $param }}
 @endforeach
     * @param {{ $action->getRequest()->getName() }} $request
     *

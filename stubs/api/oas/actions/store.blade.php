@@ -1,7 +1,7 @@
     /**
     * PATH: {{ $action->getHttpMethod() }} {{ $action->getPath() }}
     @foreach( $action->getParams() as $param )
-        * @param {{ $param }}
+        * @param mixed {{ $param }}
     @endforeach
     * @param {{ $action->getRequest()->getName() }} $request
     *
@@ -10,6 +10,9 @@
     */
     public function {{ $action->getMethod() }}({{ implode(',', $action->getParams() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
     {
+        /** @var \App\Models\User $user */
+        $user = $this->userService->getUser();
+
         $data = $request->only([
     @foreach($action->getResponse()->getProperties() as $property )
             '{{ $property['name'] }}',
@@ -20,6 +23,7 @@
         $data['{!! $key !!}'] = {!! $value !!};
     @endforeach
 
+        /** @var \App\Models\{{ $action->getResponse()->getModelName() }} $model */
         $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->create($data);
         if (empty($model) ) {
             throw new APIErrorException('unknown', 'Creation Failed');

@@ -390,7 +390,8 @@ class Action
                 $schema         = $response->schema;
                 $ref            = $schema->{'$ref'};
                 $this->response = $this->spec->findDefinition($ref);
-                if ($this->response->getType() === Definition::TYPE_MODEL) {
+                if ($this->httpMethod === 'delete') {
+                } elseif ($this->response->getType() === Definition::TYPE_MODEL) {
                     $model                = $this->response->getModelName();
                     $this->repositoryName = $model.'Repository';
                 } elseif ($this->response->getType() === Definition::TYPE_LIST) {
@@ -431,13 +432,13 @@ class Action
                 case 'get':
                     $this->actionContext = [
                         'type'             => static::CONTEXT_TYPE_ME,
-                        'targetRepository' => $this->repositoryName,
+                        'targetRepository' => 'UserRepository',
                     ];
                     break;
                 case 'put':
                     $this->actionContext = [
                         'type'             => static::CONTEXT_TYPE_ME,
-                        'targetRepository' => $this->repositoryName,
+                        'targetRepository' => 'UserRepository',
                     ];
             }
         } elseif ($elements[0]->isPlural()) {
@@ -472,7 +473,10 @@ class Action
                 case 'delete':
                     $this->actionContext = [
                         'type'             => static::CONTEXT_TYPE_DESTROY,
-                        'targetRepository' => $this->repositoryName,
+                        'targetRepository' => ucfirst(camel_case(singularize($elements[1]))).'Repository',
+                        'data'             => [
+                            'model' => ucfirst(camel_case(singularize($elements[1]))),
+                        ],
                     ];
                     break;
             }

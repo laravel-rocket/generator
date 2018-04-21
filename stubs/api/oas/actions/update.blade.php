@@ -1,7 +1,7 @@
     /**
     * PATH: {{ $action->getHttpMethod() }} {{ $action->getPath() }}
 @foreach( $action->getParams() as $param )
-        * @param {{ $param }}
+        * @param mixed {{ $param }}
 @endforeach
     * @param {{ $action->getRequest()->getName() }} $request
     *
@@ -10,6 +10,10 @@
     */
     public function {{ $action->getMethod() }}({{ implode(',', $action->getParams() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
     {
+
+        /** @var \App\Models\User $user */
+        $user = $this->userService->getUser();
+
 @if( $action->getResponse()->getType() === \LaravelRocket\Generator\Objects\OpenAPI\Definition::TYPE_MODEL )
         $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->find($id);
         if (empty($model) ) {
@@ -21,6 +25,7 @@
             '{{ $property['name'] }}',
 @endforeach
         ]);
+        /** @var \App\Models\{{ $action->getResponse()->getModelName() }} $model */
         $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->update($model, $data);
 
         return {{ $action->getResponse()->getName() }}::updateWithModel($model)->response();
