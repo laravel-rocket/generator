@@ -473,9 +473,9 @@ class Action
                 case 'delete':
                     $this->actionContext = [
                         'type'             => static::CONTEXT_TYPE_DESTROY,
-                        'targetRepository' => ucfirst(camel_case(singularize($elements[1]))).'Repository',
+                        'targetRepository' => ucfirst(camel_case(singularize($elements[1]->elementName()))).'Repository',
                         'data'             => [
-                            'model' => ucfirst(camel_case(singularize($elements[1]))),
+                            'model' => ucfirst(camel_case(singularize($elements[1]->elementName()))),
                         ],
                     ];
                     break;
@@ -485,7 +485,7 @@ class Action
 
         if (count($elements) >= 2 && $elements[1]->elementName() === 'me') {
             $this->actionContext['parentRepository'] = 'UseRepository';
-            $this->actionContext['parentFilters']    = ['user_id' => '$authUser->id'];
+            $this->actionContext['parentFilters']    = ['user_id' => '$user->id'];
         } elseif (count($elements) >= 3 && $elements[0]->isPlural() && $elements[1]->isVariable() && $elements[2]->isPlural()) {
             $table = $this->spec->findTable($elements[2]->elementName());
             if (!empty($table)) {

@@ -18,7 +18,7 @@
             throw new APIErrorException('notFound', 'Not found');
         }
 
-        $model = $this->{{ lcfirst(array_get($action->getActionContext('data'), 'model', '')) }}Repository->delete($model);
+        $this->{{ lcfirst(array_get($action->getActionContext('data'), 'model', '')) }}Repository->delete($model);
 
         return Status::ok()->response();
     }
