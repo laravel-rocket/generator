@@ -280,6 +280,7 @@ class Action
         $this->setParams($params);
         $this->setResponse();
         $this->setRequest();
+        $this->guessActionContext();
     }
 
     /**
@@ -392,6 +393,9 @@ class Action
                 if ($this->response->getType() === Definition::TYPE_MODEL) {
                     $model                = $this->response->getModelName();
                     $this->repositoryName = $model.'Repository';
+                } elseif ($this->response->getType() === Definition::TYPE_LIST) {
+                    $model                = $this->response->getListItem()->getModelName();
+                    $this->repositoryName = $model.'Repository';
                 }
 
                 return;
@@ -477,12 +481,12 @@ class Action
 
         if (count($elements) >= 2 && $elements[1]->elementName() === 'me') {
             $this->actionContext['parentRepository'] = 'UseRepository';
-            $this->actionContext['parentFilters']    = ['id' => '$authUser->id'];
+            $this->actionContext['parentFilters']    = ['user_id' => '$authUser->id'];
         } elseif (count($elements) >= 3 && $elements[0]->isPlural() && $elements[1]->isVariable() && $elements[2]->isPlural()) {
             $table = $this->spec->findTable($elements[2]->elementName());
             if (!empty($table)) {
                 $this->actionContext['parentRepository'] = $table->getRepositoryName();
-                $this->actionContext['parentFilters']    = [$elements[1]->variableName() => '$'.$elements[1]->variableName()];
+                $this->actionContext['parentFilters']    = [singularize($table->getName()).'_'.$elements[1]->variableName() => '$'.$elements[1]->variableName()];
             }
         }
     }

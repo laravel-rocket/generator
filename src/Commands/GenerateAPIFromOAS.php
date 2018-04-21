@@ -141,6 +141,7 @@ class GenerateAPIFromOAS extends MWBGenerator
         ];
 
         foreach ($this->spec->getDefinitions() as $definition) {
+            $this->output('  > Generate Response:'.$definition->getName(), 'green');
             foreach ($generators as $generator) {
                 $generator->generate($definition->getName(), $this->spec, $this->databaseService, $this->json, $this->tables);
             }
@@ -155,6 +156,8 @@ class GenerateAPIFromOAS extends MWBGenerator
         ];
 
         foreach ($this->spec->getControllers() as $controller) {
+            $this->output('  > Generate Controller:'.$controller->getName(), 'green');
+
             foreach ($generators as $generator) {
                 $generator->generate($controller->getName(), $this->spec, $this->databaseService, $this->json, $this->tables);
             }
@@ -170,6 +173,7 @@ class GenerateAPIFromOAS extends MWBGenerator
 
         foreach ($this->spec->getControllers() as $controller) {
             foreach ($controller->getRequiredRequestNames() as $requestName) {
+                $this->output('  > Generate Request:'.$requestName, 'green');
                 foreach ($generators as $generator) {
                     $generator->generate($requestName, $this->spec, $this->databaseService, $this->json, $this->tables);
                 }

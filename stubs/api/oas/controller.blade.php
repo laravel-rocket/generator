@@ -11,9 +11,12 @@ use App\Repositories\{{ $name }}Interface;
 use App\Http\Responses\Api\{{ $versionNamespace }}\{{ $name }};
 @endforeach
 @foreach( $controller->getRequiredRequestNames() as $name )
-
 use App\Http\Requests\Api\{{ $versionNamespace }}\{{ $name }};
 @endforeach
+@if( ends_with($className, 'AuthController'))
+use League\OAuth2\Server\AuthorizationServer;
+use Zend\Diactoros\Response as Psr7Response;
+@endif
 
 class {{ $className }} extends Controller
 {
@@ -22,6 +25,11 @@ class {{ $className }} extends Controller
 
     /** @var FileServiceInterface $fileService */
     protected $fileService;
+
+@if( ends_with($className, 'AuthController'))
+    /** @var AuthorizationServer */
+    protected $server;
+@endif
 
 @foreach( $controller->getRequiredRepositoryNames() as $name )
     /** @var {{ $name }}Interface ${{ lcfirst($name) }} */
