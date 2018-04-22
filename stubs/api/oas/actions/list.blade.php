@@ -1,8 +1,8 @@
     /**
     * PATH: {{ $action->getHttpMethod() }} {{ $action->getPath() }}
-    @foreach( $action->getParams() as $param )
+@foreach( $action->getParams() as $param )
         * @param mixed {{ $param }}
-    @endforeach
+@endforeach
     * @param {{ $action->getRequest()->getName() }} $request
     *
     * @return \Illuminate\Http\JsonResponse
@@ -16,9 +16,9 @@
         $offset = $request->offset();
         $limit  = $request->limit();
         $filters = [
-    @foreach( $action->getActionContext('parentFilters') as $key => $value )
+@foreach( $action->getActionContext('parentFilters', []) as $key => $value )
             '{!! $key !!}' => {!! $value !!},
-    @endforeach
+@endforeach
         ];
 
         $models = $this->{{ lcfirst($action->getRepositoryName()) }}->getByFilter($filters, 'id', 'asc', $offset, $limit + 1);

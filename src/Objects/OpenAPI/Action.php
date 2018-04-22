@@ -495,8 +495,14 @@ class Action
         }
     }
 
-    public function getActionContext($name)
+    /**
+     * @param string $name
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    public function getActionContext($name, $default = null)
     {
-        return array_get($this->actionContext, $name, '');
+        return array_get($this->actionContext, $name, $default);
     }
 }

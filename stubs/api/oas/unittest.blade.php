@@ -7,8 +7,8 @@ class {{ $className }}Test extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $user     = factory(\App\Models\User::class)->create();
-        $this->be($user, 'users');
+        $user = factory(\App\Models\User::class)->create();
+        $this->be($user, 'web');
     }
 
 @foreach( $controller->getActions() as $action )
