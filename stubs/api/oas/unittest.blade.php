@@ -12,10 +12,6 @@ class {{ $className }}Test extends TestCase
     }
 
 @foreach( $controller->getActions() as $action )
-    public function {{ $action->getMethod() }}Test()
-    {
-        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}');
-        $this->assertResponseOk();
-    }
+@include('api.oas.tests.' . $action->getActionContext('type'))
 @endforeach
 }

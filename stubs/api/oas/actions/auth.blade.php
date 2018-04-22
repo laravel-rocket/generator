@@ -85,4 +85,6 @@
         return $this->server->respondToAccessTokenRequest($serverRequest, new Psr7Response);
     }
 @break;
+@default
+@include('api.oas.actions.unknown' )
 @endswitch
