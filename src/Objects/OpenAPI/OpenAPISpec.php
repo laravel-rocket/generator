@@ -122,7 +122,7 @@ class OpenAPISpec
         $actions = [];
         foreach ($this->controllers as $controller) {
             foreach ($controller->getActions() as $action) {
-                $actions[$action->getPath()] = $action;
+                $actions[$action->getHttpMethod().':'.$action->getPath()] = $action;
             }
         }
 
@@ -130,15 +130,15 @@ class OpenAPISpec
     }
 
     /**
-     * @param $path
+     * @param string $key
      *
      * @return \LaravelRocket\Generator\Objects\OpenAPI\Action|null
      */
-    public function fundAction($path)
+    public function findAction($key)
     {
         $actions = $this->getActions();
 
-        return array_key_exists($path, $actions) ? $actions[$path] : null;
+        return array_key_exists($key, $actions) ? $actions[$key] : null;
     }
 
     /**

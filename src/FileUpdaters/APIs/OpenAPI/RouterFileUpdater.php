@@ -10,7 +10,7 @@ class RouterFileUpdater extends OpenAPIBaseFileUpdater
 
     protected function preprocess()
     {
-        $this->action = $this->spec->fundAction($this->name);
+        $this->action = $this->spec->findAction($this->name);
 
         $filePath = $this->getTargetFilePath();
         if (!file_exists($filePath)) {

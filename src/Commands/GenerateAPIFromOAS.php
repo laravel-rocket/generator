@@ -188,9 +188,9 @@ class GenerateAPIFromOAS extends MWBGenerator
             new RouterFileUpdater($this->config, $this->files, $this->view, $this->rebuild),
         ];
 
-        foreach ($this->spec->getActions() as $action) {
+        foreach ($this->spec->getActions() as $key => $action) {
             foreach ($fileUpdaters as $fileUpdater) {
-                $fileUpdater->insert($action->getPath(), $this->spec, $this->databaseService, $this->json, $this->tables);
+                $fileUpdater->insert($key, $this->spec, $this->databaseService, $this->json, $this->tables);
             }
         }
     }
