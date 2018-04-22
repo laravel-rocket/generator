@@ -55,9 +55,9 @@ class {{ $modelName }}Controller extends Controller
         }
 
         $count      = $this->{{ $variableName }}Repository->count();
-        ${{ $variableName }}s = $this->{{ $variableName }}Repository->getByFilter($filter, $order, $direction, $offset, $limit);
+        ${{ \ICanBoogie\pluralize($variableName) }} = $this->{{ $variableName }}Repository->getByFilter($filter, $order, $direction, $offset, $limit);
 
-        return {{ $modelName }}s::updateListWithModel(${{ $variableName }}s, $offset, $limit, $count)->response();
+        return {{ \ICanBoogie\pluralize($modelName) }}::updateListWithModel(${{ \ICanBoogie\pluralize($variableName) }}, $offset, $limit, $count)->response();
     }
 
     /**
