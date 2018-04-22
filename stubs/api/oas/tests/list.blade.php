@@ -1,7 +1,7 @@
     public function test{{ ucfirst($action->getMethod()) }}()
     {
         $headers = $this->getAuthenticationHeaders();
-        $models[] = factory(\App\Models\{{ $action->getResponse()->getListItem()->getModelName() }}::class)->create(3);
+        $models[] = factory(\App\Models\{{ $action->getResponse()->getListItem()->getModelName() }}::class, 3)->create();
         $variables = [
         @foreach( $action->getParams() as $index => $param )
             0,
