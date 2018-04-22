@@ -1,7 +1,7 @@
     public function test{{ ucfirst($action->getMethod()) }}()
     {
         $headers = $this->getAuthenticationHeaders();
-        $models[] = factory(\App\Models\{{ $action->getResponse()->getModelName() }}::class)->create(3);
+        $models[] = factory(\App\Models\{{ $action->getResponse()->getListItem()->getModelName() }}::class)->create(3);
         $variables = [
         @foreach( $action->getParams() as $index => $param )
             0,
@@ -19,5 +19,5 @@
         );
         $this->assertResponseOk();
         $data = json_decode($response->getContent(), true);
-        $this->assertEquals(3, count($data['items']);
+        $this->assertEquals(3, count($data['items']));
     }
