@@ -211,21 +211,21 @@ class Action
         // GET/POST/PUT/DELETE /users/{id}/friends => UserFriendController
         if (count($elements) > 3 && $elements[0]->isPlural() &&
             $elements[1]->isVariable() && $elements[2]->isPlural()) {
-            $controllerOne = title_case(snake_case(singularize($elements[2]->elementName()))).
+            $controllerOne = title_case(snake_case(singularize($elements[0]->elementName()))).
                 title_case(snake_case(singularize($elements[0]->elementName())));
             $controllerTwo = title_case(snake_case(singularize($elements[2]->elementName())));
             switch ($httpMethod) {
                 case 'get':
-                    $method    = 'index';
-                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
                     $method    = 'get'.ucfirst(camel_case($elements[0]->elementName()));
                     $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
+                    $method    = 'index';
+                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'post':
-                    $method    = 'create';
-                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
                     $method    = 'post'.ucfirst(camel_case($elements[0]->elementName()));
                     $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
+                    $method    = 'create';
+                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'put':
                 case 'patch':
