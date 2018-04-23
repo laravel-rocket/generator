@@ -38,6 +38,14 @@ class Action
             'controller' => 'AuthController',
             'action'     => 'postRefreshToken',
         ],
+        'get:me'   => [
+            'controller' => 'MeController',
+            'action'     => 'getMe',
+        ],
+        'put:me'   => [
+            'controller' => 'MeController',
+            'action'     => 'putMe',
+        ],
     ];
 
     /** @var string */
@@ -253,7 +261,7 @@ class Action
             }
         }
 
-        return $actions;
+        return array_reverse($actions);
     }
 
     /**
@@ -382,7 +390,7 @@ class Action
         }
     }
 
-    protected function getQueryParameters()
+    public function getQueryParameters()
     {
         $ret = [];
         foreach ($this->info->parameters as $parameter) {
@@ -394,7 +402,7 @@ class Action
         return $ret;
     }
 
-    protected function getBodyParameters()
+    public function getBodyParameters()
     {
         $ret = [];
         foreach ($this->info->parameters as $parameter) {
