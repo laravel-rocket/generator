@@ -1,15 +1,13 @@
     public function test{{ ucfirst($action->getMethod()) }}()
     {
         $headers = $this->getAuthenticationHeaders();
-        $models = factory(\App\Models\{{ $action->getResponse()->getModelName() }}::class, 3)->create();
         $variables = [
         @foreach( $action->getParams() as $index => $param )
             0,
         @endforeach
         ];
-        $input = [
-        ];
-
+        $model= factory(\App\Models\{{ $action->getResponse()->getModelName() }}::class)->make($variables);
+        $input = $model->toArray();
         $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
             $variables,
             $input,

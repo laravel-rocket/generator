@@ -382,6 +382,30 @@ class Action
         }
     }
 
+    protected function getQueryParameters()
+    {
+        $ret = [];
+        foreach ($this->info->parameters as $parameter) {
+            if ($parameter->in === 'query') {
+                $ret[] = $parameter->name;
+            }
+        }
+
+        return $ret;
+    }
+
+    protected function getBodyParameters()
+    {
+        $ret = [];
+        foreach ($this->info->parameters as $parameter) {
+            if ($parameter->in === 'formData') {
+                $ret[] = $parameter->name;
+            }
+        }
+
+        return $ret;
+    }
+
     protected function setResponse()
     {
         $responses = $this->info->responses;

@@ -14,8 +14,8 @@
         $user = $this->userService->getUser();
 
         $data = $request->only([
-    @foreach($action->getResponse()->getProperties() as $property )
-            '{{ $property['name'] }}',
+    @foreach($action->getBodyParameters() as $parameter )
+            '{{ $parameter }}',
     @endforeach
         ]);
 
