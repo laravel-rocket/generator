@@ -33,7 +33,7 @@ class RouterFileUpdater extends OpenAPIBaseFileUpdater
         $searchString = $this->action->getRouteName();
 
         foreach ($lines as $index => $line) {
-            if (preg_match('/'.$searchString.'/', $line)) {
+            if (strpos($line, $this->action->getHttpMethod().'(\''.$searchString.'\'', $line)) {
                 return $index + 1;
             }
         }
