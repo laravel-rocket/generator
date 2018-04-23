@@ -19,7 +19,7 @@ class ResponseGenerator extends APIBaseGenerator
      */
     protected function canGenerate(): bool
     {
-        $skipResponses = ['List'];
+        $skipResponses = ['List', 'Status'];
 
         if (in_array($this->name, $skipResponses)) {
             return false;
