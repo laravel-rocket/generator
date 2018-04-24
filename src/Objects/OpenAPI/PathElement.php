@@ -2,6 +2,7 @@
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
 use function ICanBoogie\pluralize;
+use function ICanBoogie\singularize;
 
 class PathElement
 {
@@ -106,5 +107,13 @@ class PathElement
         if ($this->element === 'me') {
             $this->isPlural = true;
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getModelName(): string
+    {
+        return ucfirst(camel_case(singularize($this->element)));
     }
 }

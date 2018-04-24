@@ -4,7 +4,7 @@
 @if( $action->hasParent() )
         $parent = factory(\App\Models\{{ array_get($action->getActionContext('parentModel'), 'model', 'Base') }}::class)->create();
         $variables = [
-        @foreach( $action->getActionContext('parentFilter') as $index => $param )
+        @foreach( $action->getActionContext('parentFilters', []) as $index => $param )
             $model->{{ substr($param,1) }},
         @endforeach
         ];

@@ -464,7 +464,7 @@ class Action
         if ($this->controllerName === 'AuthController' && $this->httpMethod === 'post') {
             $this->actionContext = [
                 'type'             => static::CONTEXT_TYPE_AUTH,
-                'targetRepository' => $this->repositoryName,
+                'targetRepository' => 'UserRepository',
             ];
         } elseif (ends_with($this->controllerName, 'AuthController') && $this->httpMethod === 'post') {
             $this->actionContext = [
@@ -487,40 +487,55 @@ class Action
                     ];
             }
         } elseif ($elements[0]->isPlural()) {
+            $table     = $this->spec->findTable($elements[0]->elementName());
+            $modelName = 'Base';
+            if (!empty($table)) {
+                $modelName = $table->getModelName();
+            }
             switch ($this->httpMethod) {
                 case 'get':
                     $this->actionContext = [
                         'type'             => static::CONTEXT_TYPE_LIST,
-                        'targetRepository' => $this->repositoryName,
+                        'targetModel'      => $modelName,
+                        'targetRepository' => $modelName.'Repository',
                     ];
                     break;
                 case 'post':
                     $this->actionContext = [
                         'type'             => static::CONTEXT_TYPE_STORE,
-                        'targetRepository' => $this->repositoryName,
+                        'targetModel'      => $modelName,
+                        'targetRepository' => $modelName.'Repository',
                     ];
             }
         } elseif (count($elements) >= 2 && $elements[0]->isVariable() && $elements[1]->isPlural()) {
+            $table     = $this->spec->findTable($elements[1]->elementName());
+            $modelName = 'Base';
+            if (!empty($table)) {
+                $modelName = $table->getModelName();
+            }
             switch ($this->httpMethod) {
                 case 'get':
                     $this->actionContext = [
                         'type'             => static::CONTEXT_TYPE_SHOW,
-                        'targetRepository' => $this->repositoryName,
+                        'targetModel'      => $modelName,
+                        'targetRepository' => $modelName.'Repository',
                     ];
                     break;
                 case 'put':
                 case 'patch':
                     $this->actionContext = [
                         'type'             => static::CONTEXT_TYPE_UPDATE,
-                        'targetRepository' => $this->repositoryName,
+                        'targetModel'      => $modelName,
+                        'targetRepository' => $modelName.'Repository',
                     ];
                     break;
                 case 'delete':
                     $this->actionContext = [
                         'type'             => static::CONTEXT_TYPE_DESTROY,
-                        'targetRepository' => ucfirst(camel_case(singularize($elements[1]->elementName()))).'Repository',
+                        'targetModel'      => $modelName,
+                        'targetRepository' => $modelName.'Repository',
                         'data'             => [
-                            'model' => ucfirst(camel_case(singularize($elements[1]->elementName()))),
+                            'model' => $modelName,
                         ],
                     ];
                     break;
@@ -536,13 +551,15 @@ class Action
             $this->actionContext['parentModel']      = 'User';
             $this->actionContext['parentFilters']    = ['user_id' => '$user->id'];
         } elseif (count($elements) >= 3 && $elements[0]->isPlural() && $elements[1]->isVariable() && $elements[2]->isPlural()) {
-            $table = $this->spec->findTable($elements[2]->elementName());
+            $table     = $this->spec->findTable($elements[2]->elementName());
+            $modelName = 'Base';
             if (!empty($table)) {
-                $this->hasParent                         = true;
-                $this->actionContext['parentRepository'] = $table->getRepositoryName();
-                $this->actionContext['parentModel']      = str_replace('Repository', '', $table->getRepositoryName());
-                $this->actionContext['parentFilters']    = [singularize($table->getName()).'_'.$elements[1]->variableName() => '$'.$elements[1]->variableName()];
+                $modelName = $table->getModelName();
             }
+            $this->hasParent                         = true;
+            $this->actionContext['parentRepository'] = $modelName;
+            $this->actionContext['parentModel']      = $modelName.'Repository';
+            $this->actionContext['parentFilters']    = [singularize($elements[2]->elementName()).'_'.$elements[1]->variableName() => '$'.$elements[1]->variableName()];
         }
     }
 

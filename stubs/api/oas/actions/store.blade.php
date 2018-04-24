@@ -19,7 +19,7 @@
     @endforeach
         ]);
 
-    @foreach( $action->getActionContext('parentFilters') as $key => $value )
+    @foreach( $action->getActionContext('parentFilters', []) as $key => $value )
         $data['{!! $key !!}'] = {!! $value !!};
     @endforeach
 
