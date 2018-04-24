@@ -10,6 +10,11 @@ class Definition
     const TYPE_LIST   = 'list';
     const TYPE_MODEL  = 'model';
 
+    protected const TABLE_ALIASES = [
+        'Me'    => 'users',
+        'Image' => 'files',
+    ];
+
     /** @var string $name */
     protected $name;
 
@@ -162,8 +167,8 @@ class Definition
         }
         if ($this->type === self::TYPE_OBJECT) {
             $tableCandidateName = pluralize(snake_case($this->name));
-            if ($this->name === 'Me') {
-                $tableCandidateName = 'users';
+            if (array_key_exists($this->name, self::TABLE_ALIASES)) {
+                $tableCandidateName = self::TABLE_ALIASES[$this->name];
             }
             foreach ($this->tables as $table) {
                 if ($tableCandidateName === $table->getName()) {

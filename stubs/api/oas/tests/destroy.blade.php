@@ -7,7 +7,6 @@
 @if( $index === count($action->getParams()) - 1)
             $models[0]->{{ substr($param,1) }},
 @else
-            0,
 @endif
 @endforeach
         ];

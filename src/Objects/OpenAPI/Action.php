@@ -38,11 +38,11 @@ class Action
             'controller' => 'AuthController',
             'action'     => 'postRefreshToken',
         ],
-        'get:me'   => [
+        'get:me'               => [
             'controller' => 'MeController',
             'action'     => 'getMe',
         ],
-        'put:me'   => [
+        'put:me'               => [
             'controller' => 'MeController',
             'action'     => 'putMe',
         ],
@@ -87,13 +87,18 @@ class Action
     /** @var string */
     protected $repositoryName = '';
 
+    /** @var bool */
+    protected $hasParent = false;
+
     /**
      * @var array
      */
     protected $actionContext = [
         'type'             => self::CONTEXT_TYPE_UNKNOWN,
         'targetRepository' => '',
+        'targetModel'      => '',
         'parentRepository' => '',
+        'parentModel'      => '',
         'parentFilters'    => [],
         'targetFilters'    => [],
         'data'             => [],
@@ -209,23 +214,23 @@ class Action
         }
 
         // GET/POST/PUT/DELETE /users/{id}/friends => UserFriendController
-        if (count($elements) > 3 && $elements[0]->isPlural() &&
+        if (count($elements) >= 3 && $elements[0]->isPlural() &&
             $elements[1]->isVariable() && $elements[2]->isPlural()) {
-            $controllerOne = title_case(snake_case(singularize($elements[0]->elementName()))).
+            $controllerOne = title_case(snake_case(singularize($elements[2]->elementName()))).
                 title_case(snake_case(singularize($elements[0]->elementName())));
             $controllerTwo = title_case(snake_case(singularize($elements[2]->elementName())));
             switch ($httpMethod) {
                 case 'get':
-                    $method    = 'get'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
                     $method    = 'index';
                     $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
+                    $method    = 'get'.ucfirst(camel_case($elements[0]->elementName()));
+                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'post':
-                    $method    = 'post'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
                     $method    = 'create';
                     $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
+                    $method    = 'post'.ucfirst(camel_case($elements[0]->elementName()));
+                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
                     break;
                 case 'put':
                 case 'patch':
@@ -240,9 +245,9 @@ class Action
         }
 
         // GET/PUT/DELETE /users/{userId}/friends/{friendId} => UserFriendController
-        if (count($elements) > 4 && $elements[0]->isVariable() && $elements[1]->isPlural() &&
+        if (count($elements) >= 4 && $elements[0]->isVariable() && $elements[1]->isPlural() &&
             $elements[2]->isVariable() && $elements[3]->isPlural()) {
-            $controllerOne = title_case(snake_case(singularize($elements[3]->elementName()))).
+            $controllerOne = title_case(snake_case(singularize($elements[1]->elementName()))).
                 title_case(snake_case(singularize($elements[1]->elementName())));
             switch ($httpMethod) {
                 case 'get':
@@ -377,6 +382,14 @@ class Action
     public function getRouteIdentifier(): string
     {
         return camel_case(lcfirst($this->controllerName)).'.'.$this->method;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasParent(): bool
+    {
+        return $this->hasParent;
     }
 
     /**
@@ -515,13 +528,19 @@ class Action
             $this->actionContext['targetFilters'] = [$elements[0]->variableName() => '$'.$elements[0]->variableName()];
         }
 
+        $this->actionContext['targetModel'] = str_replace('Repository', '', $this->actionContext['targetRepository']);
+
         if (count($elements) >= 2 && $elements[1]->elementName() === 'me') {
-            $this->actionContext['parentRepository'] = 'UseRepository';
+            $this->hasParent                         = true;
+            $this->actionContext['parentRepository'] = 'UserRepository';
+            $this->actionContext['parentModel']      = 'User';
             $this->actionContext['parentFilters']    = ['user_id' => '$user->id'];
         } elseif (count($elements) >= 3 && $elements[0]->isPlural() && $elements[1]->isVariable() && $elements[2]->isPlural()) {
             $table = $this->spec->findTable($elements[2]->elementName());
             if (!empty($table)) {
+                $this->hasParent                         = true;
                 $this->actionContext['parentRepository'] = $table->getRepositoryName();
+                $this->actionContext['parentModel']      = str_replace('Repository', '', $table->getRepositoryName());
                 $this->actionContext['parentFilters']    = [singularize($table->getName()).'_'.$elements[1]->variableName() => '$'.$elements[1]->variableName()];
             }
         }
