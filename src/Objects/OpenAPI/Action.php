@@ -549,7 +549,7 @@ class Action
             $this->hasParent                         = true;
             $this->actionContext['parentRepository'] = 'UserRepository';
             $this->actionContext['parentModel']      = 'User';
-            $this->actionContext['parentFilters']    = ['user_id' => '$user->id'];
+            $this->actionContext['parentFilters']    = ['user_id' => '$id'];
         } elseif (count($elements) >= 3 && $elements[0]->isPlural() && $elements[1]->isVariable() && $elements[2]->isPlural()) {
             $table     = $this->spec->findTable($elements[2]->elementName());
             $modelName = 'Base';

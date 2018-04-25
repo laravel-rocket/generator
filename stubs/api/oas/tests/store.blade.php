@@ -4,9 +4,9 @@
 @if( $action->hasParent() )
         $parent = factory(\App\Models\{{ $action->getActionContext('parentModel') }}::class)->create();
         $variables = [
-        @foreach( $action->getActionContext('parentFilters', []) as $key => $param )
-            '{{ $key }}' => $parent->{!! substr($param,1)  !!},
-        @endforeach
+@foreach( $action->getActionContext('parentFilters', []) as $key => $param )
+            '{!! $key !!}' => $parent->{!! $param !!},
+@endforeach
         ];
 @else
         $variables = [
