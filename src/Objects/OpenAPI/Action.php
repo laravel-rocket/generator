@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
+use function ICanBoogie\pluralize;
 use function ICanBoogie\singularize;
 
 class Action
@@ -21,62 +22,87 @@ class Action
         'post:signin'          => [
             'controller' => 'AuthController',
             'action'     => 'postSignIn',
+            'type'       => self::CONTEXT_TYPE_AUTH,
         ],
         'post:signup'          => [
             'controller' => 'AuthController',
             'action'     => 'postSignUp',
+            'type'       => self::CONTEXT_TYPE_AUTH,
         ],
         'post:signout'         => [
             'controller' => 'AuthController',
             'action'     => 'postSignOut',
+            'type'       => self::CONTEXT_TYPE_AUTH,
         ],
         'post:forgot-password' => [
             'controller' => 'PasswordController',
             'action'     => 'forgotPassword',
+            'type'       => self::CONTEXT_TYPE_PASSWORD,
         ],
         'post:token/refresh'   => [
             'controller' => 'AuthController',
             'action'     => 'postRefreshToken',
+            'type'       => self::CONTEXT_TYPE_AUTH,
         ],
         'get:me'               => [
             'controller' => 'MeController',
             'action'     => 'getMe',
+            'type'       => self::CONTEXT_TYPE_ME,
         ],
         'put:me'               => [
             'controller' => 'MeController',
             'action'     => 'putMe',
+            'type'       => self::CONTEXT_TYPE_ME,
+        ],
+    ];
+
+    protected const SPECIAL_PATH_NAMES = [
+        'me'    => [
+            'model' => 'User',
+        ],
+        'image' => [
+            'model' => 'File',
         ],
     ];
 
     /** @var string */
-    protected $path;
+    protected $path = '';
 
     /** @var string */
-    protected $method;
+    protected $action = '';
 
     /** @var string */
-    protected $httpMethod;
-
-    /** @var \TakaakiMizuno\SwaggerParser\Objects\Base */
-    protected $info;
-
-    /** @var \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] $elements */
-    protected $elements;
+    protected $httpMethod = '';
 
     /** @var string */
     protected $controllerName = '';
 
-    /** @var string[] */
-    protected $params = [];
+    /** @var string */
+    protected $type = '';
 
-    /** @var bool $usePagination */
-    protected $usePagination = false;
-
-    /** @var string $requestName */
-    protected $requestName = '';
+    /** @var \TakaakiMizuno\SwaggerParser\Objects\Base */
+    protected $info;
 
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec */
     protected $spec;
+
+    /** @var bool */
+    protected $hasParent = false;
+
+    /** @var string */
+    protected $targetModel = '';
+
+    /** @var string */
+    protected $parentModel = '';
+
+    /** @var array */
+    protected $parentFilters = [];
+
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] $elements */
+    protected $elements = [];
+
+    /** @var string[] */
+    protected $params = [];
 
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\Definition|null */
     protected $response;
@@ -84,232 +110,38 @@ class Action
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\Request */
     protected $request;
 
-    /** @var string */
-    protected $repositoryName = '';
-
-    /** @var bool */
-    protected $hasParent = false;
-
-    /**
-     * @var array
-     */
-    protected $actionContext = [
-        'type'             => self::CONTEXT_TYPE_UNKNOWN,
-        'targetRepository' => '',
-        'targetModel'      => '',
-        'parentRepository' => '',
-        'parentModel'      => '',
-        'parentFilters'    => [],
-        'targetFilters'    => [],
-        'data'             => [],
-    ];
-
-    /**
-     * @param \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] $elements
-     * @param string                                                 $httpMethod
-     * @param string                                                 $path
-     * @param \TakaakiMizuno\SwaggerParser\Objects\Base              $info
-     * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec   $spec
-     *
-     * @return array
-     */
-    public static function getAllCandidates($elements, $httpMethod, $path, $info, $spec)
-    {
-        $httpMethod = strtolower($httpMethod);
-        $actions    = [];
-        $elements   = array_reverse($elements);
-
-        if (starts_with('/', $path)) {
-            $path = substr($path, 1);
-        }
-
-        $specialKey = implode(':', [$httpMethod, $path]);
-        if (array_key_exists($specialKey, self::SPECIAL_ACTIONS)) {
-            $actionInfo = self::SPECIAL_ACTIONS[$specialKey];
-
-            $actions[] = new static($actionInfo['controller'], $actionInfo['method'], $httpMethod, $path, $info, [], $spec);
-
-            return $actions;
-        }
-
-        // Check SNS SignIn
-        if ($httpMethod === 'post' && preg_match('/^signin\/([^\/]+)$/', $path, $matches)) {
-            $name      = camel_case($matches[1]);
-            $actions[] = new static(
-                ucfirst($name).'AuthControllerController',
-                'post'.ucfirst($name).'SignIn',
-                $httpMethod, $path, $info, [
-                'sns' => $name,
-            ], $spec
-            );
-
-            return $actions;
-        }
-
-        $params = [];
-        foreach ($elements as $element) {
-            if ($element->isVariable()) {
-                $params[] = $element->variableName();
-            }
-            $params = array_reverse($params);
-        }
-
-        // GET/POST /users
-        if ($elements[0]->isPlural()) {
-            $controller = title_case(snake_case(singularize($elements[0]->elementName())));
-            switch ($httpMethod) {
-                case 'get':
-                    $method    = 'index';
-                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'post':
-                    $method    = 'store';
-                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-            }
-        }
-
-        // GET/PUT/DELETE /users/{id}
-        if (count($elements) >= 2 && $elements[0]->isVariable() && $elements[1]->isPlural()) {
-            $controller = title_case(snake_case(singularize($elements[1]->elementName())));
-            switch ($httpMethod) {
-                case 'get':
-                    $method    = 'show';
-                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'put':
-                case 'patch':
-                    $method    = 'update';
-                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'delete':
-                    $method    = 'destroy';
-                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-            }
-        }
-
-        // GET/POST/PUT/DELETE /users/info
-        if (count($elements) >= 2 && !$elements[0]->isVariable() && $elements[1]->isPlural()) {
-            $controller = title_case(snake_case(singularize($elements[1]->elementName())));
-            switch ($httpMethod) {
-                case 'get':
-                    $method    = 'get'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'post':
-                    $method    = 'post'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'put':
-                case 'patch':
-                    $method    = 'put'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'delete':
-                    $method    = 'delete'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controller, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-            }
-        }
-
-        // GET/POST/PUT/DELETE /users/{id}/friends => UserFriendController
-        if (count($elements) >= 3 && $elements[0]->isPlural() &&
-            $elements[1]->isVariable() && $elements[2]->isPlural()) {
-            $controllerOne = title_case(snake_case(singularize($elements[2]->elementName()))).
-                title_case(snake_case(singularize($elements[0]->elementName())));
-            $controllerTwo = title_case(snake_case(singularize($elements[2]->elementName())));
-            switch ($httpMethod) {
-                case 'get':
-                    $method    = 'index';
-                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
-                    $method    = 'get'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'post':
-                    $method    = 'create';
-                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
-                    $method    = 'post'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'put':
-                case 'patch':
-                    $method    = 'put'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'delete':
-                    $method    = 'delete'.ucfirst(camel_case($elements[0]->elementName()));
-                    $actions[] = new static($controllerTwo, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-            }
-        }
-
-        // GET/PUT/DELETE /users/{userId}/friends/{friendId} => UserFriendController
-        if (count($elements) >= 4 && $elements[0]->isVariable() && $elements[1]->isPlural() &&
-            $elements[2]->isVariable() && $elements[3]->isPlural()) {
-            $controllerOne = title_case(snake_case(singularize($elements[1]->elementName()))).
-                title_case(snake_case(singularize($elements[1]->elementName())));
-            switch ($httpMethod) {
-                case 'get':
-                    $method    = 'show';
-                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'put':
-                case 'patch':
-                    $method    = 'update';
-                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-                case 'delete':
-                    $method    = 'destroy';
-                    $actions[] = new static($controllerOne, $method, $httpMethod, $path, $info, $params, $spec);
-                    break;
-            }
-        }
-
-        return array_reverse($actions);
-    }
-
     /**
      * Action constructor.
      *
-     * @param string                                               $controllerName
-     * @param string                                               $method
-     * @param string                                               $httpMethod
      * @param string                                               $path
+     * @param string                                               $httpMethod
      * @param \TakaakiMizuno\SwaggerParser\Objects\Base            $info
-     * @param string[]                                             $params
      * @param \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec $spec
      */
-    public function __construct($controllerName, $method, $httpMethod, $path, $info, $params = [], $spec)
+    public function __construct($path, $httpMethod, $info, $spec)
     {
-        $this->controllerName = $controllerName;
-        $this->method         = $method;
-        $this->httpMethod     = strtolower($httpMethod);
-        $this->path           = $path;
-        $this->elements       = PathElement::parsePath($this->path, $this->httpMethod);
-        $this->info           = $info;
-        $this->spec           = $spec;
+        $this->path       = $path;
+        $this->httpMethod = $httpMethod;
+        $this->info       = $info;
+        $this->spec       = $spec;
 
-        $this->setParams($params);
-        $this->setResponse();
-        $this->setRequest();
-        $this->guessActionContext();
+        $this->parse();
     }
 
     /**
      * @return string
      */
-    public function getControllerName(): string
+    public function getPath(): string
     {
-        return $this->controllerName;
+        return $this->path;
     }
 
     /**
      * @return string
      */
-    public function getMethod(): string
+    public function getAction(): string
     {
-        return $this->method;
+        return $this->action;
     }
 
     /**
@@ -323,17 +155,87 @@ class Action
     /**
      * @return string
      */
-    public function getPath(): string
+    public function getControllerName(): string
     {
-        return $this->path;
+        return $this->controllerName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function hasParent(): string
+    {
+        return $this->hasParent;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTargetModel(): string
+    {
+        return $this->targetModel;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentModel(): string
+    {
+        return $this->parentModel;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParentFilters(): array
+    {
+        return $this->parentFilters;
     }
 
     /**
      * @return string[]
      */
-    public function getParams()
+    public function getParams(): array
     {
         return $this->params;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getQueryParameters(): array
+    {
+        $ret = [];
+        foreach ($this->info->parameters as $parameter) {
+            if ($parameter->in === 'query') {
+                $ret[] = $parameter->name;
+            }
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBodyParameters(): array
+    {
+        $ret = [];
+        foreach ($this->info->parameters as $parameter) {
+            if ($parameter->in === 'formData') {
+                $ret[] = $parameter->name;
+            }
+        }
+
+        return $ret;
     }
 
     /**
@@ -360,71 +262,13 @@ class Action
         return $this->request;
     }
 
-    /**
-     * @return string
-     */
-    public function getRepositoryName(): string
+    protected function parse()
     {
-        return $this->repositoryName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRouteName(): string
-    {
-        return $this->controllerName.'Controller@'.$this->method;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRouteIdentifier(): string
-    {
-        return camel_case(lcfirst($this->controllerName)).'.'.$this->method;
-    }
-
-    /**
-     * @return bool
-     */
-    public function hasParent(): bool
-    {
-        return $this->hasParent;
-    }
-
-    /**
-     * @param array $params
-     */
-    protected function setParams($params)
-    {
-        $this->params = [];
-        foreach ($params as $param) {
-            $this->params[] = '$'.$param;
-        }
-    }
-
-    public function getQueryParameters()
-    {
-        $ret = [];
-        foreach ($this->info->parameters as $parameter) {
-            if ($parameter->in === 'query') {
-                $ret[] = $parameter->name;
-            }
-        }
-
-        return $ret;
-    }
-
-    public function getBodyParameters()
-    {
-        $ret = [];
-        foreach ($this->info->parameters as $parameter) {
-            if ($parameter->in === 'formData') {
-                $ret[] = $parameter->name;
-            }
-        }
-
-        return $ret;
+        $this->elements = array_reverse(PathElement::parsePath($this->path, $this->httpMethod));
+        $this->setControllerAndAction();
+        $this->setParams();
+        $this->setResponse();
+        $this->setRequest();
     }
 
     protected function setResponse()
@@ -453,124 +297,189 @@ class Action
 
     protected function setRequest()
     {
-        $this->request = new Request($this->controllerName, $this->method, $this->httpMethod, $this->info, $this->response, $this->spec);
+        $this->request = new Request($this->controllerName, $this->action, $this->httpMethod, $this->info, $this->response, $this->spec);
     }
 
-    protected function guessActionContext()
+    protected function setParams()
     {
-        /** @var \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] $elements */
-        $elements = array_reverse($this->elements);
-
-        if ($this->controllerName === 'AuthController' && $this->httpMethod === 'post') {
-            $this->actionContext = [
-                'type'             => static::CONTEXT_TYPE_AUTH,
-                'targetRepository' => 'UserRepository',
-            ];
-        } elseif (ends_with($this->controllerName, 'AuthController') && $this->httpMethod === 'post') {
-            $this->actionContext = [
-                'type'             => static::CONTEXT_TYPE_AUTH_SNS,
-                'targetRepository' => $this->repositoryName,
-                'data'             => $this->params,
-            ];
-        } elseif ($elements[0]->elementName() === 'me') {
-            switch ($this->httpMethod) {
-                case 'get':
-                    $this->actionContext = [
-                        'type'             => static::CONTEXT_TYPE_ME,
-                        'targetRepository' => 'UserRepository',
-                    ];
-                    break;
-                case 'put':
-                    $this->actionContext = [
-                        'type'             => static::CONTEXT_TYPE_ME,
-                        'targetRepository' => 'UserRepository',
-                    ];
+        $this->params = [];
+        $parameters   = $this->info->parameters;
+        foreach ($parameters as $parameter) {
+            if ($parameter->in === 'path') {
+                $this->params[] = new Parameter($parameter, $this->spec);
             }
-        } elseif ($elements[0]->isPlural()) {
-            $table     = $this->spec->findTable($elements[0]->elementName());
-            $modelName = 'Base';
-            if (!empty($table)) {
-                $modelName = $table->getModelName();
-            }
-            switch ($this->httpMethod) {
-                case 'get':
-                    $this->actionContext = [
-                        'type'             => static::CONTEXT_TYPE_LIST,
-                        'targetModel'      => $modelName,
-                        'targetRepository' => $modelName.'Repository',
-                    ];
-                    break;
-                case 'post':
-                    $this->actionContext = [
-                        'type'             => static::CONTEXT_TYPE_STORE,
-                        'targetModel'      => $modelName,
-                        'targetRepository' => $modelName.'Repository',
-                    ];
-            }
-        } elseif (count($elements) >= 2 && $elements[0]->isVariable() && $elements[1]->isPlural()) {
-            $table     = $this->spec->findTable($elements[1]->elementName());
-            $modelName = 'Base';
-            if (!empty($table)) {
-                $modelName = $table->getModelName();
-            }
-            switch ($this->httpMethod) {
-                case 'get':
-                    $this->actionContext = [
-                        'type'             => static::CONTEXT_TYPE_SHOW,
-                        'targetModel'      => $modelName,
-                        'targetRepository' => $modelName.'Repository',
-                    ];
-                    break;
-                case 'put':
-                case 'patch':
-                    $this->actionContext = [
-                        'type'             => static::CONTEXT_TYPE_UPDATE,
-                        'targetModel'      => $modelName,
-                        'targetRepository' => $modelName.'Repository',
-                    ];
-                    break;
-                case 'delete':
-                    $this->actionContext = [
-                        'type'             => static::CONTEXT_TYPE_DESTROY,
-                        'targetModel'      => $modelName,
-                        'targetRepository' => $modelName.'Repository',
-                        'data'             => [
-                            'model' => $modelName,
-                        ],
-                    ];
-                    break;
-            }
-            $this->actionContext['targetFilters'] = [$elements[0]->variableName() => '$'.$elements[0]->variableName()];
-        }
-
-        $this->actionContext['targetModel'] = str_replace('Repository', '', $this->actionContext['targetRepository']);
-
-        if (count($elements) >= 2 && $elements[1]->elementName() === 'me') {
-            $this->hasParent                         = true;
-            $this->actionContext['parentRepository'] = 'UserRepository';
-            $this->actionContext['parentModel']      = 'User';
-            $this->actionContext['parentFilters']    = ['user_id' => '$id'];
-        } elseif (count($elements) >= 3 && $elements[0]->isPlural() && $elements[1]->isVariable() && $elements[2]->isPlural()) {
-            $table     = $this->spec->findTable($elements[2]->elementName());
-            $modelName = 'Base';
-            if (!empty($table)) {
-                $modelName = $table->getModelName();
-            }
-            $this->hasParent                         = true;
-            $this->actionContext['parentRepository'] = $modelName.'Repository';
-            $this->actionContext['parentModel']      = $modelName;
-            $this->actionContext['parentFilters']    = [singularize($elements[2]->elementName()).'_'.$elements[1]->variableName() => '$'.$elements[1]->variableName()];
         }
     }
 
     /**
-     * @param string $name
-     * @param mixed  $default
+     * @param int $index
      *
-     * @return mixed
+     * @return string
      */
-    public function getActionContext($name, $default = null)
+    protected function getModelFromPathElement($index)
     {
-        return array_get($this->actionContext, $name, $default);
+        $pathElement = $this->elements[$index];
+
+        $name = snake_case(pluralize($pathElement->elementName()));
+
+        $table = $this->spec->findTable($name);
+        if (!empty($table)) {
+            return $table->getModelName();
+        }
+
+        $name = snake_case(singularize($pathElement->elementName()));
+        if (array_key_exists($name, self::SPECIAL_PATH_NAMES)) {
+            return self::SPECIAL_PATH_NAMES[$name]['model'];
+        }
+
+        return 'User';
+    }
+
+    protected function setControllerAndAction()
+    {
+        $specialKey = implode(':', [$this->httpMethod, $this->path]);
+        if (array_key_exists($specialKey, self::SPECIAL_ACTIONS)) {
+            $actionInfo           = self::SPECIAL_ACTIONS[$specialKey];
+            $this->action         = array_get($actionInfo, 'action', '');
+            $this->controllerName = array_get($actionInfo, 'controller', '');
+            $this->type           = array_get($actionInfo, 'type', '');
+
+            return;
+        }
+
+        // Check SNS SignIn
+        if ($this->httpMethod === 'post' && preg_match('/^signin\/([^\/]+)$/', $this->path, $matches)) {
+            $name                 = camel_case($matches[1]);
+            $this->action         = 'post'.ucfirst($name).'SignIn';
+            $this->controllerName = ucfirst($name).'AuthController';
+            $this->type           = self::CONTEXT_TYPE_AUTH_SNS;
+
+            return;
+        }
+
+        $params = [];
+        foreach ($this->elements as $element) {
+            if ($element->isVariable()) {
+                $params[] = $element->variableName();
+            }
+            $params = array_reverse($params);
+        }
+
+        switch (count($this->elements)) {
+            case 1:
+                $element              = $this->elements[0];
+                $this->controllerName = ucfirst($element->getModelName()).'Controller';
+                $this->targetModel    = $this->getModelFromPathElement(0);
+
+                if ($element->isPlural()) {
+                    $this->controllerName = title_case(snake_case(singularize($element->elementName())));
+                    switch ($this->httpMethod) {
+                        case 'get':
+                            $this->type   = self::CONTEXT_TYPE_LIST;
+                            $this->action = 'index';
+
+                            return;
+                        case 'post':
+                            $this->type   = self::CONTEXT_TYPE_STORE;
+                            $this->action = 'store';
+
+                            return;
+                    }
+                }
+                $this->action = $this->httpMethod.ucfirst($element->elementName());
+                $this->type   = self::CONTEXT_TYPE_UNKNOWN;
+
+                return;
+            case 2:
+                $element              = $this->elements[1];
+                $subElement           = $this->elements[0];
+                $this->controllerName = ucfirst($element->getModelName()).'Controller';
+                $this->type           = self::CONTEXT_TYPE_UNKNOWN;
+                $this->action         = $subElement->elementName();
+
+                if ($element->elementName() === 'me') {
+                    $this->controllerName = 'MeController';
+                    $this->type           = self::CONTEXT_TYPE_ME_SUB_DATA;
+                    $this->action         = $this->httpMethod.ucfirst($subElement->elementName());
+                    $this->parentModel    = 'User';
+                    $this->targetModel    = $this->getModelFromPathElement(0);
+
+                    return;
+                }
+
+                if ($element->isPlural() && $subElement->isVariable()) {
+                    $this->targetModel = $this->getModelFromPathElement(1);
+                    switch ($this->httpMethod) {
+                        case 'get':
+                            $this->type   = self::CONTEXT_TYPE_SHOW;
+                            $this->action = 'show';
+
+                            return;
+                        case 'put':
+                        case 'patch':
+                        case 'post':
+                            $this->type   = self::CONTEXT_TYPE_UPDATE;
+                            $this->action = 'update';
+
+                            return;
+                        case 'delete':
+                            $this->type   = self::CONTEXT_TYPE_DESTROY;
+                            $this->action = 'destroy';
+
+                            return;
+                    }
+                }
+
+                $this->targetModel    = $this->getModelFromPathElement(1);
+                $this->controllerName = ucfirst($element->getModelName()).'Controller';
+                $this->action         = $this->httpMethod.ucfirst($subElement->elementName());
+
+                return;
+            case 3:
+                $parentElement = $this->elements[2];
+                $subElement    = $this->elements[1];
+                $targetElement = $this->elements[0];
+
+                if ($parentElement->isPlural() && $subElement->isVariable()) {
+                    $this->hasParent;
+                    $this->parentModel = $this->getModelFromPathElement(2);
+                    $this->targetModel = $this->getModelFromPathElement(0);
+
+                    $key                 = snake_case($this->parentModel.'_'.$subElement->variableName());
+                    $this->parentFilters = [
+                        $key => $subElement->isVariable(),
+                    ];
+
+                    switch ($this->httpMethod) {
+                        case 'get':
+                            if ($targetElement->isPlural()) {
+                                $this->type   = self::CONTEXT_TYPE_SHOW;
+                                $this->action = 'show';
+                            }
+
+                            return;
+                        case 'put':
+                        case 'patch':
+                        case 'post':
+                            $this->type   = self::CONTEXT_TYPE_UPDATE;
+                            $this->action = 'update';
+
+                            return;
+                        case 'delete':
+                            $this->type   = self::CONTEXT_TYPE_DESTROY;
+                            $this->action = 'destroy';
+
+                            return;
+                    }
+                }
+                $this->controllerName = ucfirst($parentElement->getModelName()).'Controller';
+                $this->action         = $this->httpMethod.ucfirst($targetElement->elementName());
+
+                return;
+        }
+
+        $targetElement = $this->elements[0];
+        $this->action  = $this->httpMethod.ucfirst($targetElement->elementName());
+        $this->type    = self::CONTEXT_TYPE_UNKNOWN;
     }
 }

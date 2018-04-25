@@ -112,7 +112,7 @@ class PathElement
     /**
      * @return string
      */
-    protected function getModelName(): string
+    public function getModelName(): string
     {
         return ucfirst(camel_case(singularize($this->element)));
     }

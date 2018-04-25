@@ -1,4 +1,4 @@
-@switch($action->getMethod())
+@switch($action->getAction())
 @case("postSignUp")
     /**
     * @param \App\Http\Requests\Api\V1\Auth\SignUpRequest $request

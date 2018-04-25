@@ -1,4 +1,4 @@
-    public function {{ $action->getMethod() }}({{ implode(',', $action->getParams() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
+    public function {{ $action->getAction() }}({{ implode(',', $action->getParams() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
     {
         $token = $request->get('{{ array_get($action->getActionContext('data'), 'sns')  }}_token');
 

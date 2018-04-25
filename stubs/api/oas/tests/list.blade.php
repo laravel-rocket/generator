@@ -1,14 +1,17 @@
     public function test{{ ucfirst($action->getMethod()) }}()
     {
-        $headers = $this->getAuthenticationHeaders();
-        $models = factory(\App\Models\{{ $action->getResponse()->getListItem()->getModelName() }}::class, 3)->create();
+
+@if( $action->hasParent() )
+        $parent = factory(\App\Models\{{ $action->getParentModel() }}::class)->create();
         $variables = [
-        @foreach( $action->getParams() as $index => $param )
-            0,
-        @endforeach
+            '{{ snake_case($action->getParentModel()) }}_id' => $parent->id,
         ];
-        $input = [
-        ];
+@else
+        $variables = [];
+@endif
+
+        $headers = $this->getAuthenticationHeaders();
+        $models = factory(\App\Models\{{ $action->getResponse()->getListItem()->getModelName() }}::class, 3)->create($variables);
 
         $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
             $variables,

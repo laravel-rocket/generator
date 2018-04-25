@@ -180,16 +180,9 @@ class OpenAPISpec
         foreach ($paths as $path => $pathInfo) {
             $methods = $pathInfo->getMethods();
             foreach ($methods as $method => $info) {
-                $pathObject = new Path($path, $method, $info, $this);
-                foreach ($pathObject->getActions() as $action) {
-                    if (!$this->checkActionAlreadyExists($action, $controllers)) {
-                        if (!array_key_exists($action->getControllerName(), $controllers)) {
-                            $this->controllers[$action->getControllerName()] = [];
-                        }
-                        $controllers[$action->getControllerName()][$action->getMethod()] = $action;
-                        break;
-                    }
-                }
+                $pathObject                                                      = new Path($path, $method, $info, $this);
+                $action                                                          = $pathObject->getAction();
+                $controllers[$action->getControllerName()][$action->getAction()] = $action;
             }
         }
 

@@ -2,21 +2,20 @@
     {
 
 @if( $action->hasParent() )
-        $parent = factory(\App\Models\{{ $action->getActionContext('parentModel') }}::class)->create();
+        $parent = factory(\App\Models\{{ $action->getParentModel() }}::class)->create();
         $variables = [
-@foreach( $action->getActionContext('parentFilters', []) as $key => $param )
-            '{!! $key !!}' => $parent->{!! $param !!},
-@endforeach
+        '{{ snake_case($action->getParentModel()) }}_id' => $parent->id,
         ];
 @else
-        $variables = [
-        @foreach( $action->getParams() as $key => $param )
-            '$key' => $model->{!! substr($param,1) !!},
-        @endforeach
-        ];
+        $variables = [];
 @endif
-        $model= factory(\App\Models\{{ $action->getActionContext('targetModel') }}::class)->make($variables);
-        $input = $model->toArray();
+
+        $model= factory(\App\Models\{{ $action->getTargetModel() }}::class)->make($variables);
+        $input = [
+@foreach( $action->getBodyParameters() as $parameter)
+            '{{ $parameter }}' => $model->{{ $parameter }},
+@endforeach
+        ];
         $headers = $this->getAuthenticationHeaders();
         $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
             $variables,
@@ -27,5 +26,4 @@
         );
         $this->assertResponseOk();
         $data = json_decode($response->getContent(), true);
-        $this->assertEquals($model->id, $data['id']);
     }

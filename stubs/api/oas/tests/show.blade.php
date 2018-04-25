@@ -1,14 +1,11 @@
     public function test{{ ucfirst($action->getMethod()) }}()
     {
         $headers = $this->getAuthenticationHeaders();
-        $models = factory(\App\Models\{{ $action->getResponse()->getModelName() }}::class, 3)->create();
+
+        $models = factory(\App\Models\{{ $action->getResponse()->getModelName() }}::class, 3)->create($variables);
         $variables = [
-@foreach( $action->getParams() as $index => $param )
-@if( $index === count($action->getParams()) - 1)
-            $models[0]->{{ substr($param,1) }},
-@else
-            0,
-@endif
+@foreach( $action->getParams() as $parameter )
+            '{!! $parameter->getName() !!}' => $models[0]->{!! $parameter->getName() !!},
 @endforeach
         ];
         $input = [

@@ -1,25 +1,18 @@
     public function test{{ ucfirst($action->getMethod()) }}()
     {
 
-@if( $action->hasParent() )
-        $parent = factory(\App\Models\{{ $action->getActionContext('parentModel') }}::class)->create();
-        $variables = [
-@foreach( $action->getActionContext('parentFilters', []) as $key => $param )
-            '{!! $key !!}' => $parent->{!! $param !!},
-@endforeach
-        ];
-@else
-        $variables = [
-        ];
-@endif
-        $model= factory(\App\Models\{{ $action->getActionContext('targetModel') }}::class)->create($variables);
+        $model= factory(\App\Models\{{ $action->getTargetModel() }}::class)->create($variables);
 
         $headers = $this->getAuthenticationHeaders();
         $newData= factory(\App\Models\{{ $action->getResponse()->getModelName() }}::class)->make();
-        $input = $newData->toArray();
+        $input = [
+@foreach( $action->getBodyParameters() as $parameter)
+            '{{ $parameter }}' => $newData->{{ $parameter }},
+@endforeach
+        ];
         $variables = [
-@foreach( $action->getParams() as $key => $param )
-            '{{ $key }}' => $model->{!! substr($param,1) !!},
+@foreach( $action->getParams() as $parameter )
+            '{!! $parameter->getName() !!}' => $model->{!! $parameter->getName() !!},
 @endforeach
         ];
         $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',

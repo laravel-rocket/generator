@@ -14,8 +14,8 @@ class Path
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] */
     protected $elements;
 
-    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Action[] */
-    protected $actions;
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Action */
+    protected $action;
 
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec */
     protected $spec;
@@ -40,11 +40,11 @@ class Path
     }
 
     /**
-     * @return \LaravelRocket\Generator\Objects\OpenAPI\Action[]
+     * @return \LaravelRocket\Generator\Objects\OpenAPI\Action
      */
-    public function getActions()
+    public function getAction()
     {
-        return $this->actions;
+        return $this->action;
     }
 
     protected function parseElements()
@@ -54,6 +54,6 @@ class Path
 
     protected function parseActions()
     {
-        $this->actions = Action::getAllCandidates($this->elements, $this->method, $this->path, $this->data, $this->spec);
+        $this->action = new Action($this->path, $this->method, $this->data, $this->spec);
     }
 }

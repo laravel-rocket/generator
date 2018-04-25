@@ -27,7 +27,7 @@ class Parameter
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->info->name;
     }
@@ -35,7 +35,7 @@ class Parameter
     /**
      * @return bool
      */
-    public function isInRequest()
+    public function isInRequest(): bool
     {
         $in = $this->info->in;
         switch ($in) {
@@ -50,8 +50,28 @@ class Parameter
     /**
      * @return bool
      */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return (bool) $this->info->required;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVariableType(): string
+    {
+        $in = $this->info->type;
+        switch ($in) {
+            case 'integer':
+                return 'int';
+            case 'number':
+                return 'float';
+            case 'string':
+                return 'string';
+            case 'boolean':
+                return 'boolean';
+        }
+
+        return 'mixed';
     }
 }
