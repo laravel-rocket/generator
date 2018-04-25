@@ -1,8 +1,8 @@
     /**
     * PATH: {{ $action->getHttpMethod() }} {{ $action->getPath() }}
-    @foreach( $action->getParams() as $param )
+@foreach( $action->getParams() as $param )
         * @param mixed {{ $param }}
-    @endforeach
+@endforeach
     * @param {{ $action->getRequest()->getName() }} $request
     *
     * @return \Illuminate\Http\JsonResponse
@@ -14,20 +14,25 @@
         $user = $this->userService->getUser();
 
         $data = $request->only([
-    @foreach($action->getBodyParameters() as $parameter )
+@foreach($action->getBodyParameters() as $parameter )
             '{{ $parameter }}',
-    @endforeach
+@endforeach
         ]);
 
-    @foreach( $action->getActionContext('parentFilters', []) as $key => $value )
+@foreach( $action->getActionContext('parentFilters', []) as $key => $value )
         $data['{!! $key !!}'] = {!! $value !!};
-    @endforeach
+@endforeach
 
-        /** @var \App\Models\{{ $action->getResponse()->getModelName() }} $model */
-        $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->create($data);
+        /** @var \App\Models\{{ $action->getActionContext('targetModel', 'Base') }} $model */
+        $model = $this->{{ lcfirst($action->getActionContext('targetModel', 'Base')) }}Repository->create($data);
         if (empty($model) ) {
             throw new APIErrorException('unknown', 'Creation Failed');
         }
+
+@if( $action->getActionContext('targetModel', '') != $action->getResponse()->getModelName() )
+        /** @var \App\Models\{{ $action->getResponse()->getModelName() }} $model */
+        $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->find($id);
+@endif
 
         return {{ $action->getResponse()->getName() }}::updateWithModel($model)->response();
     }

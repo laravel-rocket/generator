@@ -557,8 +557,8 @@ class Action
                 $modelName = $table->getModelName();
             }
             $this->hasParent                         = true;
-            $this->actionContext['parentRepository'] = $modelName;
-            $this->actionContext['parentModel']      = $modelName.'Repository';
+            $this->actionContext['parentRepository'] = $modelName.'Repository';
+            $this->actionContext['parentModel']      = $modelName;
             $this->actionContext['parentFilters']    = [singularize($elements[2]->elementName()).'_'.$elements[1]->variableName() => '$'.$elements[1]->variableName()];
         }
     }

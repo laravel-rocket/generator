@@ -2,20 +2,20 @@
     {
 
 @if( $action->hasParent() )
-        $parent = factory(\App\Models\{{ array_get($action->getActionContext('parentModel'), 'model', 'Base') }}::class)->create();
+        $parent = factory(\App\Models\{{ $action->getActionContext('parentModel') }}::class)->create();
         $variables = [
-        @foreach( $action->getActionContext('parentFilters', []) as $index => $param )
-            $model->{{ substr($param,1) }},
+        @foreach( $action->getActionContext('parentFilters', []) as $key => $param )
+            '{{ $index }}' => $parent->{{ substr($param,1) }},
         @endforeach
         ];
 @else
         $variables = [
-        @foreach( $action->getParams() as $index => $param )
-            $model->{{ substr($param,1) }},
+        @foreach( $action->getParams() as $key => $param )
+            '$key' => $model->{{ substr($param,1) }},
         @endforeach
         ];
 @endif
-        $model= factory(\App\Models\{{ $action->getResponse()->getModelName() }}::class)->make($variables);
+        $model= factory(\App\Models\{{ $action->getActionContext('targetModel') }}::class)->make($variables);
         $input = $model->toArray();
         $headers = $this->getAuthenticationHeaders();
         $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
