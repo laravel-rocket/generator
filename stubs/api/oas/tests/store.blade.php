@@ -5,13 +5,13 @@
         $parent = factory(\App\Models\{{ $action->getActionContext('parentModel') }}::class)->create();
         $variables = [
         @foreach( $action->getActionContext('parentFilters', []) as $key => $param )
-            '{{ $index }}' => $parent->{{ substr($param,1) }},
+            '{{ $key }}' => $parent->{!! substr($param,1)  !!},
         @endforeach
         ];
 @else
         $variables = [
         @foreach( $action->getParams() as $key => $param )
-            '$key' => $model->{{ substr($param,1) }},
+            '$key' => $model->{!! substr($param,1) !!},
         @endforeach
         ];
 @endif
