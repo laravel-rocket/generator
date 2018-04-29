@@ -12,6 +12,6 @@ class {{ $className }}Test extends TestCase
     }
 
 @foreach( $controller->getActions() as $action )
-@include('api.oas.tests.' . $action->getActionContext('type'))
+@include('api.oas.tests.' . $action->getType())
 @endforeach
 }

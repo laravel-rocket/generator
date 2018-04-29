@@ -20,37 +20,37 @@ class Action
 
     protected const SPECIAL_ACTIONS = [
         'post:signin'          => [
-            'controller' => 'AuthController',
+            'controller' => 'Auth',
             'action'     => 'postSignIn',
             'type'       => self::CONTEXT_TYPE_AUTH,
         ],
         'post:signup'          => [
-            'controller' => 'AuthController',
+            'controller' => 'Auth',
             'action'     => 'postSignUp',
             'type'       => self::CONTEXT_TYPE_AUTH,
         ],
         'post:signout'         => [
-            'controller' => 'AuthController',
+            'controller' => 'Auth',
             'action'     => 'postSignOut',
             'type'       => self::CONTEXT_TYPE_AUTH,
         ],
         'post:forgot-password' => [
-            'controller' => 'PasswordController',
+            'controller' => 'Password',
             'action'     => 'forgotPassword',
             'type'       => self::CONTEXT_TYPE_PASSWORD,
         ],
         'post:token/refresh'   => [
-            'controller' => 'AuthController',
+            'controller' => 'Auth',
             'action'     => 'postRefreshToken',
             'type'       => self::CONTEXT_TYPE_AUTH,
         ],
         'get:me'               => [
-            'controller' => 'MeController',
+            'controller' => 'Me',
             'action'     => 'getMe',
             'type'       => self::CONTEXT_TYPE_ME,
         ],
         'put:me'               => [
-            'controller' => 'MeController',
+            'controller' => 'Me',
             'action'     => 'putMe',
             'type'       => self::CONTEXT_TYPE_ME,
         ],
@@ -101,7 +101,7 @@ class Action
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\PathElement[] $elements */
     protected $elements = [];
 
-    /** @var string[] */
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Parameter[] */
     protected $params = [];
 
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\Definition|null */
@@ -109,6 +109,9 @@ class Action
 
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\Request */
     protected $request;
+
+    /** @var string */
+    protected $snsName = '';
 
     /**
      * Action constructor.
@@ -211,6 +214,19 @@ class Action
     /**
      * @return string[]
      */
+    public function getParamNames(): array
+    {
+        $ret = [];
+        foreach ($this->params as $parameter) {
+            $ret[] = '$'.$parameter->getName();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @return string[]
+     */
     public function getQueryParameters(): array
     {
         $ret = [];
@@ -260,6 +276,30 @@ class Action
     public function getRequest()
     {
         return $this->request;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSnsName()
+    {
+        return $this->snsName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteName(): string
+    {
+        return $this->controllerName.'Controller@'.$this->action;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRouteIdentifier(): string
+    {
+        return camel_case(lcfirst($this->controllerName)).'.'.$this->action;
     }
 
     protected function parse()
@@ -337,7 +377,10 @@ class Action
 
     protected function setControllerAndAction()
     {
-        $specialKey = implode(':', [$this->httpMethod, $this->path]);
+        $this->type   = self::CONTEXT_TYPE_UNKNOWN;
+
+        $path       = starts_with($this->path, '/') ? substr($this->path, 1) : $this->path;
+        $specialKey = implode(':', [$this->httpMethod, $path]);
         if (array_key_exists($specialKey, self::SPECIAL_ACTIONS)) {
             $actionInfo           = self::SPECIAL_ACTIONS[$specialKey];
             $this->action         = array_get($actionInfo, 'action', '');
@@ -348,11 +391,12 @@ class Action
         }
 
         // Check SNS SignIn
-        if ($this->httpMethod === 'post' && preg_match('/^signin\/([^\/]+)$/', $this->path, $matches)) {
+        if ($this->httpMethod === 'post' && preg_match('/^\/?signin\/([^\/]+)$/', $this->path, $matches)) {
             $name                 = camel_case($matches[1]);
             $this->action         = 'post'.ucfirst($name).'SignIn';
-            $this->controllerName = ucfirst($name).'AuthController';
+            $this->controllerName = ucfirst($name).'Auth';
             $this->type           = self::CONTEXT_TYPE_AUTH_SNS;
+            $this->snsName        = $name;
 
             return;
         }
@@ -368,11 +412,11 @@ class Action
         switch (count($this->elements)) {
             case 1:
                 $element              = $this->elements[0];
-                $this->controllerName = ucfirst($element->getModelName()).'Controller';
+                $this->controllerName = $element->getModelName();
                 $this->targetModel    = $this->getModelFromPathElement(0);
 
                 if ($element->isPlural()) {
-                    $this->controllerName = title_case(snake_case(singularize($element->elementName())));
+                    $this->controllerName = $element->getModelName();
                     switch ($this->httpMethod) {
                         case 'get':
                             $this->type   = self::CONTEXT_TYPE_LIST;
@@ -393,7 +437,7 @@ class Action
             case 2:
                 $element              = $this->elements[1];
                 $subElement           = $this->elements[0];
-                $this->controllerName = ucfirst($element->getModelName()).'Controller';
+                $this->controllerName = $element->getModelName();
                 $this->type           = self::CONTEXT_TYPE_UNKNOWN;
                 $this->action         = $subElement->elementName();
 
@@ -431,14 +475,16 @@ class Action
                 }
 
                 $this->targetModel    = $this->getModelFromPathElement(1);
-                $this->controllerName = ucfirst($element->getModelName()).'Controller';
+                $this->controllerName = $element->getModelName();
                 $this->action         = $this->httpMethod.ucfirst($subElement->elementName());
+                $this->type           = self::CONTEXT_TYPE_UNKNOWN;
 
                 return;
             case 3:
-                $parentElement = $this->elements[2];
-                $subElement    = $this->elements[1];
-                $targetElement = $this->elements[0];
+                $parentElement        = $this->elements[2];
+                $subElement           = $this->elements[1];
+                $targetElement        = $this->elements[0];
+                $this->controllerName = $parentElement->getModelName();
 
                 if ($parentElement->isPlural() && $subElement->isVariable()) {
                     $this->hasParent;
@@ -457,6 +503,9 @@ class Action
                                 $this->action = 'show';
                             }
 
+                            $this->type   = self::CONTEXT_TYPE_UNKNOWN;
+                            $this->action = 'get'.ucfirst($targetElement->elementName());
+
                             return;
                         case 'put':
                         case 'patch':
@@ -472,8 +521,8 @@ class Action
                             return;
                     }
                 }
-                $this->controllerName = ucfirst($parentElement->getModelName()).'Controller';
                 $this->action         = $this->httpMethod.ucfirst($targetElement->elementName());
+                $this->type           = self::CONTEXT_TYPE_UNKNOWN;
 
                 return;
         }

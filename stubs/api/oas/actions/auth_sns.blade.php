@@ -1,8 +1,18 @@
-    public function {{ $action->getAction() }}({{ implode(',', $action->getParams() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
+    /**
+    * PATH: {{ $action->getHttpMethod() }} {{ $action->getPath() }}
+    @foreach( $action->getParams() as $param )
+        * @param {{ $param->getVariableType() }} {{ $param->getName() }}
+    @endforeach
+    * @param {{ $action->getRequest()->getName() }} $request
+    *
+    * @return \Illuminate\Http\JsonResponse
+    * @throws \App\Exceptions\Api\{{ $versionNamespace }}\APIErrorException
+    */
+    public function {{ $action->getAction() }}({{ implode(',', $action->getParamNames() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
     {
-        $token = $request->get('{{ array_get($action->getActionContext('data'), 'sns')  }}_token');
+        $token = $request->get('{{ $action->getSnsName()  }}_token');
 
-        $userId = $this->serviceAuthenticationService->getUserIdFromToken('{{ array_get($action->getActionContext('data'), 'sns')  }}', $token);
+        $userId = $this->serviceAuthenticationService->getUserIdFromToken('{{ $action->getSnsName()  }}', $token);
         $user   = $this->userRepository->find($userId);
 
         if (empty($user)) {

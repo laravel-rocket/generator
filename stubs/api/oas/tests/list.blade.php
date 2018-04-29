@@ -1,4 +1,4 @@
-    public function test{{ ucfirst($action->getMethod()) }}()
+    public function test{{ ucfirst($action->getAction()) }}()
     {
 
 @if( $action->hasParent() )
@@ -13,7 +13,7 @@
         $headers = $this->getAuthenticationHeaders();
         $models = factory(\App\Models\{{ $action->getResponse()->getListItem()->getModelName() }}::class, 3)->create($variables);
 
-        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
+        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             $variables,
             $input,
             [],

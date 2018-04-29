@@ -8,7 +8,7 @@
     * @return \Illuminate\Http\JsonResponse
     * @throws \App\Exceptions\Api\{{ $versionNamespace }}\APIErrorException
     */
-    public function {{ $action->getAction() }}({{ implode(',', $action->getParams() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
+    public function {{ $action->getAction() }}({{ implode(',', $action->getParamNames() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
     {
         /** @var \App\Models\User $user */
         $user = $this->userService->getUser();
@@ -31,7 +31,7 @@
 @endif
         ];
 
-        $models = $this->{{ lcfirst($action->getTargetModel()) }}->getByFilter($filters, 'id', 'asc', $offset, $limit + 1);
+        $models = $this->{{ lcfirst($action->getTargetModel()) }}Repository->getByFilter($filters, 'id', 'asc', $offset, $limit + 1);
 
         $hasNext = false;
         if (count($models) > $limit) {

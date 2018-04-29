@@ -1,4 +1,4 @@
-@switch($action->getMethod())
+@switch($action->getAction())
 @case("postSignUp")
     public function testSignUp()
     {
@@ -17,7 +17,7 @@
             'client_secret' => $clientSecret,
         ];
 
-        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
+        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             [],
             $input,
             [],
@@ -49,7 +49,7 @@
             'client_secret' => $clientSecret,
         ];
 
-        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
+        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             [],
             $input,
             [],
@@ -98,7 +98,7 @@
             'Authorization' => $type.' '.$token,
         ];
 
-        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
+        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             [],
             $input,
             [],
@@ -153,7 +153,7 @@
             'client_secret' => $clientSecret,
         ];
 
-        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
+        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             [],
             $input,
             [],

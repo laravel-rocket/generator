@@ -1,4 +1,4 @@
-    public function test{{ ucfirst($action->getMethod()) }}()
+    public function test{{ ucfirst($action->getAction()) }}()
     {
         $headers = $this->getAuthenticationHeaders();
 
@@ -11,7 +11,7 @@
         $input = [
         ];
 
-        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
+        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             $variables,
             $input,
             [],

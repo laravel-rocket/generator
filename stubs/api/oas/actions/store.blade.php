@@ -8,7 +8,7 @@
     * @return \Illuminate\Http\JsonResponse
     * @throws \App\Exceptions\Api\{{ $versionNamespace }}\APIErrorException
     */
-    public function {{ $action->getAction() }}({{ implode(',', $action->getParams() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
+    public function {{ $action->getAction() }}({{ implode(',', $action->getParamNames() ) }}{{ count($action->getParams()) > 0 ? ', ' : '' }}{{ $action->getRequest()->getName() }} $request)
     {
         /** @var \App\Models\User $user */
         $user = $this->userService->getUser();
@@ -28,7 +28,7 @@
         ]);
 
 @if( $action->hasParent() )
-@foreach( $action->getActionContext('parentFilters', []) as $key => $value )
+@foreach( $action->getParentFilters() as $key => $value )
         $data['{!! $key !!}'] = $parent->{!! $value !!};
 @endforeach
 @endif

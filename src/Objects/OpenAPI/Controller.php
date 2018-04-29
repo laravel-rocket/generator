@@ -63,7 +63,7 @@ class Controller
     public function findActionByName(string $name)
     {
         foreach ($this->actions as $action) {
-            if ($action->getMethod() === $name) {
+            if ($action->getAction() === $name) {
                 return $action;
             }
         }
@@ -115,8 +115,11 @@ class Controller
     {
         $ret = [];
         foreach ($this->actions as $action) {
-            if (!empty($action->getRepositoryName())) {
-                $ret[] = $action->getRepositoryName();
+            if (!empty($action->getTargetModel())) {
+                $ret[] = $action->getTargetModel().'Repository';
+            }
+            if (!empty($action->getParentModel())) {
+                $ret[] = $action->getParentModel().'Repository';
             }
         }
 

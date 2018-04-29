@@ -1,4 +1,4 @@
-    public function test{{ ucfirst($action->getMethod()) }}()
+    public function test{{ ucfirst($action->getAction()) }}()
     {
 
         $model= factory(\App\Models\{{ $action->getTargetModel() }}::class)->create($variables);
@@ -15,7 +15,7 @@
             '{!! $parameter->getName() !!}' => $model->{!! $parameter->getName() !!},
 @endforeach
         ];
-        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
+        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             $variables,
             $input,
             [],

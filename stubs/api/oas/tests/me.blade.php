@@ -1,10 +1,10 @@
-@switch($action->getMethod())
+@switch($action->getAction())
 @case("getMe")
     public function testGetMe()
     {
         $headers = $this->getAuthenticationHeaders();
 
-        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
+        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             [],
             [],
             [],
@@ -20,7 +20,7 @@
         $headers = $this->getAuthenticationHeaders();
         $email = $this->faker->email;
 
-        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getMethod() }}',
+        $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             [],
             [
                 'email' => $email;
