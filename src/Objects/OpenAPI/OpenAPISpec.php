@@ -3,6 +3,7 @@ namespace LaravelRocket\Generator\Objects\OpenAPI;
 
 use LaravelRocket\Generator\Objects\Table;
 use function ICanBoogie\pluralize;
+use function ICanBoogie\singularize;
 
 class OpenAPISpec
 {
@@ -93,16 +94,26 @@ class OpenAPISpec
 
     /**
      * @param string $name
+     * @param string $prefix
      *
      * @return \LaravelRocket\Generator\Objects\Table|null
      */
-    public function findTable(string $name)
+    public function findTable(string $name, string $prefix = '')
     {
         $name = pluralize($name);
 
         foreach ($this->tables as $table) {
             if ($table->getName() === $name) {
                 return new Table($table, $this->tables, $this->json);
+            }
+        }
+
+        if (!empty($prefix)) {
+            $name = singularize($prefix).'_'.$name;
+            foreach ($this->tables as $table) {
+                if ($table->getName() === $name) {
+                    return new Table($table, $this->tables, $this->json);
+                }
             }
         }
 

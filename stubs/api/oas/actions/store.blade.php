@@ -14,8 +14,8 @@
         $user = $this->userService->getUser();
 
 @if( $action->hasParent() )
-        /** @var \App\Models\{{ $action->getParentTable()->getModelName() }} $parent */
-        $parent = $this->{{ lcfirst($action->getParentTable()->getModelName()) }}Repository->find($id);
+        /** @var \App\Models\{{ $action->->getParentModel() }} $parent */
+        $parent = $this->{{ lcfirst($action->->getParentModel()) }}Repository->find($id);
         if (empty($parent) ) {
             throw new APIErrorException('notFound', 'Not found');
         }
@@ -36,8 +36,8 @@
 @endif
 @endif
 
-        /** @var \App\Models\{{ $action->getTargetTable()->getModelName() }} $model */
-        $model = $this->{{ lcfirst($action->getTargetTable()->getModelName()) }}Repository->create($data);
+        /** @var \App\Models\{{ $action->->getTargetModel() }} $model */
+        $model = $this->{{ lcfirst($action->->getTargetModel()) }}Repository->create($data);
         if (empty($model) ) {
             throw new APIErrorException('unknown', 'Creation Failed');
         }
@@ -49,7 +49,7 @@
         ]);
 @endif
 
-@if( $action->getTargetTable()->getModelName() != $action->getResponse()->getModelName() )
+@if( $action->->getTargetModel() != $action->getResponse()->getModelName() )
         /** @var \App\Models\{{ $action->getResponse()->getModelName() }} $model */
         $model = $this->{{ lcfirst($action->getResponse()->getModelName()) }}Repository->find($id);
 @endif

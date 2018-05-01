@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
+use LaravelRocket\Generator\Objects\Relation;
+
 class Controller
 {
     /** @var string */
@@ -115,11 +117,14 @@ class Controller
     {
         $ret = [];
         foreach ($this->actions as $action) {
-            if (!empty($action->getTargetModel())) {
-                $ret[] = $action->getTargetModel().'Repository';
+            if (!empty($action->getTargetTable())) {
+                $ret[] = $action->getTargetTable()->getModelName().'Repository';
             }
-            if (!empty($action->getParentModel())) {
-                $ret[] = $action->getParentModel().'Repository';
+            if (!empty($action->getParentTable())) {
+                $ret[] = $action->getParentTable()->getModelName().'Repository';
+            }
+            if (!empty($action->getParentRelation()) && $action->getParentRelation()->getType() === Relation::TYPE_BELONGS_TO_MANY) {
+                $ret[] = $action->getParentRelation()->getIntermediateTableModel().'Repository';
             }
         }
 

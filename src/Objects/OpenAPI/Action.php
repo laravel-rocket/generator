@@ -183,19 +183,51 @@ class Action
     }
 
     /**
-     * @return string
+     * @return \LaravelRocket\Generator\Objects\Table
      */
-    public function getTargetTable(): string
+    public function getTargetTable()
     {
         return $this->targetTable;
     }
 
     /**
+     * @return string
+     */
+    public function getTargetModel()
+    {
+        if (!empty($this->targetTable)) {
+            return $this->targetTable->getModelName();
+        }
+
+        return $this->response->getModelName() ?: 'User';
+    }
+
+    /**
      * @return \LaravelRocket\Generator\Objects\Table
      */
-    public function getParentTable(): string
+    public function getParentTable()
     {
         return $this->parentTable;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParentModel()
+    {
+        if (!empty($this->parentTable)) {
+            return $this->parentTable->getModelName();
+        }
+
+        return 'User';
+    }
+
+    /**
+     * @return \LaravelRocket\Generator\Objects\Relation
+     */
+    public function getParentRelation()
+    {
+        return $this->parentRelation;
     }
 
     /**
@@ -417,7 +449,7 @@ class Action
             case 1:
                 $element              = $this->elements[0];
                 $this->controllerName = $element->getModelName();
-                $this->targetTable    = $this->spec->findTable($this->elements[0]);
+                $this->targetTable    = $this->spec->findTable($this->elements[0]->elementName());
 
                 if ($element->isPlural()) {
                     $this->controllerName = $element->getModelName();
@@ -450,13 +482,13 @@ class Action
                     $this->type           = self::CONTEXT_TYPE_ME_SUB_DATA;
                     $this->action         = $this->httpMethod.ucfirst($subElement->elementName());
                     $this->parentTable    = $this->spec->findTable('users');
-                    $this->targetTable    = $this->spec->findTable($this->elements[0]);
+                    $this->targetTable    = $this->spec->findTable($this->elements[0]->elementName(), 'user');
 
                     return;
                 }
 
                 if ($element->isPlural() && $subElement->isVariable()) {
-                    $this->targetTable = $this->spec->findTable($this->elements[1]);
+                    $this->targetTable = $this->spec->findTable($this->elements[1]->elementName(), $element->elementName());
                     switch ($this->httpMethod) {
                         case 'get':
                             $this->type   = self::CONTEXT_TYPE_SHOW;
@@ -478,7 +510,7 @@ class Action
                     }
                 }
 
-                $this->targetTable    = $this->spec->findTable($this->elements[1]);
+                $this->targetTable    = $this->spec->findTable($subElement->elementName(), $element->elementName());
                 $this->controllerName = $element->getModelName();
                 $this->action         = $this->httpMethod.ucfirst($subElement->elementName());
                 $this->type           = self::CONTEXT_TYPE_UNKNOWN;
@@ -492,8 +524,8 @@ class Action
 
                 if ($parentElement->isPlural() && $subElement->isVariable()) {
                     $this->hasParent   = true;
-                    $this->parentTable = $this->spec->findTable($this->elements[2]);
-                    $this->targetTable = $this->spec->findTable($this->elements[0]);
+                    $this->parentTable = $this->spec->findTable($this->elements[2]->elementName());
+                    $this->targetTable = $this->spec->findTable($this->elements[0]->elementName(), $this->elements[2]->elementName());
 
                     $key                 = snake_case($this->parentTable->getModelName().'_'.$subElement->variableName());
                     $this->parentFilters = [
@@ -543,7 +575,7 @@ class Action
                         $this->parentFilters = [
                             'user_id' => 'id',
                         ];
-                        $this->targetTable   = $this->spec->findTable($this->elements[1]);
+                        $this->targetTable   = $this->spec->findTable($this->elements[1]->elementName(), 'user');
                     }
                     switch ($this->httpMethod) {
                         case 'get':
@@ -579,6 +611,10 @@ class Action
     public function setRelationWithParent()
     {
         if (!$this->hasParent) {
+            return;
+        }
+
+        if (empty($this->targetTable)) {
             return;
         }
 
