@@ -142,7 +142,7 @@ class BaseCommand extends Command
     {
         $this->output('  > Reformatting code....');
 
-        \Artisan::call('ide-helper:model', ['-W' => true, '--env' => 'rocket']);
+        \Artisan::call('ide-helper:models', ['-W' => true, '--env' => 'rocket']);
         \Artisan::call('ide-helper:generate');
 
         foreach (['app', 'tests', 'config', 'database'] as $path) {
