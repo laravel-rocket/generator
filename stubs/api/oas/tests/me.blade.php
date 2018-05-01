@@ -23,7 +23,7 @@
         $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             [],
             [
-                'email' => $email;
+                'email' => $email,
             ],
             [],
             [],

@@ -21,8 +21,8 @@
             '{{ $parameter }}',
 @endforeach
         ]);
-        $model = $this->userRepository->update($model, $data);
+        $user = $this->userRepository->update($user, $data);
 
-        return {{ $action->getResponse()->getName() }}::updateWithModel($model)->response();
+        return {{ $action->getResponse()->getName() }}::updateWithModel($user)->response();
 @endif
     }

@@ -442,7 +442,7 @@ class Action
                 $this->action         = $subElement->elementName();
 
                 if ($element->elementName() === 'me') {
-                    $this->controllerName = 'MeController';
+                    $this->controllerName = 'Me';
                     $this->type           = self::CONTEXT_TYPE_ME_SUB_DATA;
                     $this->action         = $this->httpMethod.ucfirst($subElement->elementName());
                     $this->parentModel    = 'User';
@@ -487,20 +487,20 @@ class Action
                 $this->controllerName = $parentElement->getModelName();
 
                 if ($parentElement->isPlural() && $subElement->isVariable()) {
-                    $this->hasParent;
+                    $this->hasParent   = true;
                     $this->parentModel = $this->getModelFromPathElement(2);
                     $this->targetModel = $this->getModelFromPathElement(0);
 
                     $key                 = snake_case($this->parentModel.'_'.$subElement->variableName());
                     $this->parentFilters = [
-                        $key => $subElement->isVariable(),
+                        $key => $subElement->variableName(),
                     ];
 
                     switch ($this->httpMethod) {
                         case 'get':
                             if ($targetElement->isPlural()) {
-                                $this->type   = self::CONTEXT_TYPE_SHOW;
-                                $this->action = 'show';
+                                $this->type   = self::CONTEXT_TYPE_LIST;
+                                $this->action = 'get'.ucfirst($targetElement->elementName());
                             }
 
                             $this->type   = self::CONTEXT_TYPE_UNKNOWN;
@@ -509,14 +509,53 @@ class Action
                             return;
                         case 'put':
                         case 'patch':
-                        case 'post':
                             $this->type   = self::CONTEXT_TYPE_UPDATE;
-                            $this->action = 'update';
+                            $this->action = 'update'.ucfirst($targetElement->elementName());
+
+                            return;
+                        case 'post':
+                            if ($targetElement->isPlural()) {
+                                $this->type   = self::CONTEXT_TYPE_UPDATE;
+                                $this->action = 'create'.ucfirst($targetElement->elementName());
+                            } else {
+                                $this->type        = self::CONTEXT_TYPE_UPDATE;
+                                $this->action      = 'post'.ucfirst($parentElement->elementName()).ucfirst($targetElement->elementName());
+                                $this->targetModel = $this->parentModel;
+                                $this->hasParent   = false;
+                            }
 
                             return;
                         case 'delete':
                             $this->type   = self::CONTEXT_TYPE_DESTROY;
-                            $this->action = 'destroy';
+                            $this->action = 'destroy'.ucfirst($targetElement->elementName());
+
+                            return;
+                    }
+                } elseif ($subElement->isPlural() && $targetElement->isVariable()) {
+                    if ($parentElement->elementName() === 'me') {
+                        $this->hasParent     = true;
+                        $this->parentModel   = 'User';
+                        $this->parentFilters = [
+                            'user_id' => 'id',
+                        ];
+                        $this->targetModel = $this->getModelFromPathElement(1);
+                    }
+                    switch ($this->httpMethod) {
+                        case 'get':
+                            $this->type   = self::CONTEXT_TYPE_SHOW;
+                            $this->action = 'show'.ucfirst($subElement->elementName());
+
+                            return;
+                        case 'put':
+                        case 'patch':
+                        case 'post':
+                            $this->type   = self::CONTEXT_TYPE_UPDATE;
+                            $this->action = 'update'.ucfirst($subElement->elementName());
+
+                            return;
+                        case 'delete':
+                            $this->type   = self::CONTEXT_TYPE_DESTROY;
+                            $this->action = 'delete'.ucfirst(singularize($subElement->elementName()));
 
                             return;
                     }

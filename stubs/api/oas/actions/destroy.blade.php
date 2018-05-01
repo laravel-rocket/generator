@@ -17,6 +17,13 @@
         if (empty($model) ) {
             throw new APIErrorException('notFound', 'Not found');
         }
+@if( $action->hasParent() )
+@foreach( $action->getParentFilters() as $key => $value )
+        if( $model->{{ $key }} != $parent->{!! $value !!} ) {
+            throw new APIErrorException('notFound', 'Not found');
+        }
+@endforeach
+@endif
 
         $this->{{ lcfirst($action->getTargetModel()) }}Repository->delete($model);
 
