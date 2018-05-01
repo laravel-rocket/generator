@@ -2,9 +2,9 @@
     {
 
 @if( $action->hasParent() )
-        $parent = factory(\App\Models\{{ $action->->getParentModel() }}::class)->create();
+        $parent = factory(\App\Models\{{ $action->getParentModel() }}::class)->create();
         $variables = [
-            '{{ snake_case($action->->getParentModel()) }}_id' => $parent->id,
+            '{{ snake_case($action->getParentModel()) }}_id' => $parent->id,
         ];
 @else
         $variables = [];

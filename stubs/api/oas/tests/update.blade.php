@@ -2,18 +2,18 @@
     {
 
 @if( $action->hasParent() )
-        $parent = factory(\App\Models\{{ $action->->getParentModel() }}::class)->create();
+        $parent = factory(\App\Models\{{ $action->getParentModel() }}::class)->create();
         $variables = [
-            '{{ snake_case($action->->getParentModel()) }}_id' => $parent->id,
+            '{{ snake_case($action->getParentModel()) }}_id' => $parent->id,
         ];
 @else
         $variables = [];
 @endif
 
-        $model= factory(\App\Models\{{ $action->->getTargetModel() }}::class)->create($variables);
+        $model= factory(\App\Models\{{ $action->getTargetModel() }}::class)->create($variables);
 
         $headers = $this->getAuthenticationHeaders();
-        $newData= factory(\App\Models\{{ $action->->getTargetModel() }}::class)->make();
+        $newData= factory(\App\Models\{{ $action->getTargetModel() }}::class)->make();
         $input = [
 @foreach( $action->getBodyParameters() as $parameter)
             '{{ $parameter }}' => $newData->{{ $parameter }},

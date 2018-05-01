@@ -13,7 +13,7 @@
         /** @var \App\Models\User $user */
         $user = $this->userService->getUser();
 
-        $model = $this->{{ lcfirst($action->->getTargetModel()) }}Repository->find($id);
+        $model = $this->{{ lcfirst($action->getTargetModel()) }}Repository->find($id);
         if (empty($model) ) {
             throw new APIErrorException('notFound', 'Not found');
         }
@@ -25,7 +25,7 @@
 @endforeach
 @endif
 
-        $this->{{ lcfirst($action->->getTargetModel()) }}Repository->delete($model);
+        $this->{{ lcfirst($action->getTargetModel()) }}Repository->delete($model);
 
         return Status::ok()->response();
     }

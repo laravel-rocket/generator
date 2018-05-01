@@ -2,18 +2,18 @@
     {
 
 @if( $action->hasParent() )
-        $parent = factory(\App\Models\{{ $action->->getParentModel() }}::class)->create();
+        $parent = factory(\App\Models\{{ $action->getParentModel() }}::class)->create();
 @if( $action->getParentRelation() && $action->getParentRelation()->getType() === \LaravelRocket\Generator\Objects\Relation::TYPE_BELONGS_TO_MANY)
 @else
         $variables = [
-            '{{ snake_case($action->->getParentModel()) }}_id' => $parent->id,
+            '{{ snake_case($action->getParentModel()) }}_id' => $parent->id,
         ];
 @endif
 @else
         $variables = [];
 @endif
 
-        $model= factory(\App\Models\{{ $action->->getTargetModel() }}::class)->make($variables);
+        $model= factory(\App\Models\{{ $action->getTargetModel() }}::class)->make($variables);
 
 @if( $action->hasParent() && $action->getParentRelation() && $action->getParentRelation()->getType() === \LaravelRocket\Generator\Objects\Relation::TYPE_BELONGS_TO_MANY)
         $relation = factory(\App\Models\{{ $action->getParentRelation()->getIntermediateTableModel() }}::class)->make([

@@ -14,8 +14,8 @@
         $user = $this->userService->getUser();
 
 @if( $action->hasParent() )
-        /** @var \App\Models\{{ $action->->getParentModel() }} $parent */
-        $parent = $this->{{ lcfirst($action->->getParentModel()) }}Repository->find($id);
+        /** @var \App\Models\{{ $action->getParentModel() }} $parent */
+        $parent = $this->{{ lcfirst($action->getParentModel()) }}Repository->find($id);
         if (empty($parent) ) {
             throw new APIErrorException('notFound', 'Not found');
         }
@@ -31,7 +31,7 @@
 @endif
         ];
 
-        $models = $this->{{ lcfirst($action->->getTargetModel()) }}Repository->getByFilter($filters, 'id', 'asc', $offset, $limit + 1);
+        $models = $this->{{ lcfirst($action->getTargetModel()) }}Repository->getByFilter($filters, 'id', 'asc', $offset, $limit + 1);
 
         $hasNext = false;
         if (count($models) > $limit) {
