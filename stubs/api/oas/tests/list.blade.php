@@ -2,9 +2,9 @@
     {
 
 @if( $action->hasParent() )
-        $parent = factory(\App\Models\{{ $action->getParentModel() }}::class)->create();
+        $parent = factory(\App\Models\{{ $action->getParentTable()->getModelName() }}::class)->create();
         $variables = [
-            '{{ snake_case($action->getParentModel()) }}_id' => $parent->id,
+            '{{ snake_case($action->getParentTable()->getModelName()) }}_id' => $parent->id,
         ];
 @else
         $variables = [];
@@ -15,7 +15,7 @@
 
         $response = $this->action('{{ strtoupper($action->getHttpMethod()) }}', 'Api\{{ $versionNamespace }}\{{ $className }}＠{{ $action->getAction() }}',
             $variables,
-            $input,
+            [],
             [],
             [],
             $this->transformHeadersToServerVars($headers)

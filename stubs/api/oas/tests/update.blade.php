@@ -1,10 +1,19 @@
     public function test{{ ucfirst($action->getAction()) }}()
     {
 
-        $model= factory(\App\Models\{{ $action->getTargetModel() }}::class)->create($variables);
+@if( $action->hasParent() )
+        $parent = factory(\App\Models\{{ $action->getParentTable()->getModelName() }}::class)->create();
+        $variables = [
+            '{{ snake_case($action->getParentTable()->getModelName()) }}_id' => $parent->id,
+        ];
+@else
+        $variables = [];
+@endif
+
+        $model= factory(\App\Models\{{ $action->getTargetTable()->getModelName() }}::class)->create($variables);
 
         $headers = $this->getAuthenticationHeaders();
-        $newData= factory(\App\Models\{{ $action->getResponse()->getModelName() }}::class)->make();
+        $newData= factory(\App\Models\{{ $action->getTargetTable()->getModelName() }}::class)->make();
         $input = [
 @foreach( $action->getBodyParameters() as $parameter)
             '{{ $parameter }}' => $newData->{{ $parameter }},

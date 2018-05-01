@@ -14,8 +14,8 @@
         $user = $this->userService->getUser();
 
 @if( $action->getResponse()->getType() === \LaravelRocket\Generator\Objects\OpenAPI\Definition::TYPE_MODEL )
-        /** @var \App\Models\{{ $action->getTargetModel() }} $model */
-        $model = $this->{{ lcfirst($action->getTargetModel()) }}Repository->find($id);
+        /** @var \App\Models\{{ $action->getTargetTable()->getModelName() }} $model */
+        $model = $this->{{ lcfirst($action->getTargetTable()->getModelName()) }}Repository->find($id);
         if (empty($model) ) {
             throw new APIErrorException('notFound', 'Not found');
         }

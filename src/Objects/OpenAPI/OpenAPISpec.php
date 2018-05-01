@@ -2,6 +2,7 @@
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
 use LaravelRocket\Generator\Objects\Table;
+use function ICanBoogie\pluralize;
 
 class OpenAPISpec
 {
@@ -97,6 +98,8 @@ class OpenAPISpec
      */
     public function findTable(string $name)
     {
+        $name = pluralize($name);
+
         foreach ($this->tables as $table) {
             if ($table->getName() === $name) {
                 return new Table($table, $this->tables, $this->json);

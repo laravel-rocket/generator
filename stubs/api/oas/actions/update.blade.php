@@ -15,7 +15,7 @@
         $user = $this->userService->getUser();
 
 @if( $action->getResponse()->getType() === \LaravelRocket\Generator\Objects\OpenAPI\Definition::TYPE_MODEL )
-        $model = $this->{{ lcfirst($action->getTargetModel()) }}Repository->find($id);
+        $model = $this->{{ lcfirst($action->getTargetTable()->getModelName()) }}Repository->find($id);
         if (empty($model) ) {
             throw new APIErrorException('notFound', 'Not found');
         }
@@ -25,8 +25,8 @@
             '{{ $parameter }}',
 @endforeach
         ]);
-        /** @var \App\Models\{{ $action->getTargetModel() }} $model */
-        $model = $this->{{ lcfirst($action->getTargetModel()) }}Repository->update($model, $data);
+        /** @var \App\Models\{{ $action->getTargetTable()->getModelName() }} $model */
+        $model = $this->{{ lcfirst($action->getTargetTable()->getModelName()) }}Repository->update($model, $data);
 
         return {{ $action->getResponse()->getName() }}::updateWithModel($model)->response();
 @else

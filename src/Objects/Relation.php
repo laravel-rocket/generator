@@ -246,6 +246,14 @@ class Relation
     }
 
     /**
+     * @return string
+     */
+    public function getIntermediateTableModel()
+    {
+        return ucfirst(camel_case(singularize($this->intermediateTableName)));
+    }
+
+    /**
      * @return bool
      */
     public function isMultipleSelection()

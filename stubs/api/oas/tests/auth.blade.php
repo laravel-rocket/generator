@@ -34,7 +34,7 @@
     {
         $email    = $this->faker->email;
         $password = $this->faker->password(8);
-        $user     = factory(User::class)->create([
+        $user     = factory(\App\Models\User::class)->create([
             'email'    => $email,
             'password' => $password,
         ]);
@@ -65,7 +65,7 @@
     {
         $email    = $this->faker->email;
         $password = $this->faker->password(8);
-        $user     = factory(User::class)->create([
+        $user     = factory(\App\Models\User::class)->create([
             'email'    => $email,
             'password' => $password,
         ]);
@@ -114,7 +114,7 @@
     {
         $email    = $this->faker->email;
         $password = $this->faker->password(8);
-        $user     = factory(User::class)->create([
+        $user     = factory(\App\Models\User::class)->create([
             'email'    => $email,
             'password' => $password,
         ]);

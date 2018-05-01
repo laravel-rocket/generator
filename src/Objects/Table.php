@@ -351,4 +351,16 @@ class Table
     {
         return $this->getModelName().'Repository';
     }
+
+    /**
+     * @param self $table
+     *
+     * @return \LaravelRocket\Generator\Objects\Relation|null
+     */
+    public function findRelationWithTable($table)
+    {
+        $relation = $this->getRelation($table->getName()) ?: $this->getRelation(singularize($table->getName()));
+
+        return $relation;
+    }
 }

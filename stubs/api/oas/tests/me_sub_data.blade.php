@@ -26,7 +26,7 @@
         $data = json_decode($response->getContent(), true);
         $this->assertEquals(3, count($data['items']));
 @elseif( $action->getHttpMethod() === 'post' && $action->getResponse()->getType() === \LaravelRocket\Generator\Objects\OpenAPI\Definition::TYPE_MODEL )
-        $model= factory(\App\Models\{{ $action->getTargetModel() }}::class)->make([
+        $model= factory(\App\Models\{{ $action->getTargetTable()->getModelName() }}::class)->make([
             'user_id' => $userId,
         ]);
         $input = [
@@ -52,7 +52,7 @@
             $model->id,
         ];
 @if( $action->getHttpMethod() === 'put' || $action->getHttpMethod() === 'patch' )
-        $modelData= factory(\App\Models\{{ $action->getTargetModel() }}::class)->make([
+        $modelData= factory(\App\Models\{{ $action->getTargetTable()->getModelName() }}::class)->make([
             'user_id' => $userId,
         ]);
         $input = [
