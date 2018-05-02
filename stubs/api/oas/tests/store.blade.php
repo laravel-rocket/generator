@@ -17,8 +17,8 @@
 
 @if( $action->hasParent() && $action->getParentRelation() && $action->getParentRelation()->getType() === \LaravelRocket\Generator\Objects\Relation::TYPE_BELONGS_TO_MANY)
         $relation = factory(\App\Models\{{ $action->getParentRelation()->getIntermediateTableModel() }}::class)->make([
-            '{{ \ICanBoogie\singularize($action->getParentTable()->getName() }}_id' => $parent->id,
-            '{{ \ICanBoogie\singularize($action->getTargetTable()->getName() }}_id' => $model->id,
+            '{{ \ICanBoogie\singularize($action->getParentTable()->getName()) }}_id' => $parent->id,
+            '{{ \ICanBoogie\singularize($action->getTargetTable()->getName()) }}_id' => $model->id,
         ]);
 @endif
 

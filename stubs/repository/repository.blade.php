@@ -59,6 +59,19 @@ unset($existingMethods['getBlankModel']);
 @else
     protected function buildQueryByFilter($query, $filter)
     {
+
+@foreach( $relations as $relation)
+@if( $relation->getType === \LaravelRocket\Generator\Objects\Relation::TYPE_BELONGS_TO_MANY)
+    if (array_key_exists('{{ $relation->getReferenceColumn()->getName() }}', $filter)) {
+        $value = $filter['{{ $relation->getReferenceColumn()->getName() }}'];
+        $query     = $query->whereHas('{{ $relation->getName() }}', function ($q) use ($value) {
+            $q->where('{{ $relation->getReferenceColumn()->getName() }}', $value);
+        });
+        unset($filter['{{ $relation->getReferenceColumn()->getName() }}']);
+    }
+
+@endif
+@endforeach
         return parent::buildQueryByFilter($query, $filter);
     }
 @endif

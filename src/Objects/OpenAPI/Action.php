@@ -551,7 +551,7 @@ class Action
                             return;
                         case 'post':
                             if ($targetElement->isPlural()) {
-                                $this->type   = self::CONTEXT_TYPE_UPDATE;
+                                $this->type   = self::CONTEXT_TYPE_STORE;
                                 $this->action = 'create'.ucfirst($targetElement->elementName());
                             } else {
                                 $this->type        = self::CONTEXT_TYPE_UPDATE;

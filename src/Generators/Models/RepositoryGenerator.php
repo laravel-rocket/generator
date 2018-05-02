@@ -33,6 +33,7 @@ class RepositoryGenerator extends ModelBaseGenerator
         $variables['variableName']    = camel_case($modelName);
         $variables['tableName']       = $this->table->getName();
         $variables['relationTable']   = $this->detectRelationTable($this->table);
+        $variables['relations']       = $this->getRelations();
         $variables['baseClass']       = $variables['relationTable'] ? 'RelationModelRepository' : 'SingleKeyModelRepository';
         $variables['keywordColumns']  = [];
         $variables['existingMethods'] = $this->getExistingMethods();
