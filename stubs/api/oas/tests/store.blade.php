@@ -4,6 +4,7 @@
 @if( $action->hasParent() )
         $parent = factory(\App\Models\{{ $action->getParentModel() }}::class)->create();
 @if( $action->getParentRelation() && $action->getParentRelation()->getType() === \LaravelRocket\Generator\Objects\Relation::TYPE_BELONGS_TO_MANY)
+        $variables = [];
 @else
         $variables = [
             '{{ snake_case($action->getParentModel()) }}_id' => $parent->id,
@@ -21,6 +22,14 @@
             '{{ \ICanBoogie\singularize($action->getTargetTable()->getName()) }}_id' => $model->id,
         ]);
 @endif
+
+        $variables = [
+@if( $action->hasParent() )
+@foreach( $action->getParams() as $parameter )
+            '{!! $parameter->getName() !!}' => $parent->{!! $parameter->getName() !!},
+@endforeach
+@endif
+        ];
 
         $input = [
 @foreach( $action->getBodyParameters() as $parameter)

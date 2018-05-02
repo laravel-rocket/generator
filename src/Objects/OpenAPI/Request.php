@@ -3,6 +3,25 @@ namespace LaravelRocket\Generator\Objects\OpenAPI;
 
 class Request
 {
+    protected const SPECIAL_REQUESTS = [
+        'postSignUp'       => [
+            'name'      => 'SignUpRequest',
+            'namespace' => '\Auth',
+        ],
+        'postSignOut'      => [
+            'name'      => 'SignInRequest',
+            'namespace' => '\Auth',
+        ],
+        'postRefreshToken' => [
+            'name'      => 'RefreshTokenRequest',
+            'namespace' => '\Auth',
+        ],
+        'forgotPassword'   => [
+            'name'      => 'PasswordRequest',
+            'namespace' => '\Auth',
+        ],
+    ];
+
     /** @var string */
     protected $controllerName;
 
@@ -29,6 +48,9 @@ class Request
 
     /** @var string */
     protected $requestName;
+
+    /** @var string */
+    protected $requestNamespace;
 
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\Parameter[] $parameters */
     protected $parameters = [];
@@ -65,6 +87,14 @@ class Request
     }
 
     /**
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return $this->requestNamespace;
+    }
+
+    /**
      * @return \LaravelRocket\Generator\Objects\OpenAPI\Parameter[]
      */
     public function getParameters()
@@ -74,6 +104,13 @@ class Request
 
     protected function setRequestName()
     {
+        $this->requestNamespace = '';
+
+        if (array_key_exists($this->requestName, self::SPECIAL_REQUESTS)) {
+            $this->requestName      = self::SPECIAL_REQUESTS[$this->requestName]['name'];
+            $this->requestNamespace = self::SPECIAL_REQUESTS[$this->requestName]['namespace'];
+        }
+
         if ($this->response->getType() === Definition::TYPE_LIST) {
             $this->requestName = 'PaginationRequest';
 

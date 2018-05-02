@@ -23,6 +23,9 @@ class Controller
     /** @var string[] */
     protected $responseNames = [];
 
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Request[] */
+    protected $requests = [];
+
     /**
      * Controller constructor.
      *
@@ -86,7 +89,20 @@ class Controller
      */
     public function getRequiredRequestNames(): array
     {
+        $ret = [];
+        foreach ($this->requests as $request) {
+            $ret[] = $request->getName();
+        }
+
         return $this->requestNames;
+    }
+
+    /**
+     * @return \LaravelRocket\Generator\Objects\OpenAPI\Request[]
+     */
+    public function getRequiredRequests(): array
+    {
+        return $this->requests;
     }
 
     /**
@@ -133,12 +149,16 @@ class Controller
 
     protected function setRequestNames()
     {
-        $ret = [];
+        $ret      = [];
+        $requests = [];
         foreach ($this->actions as $action) {
-            $ret[] = $action->getRequest()->getName();
+            $request = $action->getRequest();
+            if (!array_key_exists($request->getName(), $ret)) {
+                $ret[]      = $request->getName();
+                $requests[] = $request;
+            }
         }
-
-        $this->requestNames = array_unique($ret);
+        $this->requests = $requests;
     }
 
     protected function setResponseNames()

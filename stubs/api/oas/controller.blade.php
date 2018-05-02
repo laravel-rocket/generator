@@ -2,7 +2,7 @@ namespace App\Http\Controllers\Api\{{ $versionNamespace }};
 
 use App\Exceptions\Api\{{ $versionNamespace }}\APIErrorException;
 use App\Http\Controllers\Controller;
-use App\Services\APIUserServiceInterface;
+use App\Services\UserServiceInterface;
 use App\Services\FileServiceInterface;
 @foreach( $controller->getRequiredRepositoryNames() as $name )
 use App\Repositories\{{ $name }}Interface;
@@ -10,10 +10,11 @@ use App\Repositories\{{ $name }}Interface;
 @foreach( $controller->getRequiredResponseNames() as $name )
 use App\Http\Responses\Api\{{ $versionNamespace }}\{{ $name }};
 @endforeach
-@foreach( $controller->getRequiredRequestNames() as $name )
-use App\Http\Requests\Api\{{ $versionNamespace }}\{{ $name }};
+@foreach( $controller->getRequiredRequests() as $request )
+use App\Http\Requests\Api\{{ $versionNamespace }}{{ $request->getNamespace() }}\{{ $request->getName() }};
 @endforeach
 @if( ends_with($className, 'AuthController'))
+use App\Http\Requests\Api\V1\PsrServerRequest;
 use App\Repositories\UserRepositoryInterface;
 use App\Services\UserServiceAuthenticationServiceInterface;
 use League\OAuth2\Server\AuthorizationServer;
@@ -22,14 +23,14 @@ use Zend\Diactoros\Response as Psr7Response;
 
 class {{ $className }} extends Controller
 {
-    /** @var APIUserServiceInterface $userService */
+    /** @var UserServiceInterface $userService */
     protected $userService;
 
     /** @var FileServiceInterface $fileService */
     protected $fileService;
 
 @if( ends_with($className, 'AuthController'))
-    /** @var APIUserServiceInterface $authenticatableService */
+    /** @var UserServiceInterface $authenticatableService */
     protected $authenticatableService;
 
     /** @var UserServiceAuthenticationServiceInterface $serviceAuthenticationService */
@@ -37,6 +38,9 @@ class {{ $className }} extends Controller
 
     /** @var UserRepositoryInterface $userRepository */
     protected $userRepository;
+
+    /** @var \League\OAuth2\Server\AuthorizationServer  */
+    protected $server;
 @endif
 
 @foreach( $controller->getRequiredRepositoryNames() as $name )
@@ -53,7 +57,7 @@ class {{ $className }} extends Controller
         AuthorizationServer $server,
         UserRepositoryInterface $userRepository,
 @endif
-        APIUserServiceInterface $userService,
+        UserServiceInterface $userService,
         FileServiceInterface $fileService
     ) {
 @foreach( $controller->getRequiredRepositoryNames() as $name )
@@ -62,7 +66,7 @@ class {{ $className }} extends Controller
         $this->userService        = $userService;
         $this->fileService        = $fileService;
 @if( ends_with($className, 'AuthController'))
-        $this->authenticatableService       = $authenticatableService;
+        $this->authenticatableService       = $userService;
         $this->serviceAuthenticationService = $serviceAuthenticationService;
         $this->server                       = $server;
         $this->userRepository               = $userRepository;

@@ -12,7 +12,7 @@
     {
 @if( $action->getAction() === 'forgotPassword' )
         $email = $request->get('email');
-        $this->apiUserService->sendPasswordResetEmail($email);
+        $this->userService->sendPasswordResetEmail($email);
 
         return Status::ok()->response();
 @endif
