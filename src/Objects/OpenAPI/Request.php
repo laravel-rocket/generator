@@ -55,6 +55,8 @@ class Request
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\Parameter[] $parameters */
     protected $parameters = [];
 
+    protected $canGenerate = true;
+
     /**
      * Path constructor.
      *
@@ -102,13 +104,24 @@ class Request
         return $this->parameters;
     }
 
+    /**
+     * @return bool
+     */
+    public function canGenerate(): bool
+    {
+        return $this->canGenerate;
+    }
+
     protected function setRequestName()
     {
         $this->requestNamespace = '';
 
-        if (array_key_exists($this->requestName, self::SPECIAL_REQUESTS)) {
-            $this->requestName      = self::SPECIAL_REQUESTS[$this->requestName]['name'];
-            $this->requestNamespace = self::SPECIAL_REQUESTS[$this->requestName]['namespace'];
+        if (array_key_exists($this->method, self::SPECIAL_REQUESTS)) {
+            $this->requestName      = self::SPECIAL_REQUESTS[$this->method]['name'];
+            $this->requestNamespace = self::SPECIAL_REQUESTS[$this->method]['namespace'];
+            $this->canGenerate      = false;
+
+            return;
         }
 
         if ($this->response->getType() === Definition::TYPE_LIST) {

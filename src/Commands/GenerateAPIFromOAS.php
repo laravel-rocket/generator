@@ -173,10 +173,13 @@ class GenerateAPIFromOAS extends MWBGenerator
         ];
 
         foreach ($this->spec->getControllers() as $controller) {
-            foreach ($controller->getRequiredRequestNames() as $requestName) {
-                $this->output('  > Generate Request:'.$requestName, 'green');
+            foreach ($controller->getRequiredRequests() as $request) {
+                if (!$request->canGenerate()) {
+                    continue;
+                }
+                $this->output('  > Generate Request:'.$request->getName(), 'green');
                 foreach ($generators as $generator) {
-                    $generator->generate($requestName, $this->spec, $this->databaseService, $this->json, $this->tables);
+                    $generator->generate($request->getName(), $this->spec, $this->databaseService, $this->json, $this->tables);
                 }
             }
         }

@@ -94,7 +94,7 @@ class Controller
             $ret[] = $request->getName();
         }
 
-        return $this->requestNames;
+        return $ret;
     }
 
     /**
@@ -149,15 +149,12 @@ class Controller
 
     protected function setRequestNames()
     {
-        $ret      = [];
         $requests = [];
         foreach ($this->actions as $action) {
-            $request = $action->getRequest();
-            if (!array_key_exists($request->getName(), $ret)) {
-                $ret[]      = $request->getName();
-                $requests[] = $request;
-            }
+            $request                       = $action->getRequest();
+            $requests[$request->getName()] = $request;
         }
+
         $this->requests = $requests;
     }
 
