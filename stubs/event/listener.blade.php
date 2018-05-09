@@ -11,7 +11,7 @@ use App\Repositories\{{ $model }}RepositoryInterface;
 use App\Services\{{ $service }}ServiceInterface;
 @endforeach
 
-class {{ $listenerName }} extends EventListener
+class {{ $listenerName }} extends Listener
 {
 @foreach( $models as $model)
     /** @var {{ $model }}RepositoryInterface ${{ lcfirst($model) }}Repository */
