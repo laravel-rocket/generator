@@ -149,6 +149,7 @@
 
         $input = [
             'refresh_token' => $refreshToken,
+            'grant_type'    => 'refresh_token',
             'client_id'     => $clientId,
             'client_secret' => $clientSecret,
         ];

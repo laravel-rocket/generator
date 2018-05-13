@@ -29,7 +29,7 @@
         $variables = [
 @if( $action->hasParent() )
 @foreach( $action->getParams() as $parameter )
-            '{!! $parameter->getName() !!}' => $model[0]->{!! $parameter->getName() !!},
+            '{!! $parameter->getName() !!}' => $models[0]->{!! $parameter->getName() !!},
 @endforeach
 @endif
         ];
