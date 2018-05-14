@@ -31,7 +31,7 @@ class AdminCRUDGenerator extends MWBGenerator
         if ($this->tables === false) {
             return false;
         }
-        $this->getAppJsbuildon();
+        $this->getAppJson();
 
         $this->databaseService = new DatabaseService($this->config, $this->files);
         $this->databaseService->resetDatabase();
