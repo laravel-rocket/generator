@@ -131,11 +131,17 @@ class Column
         return $this->editFieldType === 'image' || $this->editFieldType === 'file';
     }
 
+    /**
+     * @return bool
+     */
     public function hasImageRelation()
     {
         return $this->editFieldType === 'image';
     }
 
+    /**
+     * @return bool|\LaravelRocket\Generator\Objects\Relation
+     */
     public function getRelation()
     {
         return $this->relation;
@@ -178,6 +184,10 @@ class Column
             return false;
         }
 
+        if ($this->hasRelation()) {
+            return false;
+        }
+
         return true;
     }
 
@@ -186,7 +196,15 @@ class Column
      */
     public function isShowable(): bool
     {
-        return !in_array($this->column->getName(), $this->unshowables);
+        if (in_array($this->column->getName(), $this->unshowables)) {
+            return false;
+        }
+
+        if ($this->hasRelation()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -195,6 +213,10 @@ class Column
     public function isAPIReturnable(): bool
     {
         if (in_array($this->getName(), $this->unshowables)) {
+            return false;
+        }
+
+        if ($this->hasFileRelation()) {
             return false;
         }
 

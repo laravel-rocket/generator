@@ -10,7 +10,7 @@ class {!! $serviceName !!}Test extends TestCase
      */
     protected function getInstance()
     {
-        /** @var \App\Services\{!! $serviceName !!}eInterface $service */
+        /** @var \App\Services\{!! $serviceName !!}Interface $service */
         $service = \App::make(\App\Services\{!! $serviceName !!}Interface::class);
 
         return $service;

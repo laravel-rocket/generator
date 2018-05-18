@@ -134,7 +134,7 @@ class Request
         switch ($this->httpMethod) {
             case 'post':
             case 'put':
-                $this->requestName = ucfirst($this->httpMethod).ucfirst($controllerRootName).'Request';
+                $this->requestName = ucfirst($this->httpMethod).ucfirst($controllerRootName).ucfirst($this->method).'Request';
                 break;
             default:
                 $this->requestName = 'Request';
