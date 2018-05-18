@@ -170,7 +170,8 @@ class Relation
      */
     public function isEditable(): bool
     {
-        return !$this->hasPostFix($this->getName(), $this->uneditables) && ($this->getType() === self::TYPE_BELONGS_TO || $this->isRoles() || $this->isTypes());
+        return !$this->hasPostFix($this->getName(), $this->uneditables)
+            && ($this->getType() === self::TYPE_BELONGS_TO || $this->isRoles() || $this->isTypes());
     }
 
     /**
@@ -178,7 +179,8 @@ class Relation
      */
     public function isListable(): bool
     {
-        return !$this->hasPostFix($this->getName(), $this->unlistables) && ($this->getType() === self::TYPE_BELONGS_TO || $this->isRoles() || $this->isTypes());
+        return !$this->hasPostFix($this->getName(), $this->unlistables)
+            && ($this->getType() === self::TYPE_BELONGS_TO || $this->isRoles() || $this->isTypes());
     }
 
     /**
@@ -186,11 +188,8 @@ class Relation
      */
     public function isShowable(): bool
     {
-        if (!$this->hasPostFix($this->getName(), $this->unshowables)) {
-            return false;
-        }
-
-        return !$this->hasPostFix($this->getName(), $this->unshowables) && ($this->getType() === self::TYPE_BELONGS_TO || $this->isRoles() || $this->isTypes());
+        return !$this->hasPostFix($this->getName(), $this->unshowables)
+            && ($this->getType() === self::TYPE_BELONGS_TO || $this->isRoles() || $this->isTypes());
     }
 
     /**

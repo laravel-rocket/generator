@@ -216,10 +216,6 @@ class Column
             return false;
         }
 
-        if ($this->hasFileRelation()) {
-            return false;
-        }
-
         return $this->isEditable() || $this->isShowable() || $this->isListable();
     }
 

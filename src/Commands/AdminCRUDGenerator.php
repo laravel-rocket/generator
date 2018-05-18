@@ -10,7 +10,6 @@ use LaravelRocket\Generator\Generators\React\CRUD\Admin\RepositoryGenerator;
 use LaravelRocket\Generator\Generators\React\CRUD\Admin\ViewGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use function ICanBoogie\pluralize;
-use function ICanBoogie\singularize;
 
 class AdminCRUDGenerator extends MWBGenerator
 {
@@ -75,7 +74,12 @@ class AdminCRUDGenerator extends MWBGenerator
             return;
         }
 
-        $this->output('Processing '.ucfirst(singularize($name)).' Admin CRUD...', 'green');
+        $this->output('Processing '.$table->getName().' Admin CRUD...', 'green');
+
+        if (!$rebuild) {
+            $this->output('  Warning: if you want to update existing files, please set \'--rebuild\' option', 'yellow');
+        }
+
         foreach ($generators as $generator) {
             $generator->generate($table, $this->tables, $this->json);
         }
