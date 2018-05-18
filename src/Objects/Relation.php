@@ -44,6 +44,8 @@ class Relation
     const EDIT_TYPE_RADIO_BUTTON  = 'radio_button';
     const EDIT_TYPE_SELECT_SINGLE = 'select_single';
     const EDIT_TYPE_SELECT_MULTI  = 'select_multi';
+    const EDIT_TYPE_IMAGE         = 'image';
+    const EDIT_TYPE_FILE          = 'file';
 
     /**
      * Relation constructor.
@@ -291,6 +293,14 @@ class Relation
 
         if (ends_with($this->name, '_type') || ends_with($this->name, 'role')) {
             return self::EDIT_TYPE_RADIO_BUTTON;
+        }
+
+        if ($this->isImage()) {
+            return self::EDIT_TYPE_IMAGE;
+        }
+
+        if ($this->isFile()) {
+            return self::EDIT_TYPE_FILE;
         }
 
         return self::EDIT_TYPE_SELECT_SINGLE;

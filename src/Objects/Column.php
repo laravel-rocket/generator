@@ -168,6 +168,10 @@ class Column
      */
     public function isEditable(): bool
     {
+        if ($this->hasImageRelation() || $this->hasFileRelation()) {
+            return false;
+        }
+
         return !in_array($this->column->getName(), $this->uneditables);
     }
 
