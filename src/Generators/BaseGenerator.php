@@ -153,4 +153,113 @@ class BaseGenerator
 
         return $result;
     }
+
+    protected function getUses(): array
+    {
+        $constants  = [];
+        $statements = $this->parseFile();
+        if (empty($statements)) {
+            return [];
+        }
+
+        $this->getAllUses($statements, $constants);
+
+        asort($constants);
+
+        return $constants;
+    }
+
+    protected function getConstants(): array
+    {
+        $constants  = [];
+        $statements = $this->parseFile();
+        if (empty($statements)) {
+            return [];
+        }
+
+        $this->getAllConstants($statements, $constants);
+
+        $columns = $this->json->get(['tables', $this->table->getName().'.columns'], []);
+        foreach ($columns as $name => $column) {
+            $type = array_get($column, 'type');
+            if ($type === 'type') {
+                $options = array_get($column, 'options', []);
+                foreach ($options as $option) {
+                    $value                    = array_get($option, 'value');
+                    $constantName             = $this->generateConstantName($name, $value);
+                    $constants[$constantName] = "$constantName = '$value'";
+                }
+            }
+        }
+
+        asort($constants);
+
+        return $constants;
+    }
+
+    protected function getTraits(): array
+    {
+        $traits     = [];
+        $statements = $this->parseFile();
+        if (empty($statements)) {
+            return [];
+        }
+
+        $this->getAllTraits($statements, $traits);
+
+        asort($traits);
+
+        return $traits;
+    }
+
+    protected function getAllUses($statements, &$result)
+    {
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        foreach ($statements as $statement) {
+            if (get_class($statement) === \PhpParser\Node\Stmt\Use_::class) {
+                foreach ($statement->uses as $use) {
+                    $result[$use->name] = ltrim($prettyPrinter->prettyPrint([$use]));
+                }
+            } elseif (property_exists($statement, 'stmts')) {
+                $return = $this->getAllTraits($statement->stmts, $result);
+                if (!empty($return)) {
+                    return $return;
+                }
+            }
+        }
+    }
+
+    protected function getAllTraits($statements, &$result)
+    {
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        foreach ($statements as $statement) {
+            if (get_class($statement) === \PhpParser\Node\Stmt\TraitUse::class) {
+                foreach ($statement->traits as $trait) {
+                    $result[$trait->toString()] = ltrim($prettyPrinter->prettyPrint([$trait]));
+                }
+            } elseif (property_exists($statement, 'stmts')) {
+                $return = $this->getAllTraits($statement->stmts, $result);
+                if (!empty($return)) {
+                    return $return;
+                }
+            }
+        }
+    }
+
+    protected function getAllConstants($statements, &$result)
+    {
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        foreach ($statements as $statement) {
+            if (get_class($statement) === \PhpParser\Node\Stmt\ClassConst::class) {
+                foreach ($statement->consts as $constant) {
+                    $result[$constant->name] = ltrim($prettyPrinter->prettyPrint([$constant]));
+                }
+            } elseif (property_exists($statement, 'stmts')) {
+                $return = $this->getAllConstants($statement->stmts, $result);
+                if (!empty($return)) {
+                    return $return;
+                }
+            }
+        }
+    }
 }

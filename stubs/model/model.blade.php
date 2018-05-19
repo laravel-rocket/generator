@@ -10,6 +10,17 @@ use LaravelRocket\Foundation\Models\Base;
 @if( $softDelete )
 use Illuminate\Database\Eloquent\SoftDeletes;
 @endif
+@foreach( $uses as $use )
+@if( !in_array($use, [
+        'Illuminate\Notifications\Notifiable',
+        'Laravel\Passport\HasApiTokens',
+        'LaravelRocket\Foundation\Models\AuthenticatableBase',
+        'LaravelRocket\Foundation\Models\Base',
+        'Illuminate\Database\Eloquent\SoftDeletes'
+    ]))
+use {!! $trait !!};
+@endif
+@endForeach
 
 /**
  * App\Models\{{ $className }}.

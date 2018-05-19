@@ -37,6 +37,7 @@ class ModelGenerator extends ModelBaseGenerator
         $variables['constants']     = $this->getConstants();
         $variables['casts']         = $this->getCasts();
         $variables['traits']        = $this->getTraits();
+        $variables['uses']          = $this->getUses();
 
         return $variables;
     }
@@ -45,13 +46,13 @@ class ModelGenerator extends ModelBaseGenerator
     {
         $casts = [];
         foreach ($this->table->getColumns() as $column) {
-            $columnDefinition             = $this->json->getColumnDefinition($this->table->getName(), $column->getName());
-            $columnObject                 = new Column($column);
+            $columnDefinition = $this->json->getColumnDefinition($this->table->getName(), $column->getName());
+            $columnObject     = new Column($column);
 
             $ediFieldType = $columnObject->getEditFieldType();
             $options      = $columnObject->getEditFieldOptions();
 
-            $definitionType               = array_get($columnDefinition, 'type', '');
+            $definitionType = array_get($columnDefinition, 'type', '');
 
             if ($ediFieldType === 'boolean' || $definitionType == 'boolean') {
                 $casts[$column->getName()] = 'boolean';
@@ -61,83 +62,6 @@ class ModelGenerator extends ModelBaseGenerator
         }
 
         return $casts;
-    }
-
-    protected function getConstants(): array
-    {
-        $constants  = [];
-        $statements = $this->parseFile();
-        if (empty($statements)) {
-            return [];
-        }
-
-        $this->getAllConstants($statements, $constants);
-
-        $columns = $this->json->get(['tables', $this->table->getName().'.columns'], []);
-        foreach ($columns as $name => $column) {
-            $type = array_get($column, 'type');
-            if ($type === 'type') {
-                $options = array_get($column, 'options', []);
-                foreach ($options as $option) {
-                    $value                    = array_get($option, 'value');
-                    $constantName             = $this->generateConstantName($name, $value);
-                    $constants[$constantName] = "$constantName = '$value'";
-                }
-            }
-        }
-
-        asort($constants);
-
-        return $constants;
-    }
-
-    protected function getTraits(): array
-    {
-        $traits     = [];
-        $statements = $this->parseFile();
-        if (empty($statements)) {
-            return [];
-        }
-
-        $this->getAllTraits($statements, $traits);
-
-        asort($traits);
-
-        return $traits;
-    }
-
-    protected function getAllTraits($statements, &$result)
-    {
-        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
-        foreach ($statements as $statement) {
-            if (get_class($statement) === \PhpParser\Node\Stmt\TraitUse::class) {
-                foreach ($statement->traits as $trait) {
-                    $result[$trait->name] = ltrim($prettyPrinter->prettyPrint([$trait]));
-                }
-            } elseif (property_exists($statement, 'stmts')) {
-                $return = $this->getAllTraits($statement->stmts, $result);
-                if (!empty($return)) {
-                    return $return;
-                }
-            }
-        }
-    }
-
-    protected function getAllConstants($statements, &$result)
-    {
-        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
-        foreach ($statements as $statement) {
-            if (get_class($statement) === \PhpParser\Node\Stmt\ClassConst::class) {
-                foreach ($statement->consts as $constant) {
-                    $result[$constant->name] = ltrim($prettyPrinter->prettyPrint([$constant]));
-                }
-            } elseif (property_exists($statement, 'stmts')) {
-                $return = $this->getAllConstants($statement->stmts, $result);
-                if (!empty($return)) {
-                    return $return;
-                }
-            }
-        }
     }
 
     protected function getFillableColumns()

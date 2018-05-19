@@ -62,9 +62,10 @@ class ParseTest extends TestCase
         $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
         foreach ($statements as $statement) {
             print get_class($statement).PHP_EOL;
-            if (get_class($statement) == \PhpParser\Node\Stmt\TraitUse::class ) {
-                foreach( $statement->traits as $trait){
-                    print ltrim($prettyPrinter->prettyPrint([$trait])) . PHP_EOL;
+            if (get_class($statement) == \PhpParser\Node\Stmt\Use_::class ) {
+                foreach( $statement->uses as $use){
+                    print $use->name . PHP_EOL;
+                    print ltrim($prettyPrinter->prettyPrint([$use])). PHP_EOL;
                 }
             } elseif (property_exists($statement, 'stmts')) {
                 $this->travarse($statement->stmts);
