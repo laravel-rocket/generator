@@ -180,6 +180,10 @@ class Column
      */
     public function isListable(): bool
     {
+        if ($this->isPrimaryKey()) {
+            return true;
+        }
+
         if (in_array($this->getName(), $this->unlistables)) {
             return false;
         }
@@ -200,6 +204,10 @@ class Column
      */
     public function isShowable(): bool
     {
+        if ($this->isPrimaryKey()) {
+            return true;
+        }
+
         if (in_array($this->column->getName(), $this->unshowables)) {
             return false;
         }
@@ -579,6 +587,15 @@ class Column
             if ($haystack === $needle || ends_with($haystack, '_'.$needle)) {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    public function isPrimaryKey()
+    {
+        if ($this->column->getAutoincrement() && $this->getName() == 'id') {
+            return true;
         }
 
         return false;

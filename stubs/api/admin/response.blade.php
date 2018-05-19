@@ -4,7 +4,7 @@ class {{ $className }} extends Response
 {
     protected $columns = [
 @foreach( $table->getColumns() as $column )
-@if( !$column->hasRelation() && $column->isAPIReturnable())
+@if( $column->isAPIReturnable())
         '{{ $column->getAPIName() }}' => {!! $column->getDefaultAPIResponse() !!},
 @endif
 @endforeach
@@ -30,7 +30,7 @@ class {{ $className }} extends Response
         if(!empty($model)) {
             $modelArray = [
 @foreach( $table->getColumns() as $column )
-@if( !$column->hasRelation() && $column->isAPIReturnable())
+@if( $column->isAPIReturnable())
 @if( $column->isTimestamp())
                 '{{ $column->getAPIName() }}' => $model->{{ $column->getName() }} ? $model->{{ $column->getName() }}->timestamp : null,
 @else
