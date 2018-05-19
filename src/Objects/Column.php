@@ -89,9 +89,9 @@ class Column
     public function getAPIName()
     {
         $name = $this->getName();
-        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
-            $name = substr($name, 0, strlen($name) - 3);
-        }
+//        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+//            $name = substr($name, 0, strlen($name) - 3);
+//        }
 
         return camel_case($name);
     }

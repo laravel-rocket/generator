@@ -15,7 +15,7 @@ class AdminAPIGenerator extends MWBGenerator
 {
     protected $name = 'rocket:make:api:admin';
 
-    protected $signature = 'rocket:make:api:admin {name?} {--file=} {--json=}';
+    protected $signature = 'rocket:make:api:admin {name?} {--file=} {--json=} {--rebuild}';
 
     protected $description = 'Create Admin API for CRUD';
 
@@ -49,22 +49,25 @@ class AdminAPIGenerator extends MWBGenerator
 
     protected function generate()
     {
+        $rebuild = !empty($this->input->getOption('rebuild'));
+
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
-            new ResponseGenerator($this->config, $this->files, $this->view),
-            new ListResponseGenerator($this->config, $this->files, $this->view),
-            new ControllerGenerator($this->config, $this->files, $this->view),
-            new UnitTestGenerator($this->config, $this->files, $this->view),
-            new RequestGenerator($this->config, $this->files, $this->view),
+            new ResponseGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ListResponseGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ControllerGenerator($this->config, $this->files, $this->view, $rebuild),
+            new UnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
+            new RequestGenerator($this->config, $this->files, $this->view, $rebuild),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */
         $fileUpdaters = [
-            new RouterFileUpdater($this->config, $this->files, $this->view),
+            new RouterFileUpdater($this->config, $this->files, $this->view, $rebuild),
         ];
 
-        $name = $this->normalizeName($this->argument('name'));
         if (!empty($name)) {
+            $name = $this->normalizeName($this->argument('name'));
+
             $table = $this->findTableFromName($name);
             if (empty($table)) {
                 $this->output('No table definition found: '.$name, 'red');
@@ -77,7 +80,7 @@ class AdminAPIGenerator extends MWBGenerator
         }
 
         foreach ($tables as $table) {
-            $this->output('Processing '.ucfirst(singularize($name)).' Admin API...', 'green');
+            $this->output('Processing '.ucfirst(singularize($table->getName())).' Admin API...', 'green');
             foreach ($generators as $generator) {
                 $generator->generate($table, $this->tables, $this->json);
             }
