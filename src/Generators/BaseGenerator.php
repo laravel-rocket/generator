@@ -201,7 +201,7 @@ class BaseGenerator
                     $result[$name] = $name;
                 }
             } elseif (property_exists($statement, 'stmts')) {
-                $return = $this->getAllTraits($statement->stmts, $result);
+                $return = $this->getAllUses($statement->stmts, $result);
                 if (!empty($return)) {
                     return $return;
                 }
