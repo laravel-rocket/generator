@@ -2,9 +2,6 @@
 namespace LaravelRocket\Generator\Generators\Models;
 
 use LaravelRocket\Generator\Objects\Column;
-use PhpParser\Error;
-use PhpParser\Lexer;
-use PhpParser\ParserFactory;
 
 class ModelGenerator extends ModelBaseGenerator
 {
@@ -39,6 +36,7 @@ class ModelGenerator extends ModelBaseGenerator
         $variables['relations']     = $this->getRelations();
         $variables['constants']     = $this->getConstants();
         $variables['casts']         = $this->getCasts();
+        $variables['traits']        = $this->getTraits();
 
         return $variables;
     }
@@ -67,23 +65,9 @@ class ModelGenerator extends ModelBaseGenerator
 
     protected function getConstants(): array
     {
-        $constants = [];
-        $filePath  = $this->getPath();
-        if (!file_exists($filePath)) {
-            return $constants;
-        }
-
-        $lexer = new Lexer([
-            'usedAttributes' => [
-                'comments', 'startLine', 'endLine',
-            ],
-        ]);
-
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
-
-        try {
-            $statements = $parser->parse(file_get_contents($filePath));
-        } catch (Error $e) {
+        $constants  = [];
+        $statements = $this->parseFile();
+        if (empty($statements)) {
             return [];
         }
 
@@ -105,6 +89,38 @@ class ModelGenerator extends ModelBaseGenerator
         asort($constants);
 
         return $constants;
+    }
+
+    protected function getTraits(): array
+    {
+        $traits     = [];
+        $statements = $this->parseFile();
+        if (empty($statements)) {
+            return [];
+        }
+
+        $this->getAllTraits($statements, $traits);
+
+        asort($traits);
+
+        return $traits;
+    }
+
+    protected function getAllTraits($statements, &$result)
+    {
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        foreach ($statements as $statement) {
+            if (get_class($statement) === \PhpParser\Node\Stmt\TraitUse::class) {
+                foreach ($statement->traits as $trait) {
+                    $result[$trait->name] = ltrim($prettyPrinter->prettyPrint([$trait]));
+                }
+            } elseif (property_exists($statement, 'stmts')) {
+                $return = $this->getAllTraits($statement->stmts, $result);
+                if (!empty($return)) {
+                    return $return;
+                }
+            }
+        }
     }
 
     protected function getAllConstants($statements, &$result)

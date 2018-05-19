@@ -66,9 +66,8 @@ class Relation
         $this->referenceColumn       = $referenceColumn;
         $this->intermediateTableName = $intermediateTableName;
 
-        $this->editFieldType = $this->detectEditType();
-
         $this->setName();
+        $this->editFieldType = $this->detectEditType();
     }
 
     protected function setName()

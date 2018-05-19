@@ -27,6 +27,11 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
 @if( $authenticatable )
     use HasApiTokens, Notifiable;
 @endif
+@foreach( $traits as $trait )
+@if( !in_array($trait, ['SoftDeletes','HasApiTokens','Notifiable']))
+    use {!! $trait !!};
+@endif
+@endForeach
 
 @foreach( $constants as $constant )
     const {!! $constant !!};

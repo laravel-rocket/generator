@@ -59,10 +59,13 @@ class ParseTest extends TestCase
 
     protected function travarse($statements)
     {
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
         foreach ($statements as $statement) {
             print get_class($statement).PHP_EOL;
-            if (get_class($statement) == ArrayItem::class && $statement->key && $statement->key->value == 'aliases') {
-//                print_r($statement->value);
+            if (get_class($statement) == \PhpParser\Node\Stmt\TraitUse::class ) {
+                foreach( $statement->traits as $trait){
+                    print ltrim($prettyPrinter->prettyPrint([$trait])) . PHP_EOL;
+                }
             } elseif (property_exists($statement, 'stmts')) {
                 $this->travarse($statement->stmts);
             } elseif (property_exists($statement, 'expr')) {

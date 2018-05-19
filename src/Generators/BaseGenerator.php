@@ -27,6 +27,8 @@ class BaseGenerator
     /** @var bool */
     protected $rebuild;
 
+    protected $parsedFile;
+
     /**
      * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
@@ -105,8 +107,16 @@ class BaseGenerator
      *
      * @return null|\PhpParser\Node[]
      */
-    protected function parseFile(string $filePath)
+    protected function parseFile(string $filePath = '')
     {
+        if (!empty($this->parsedFile)) {
+            return $this->parsedFile;
+        }
+
+        if (empty($filePath)) {
+            $filePath = $this->getPath();
+        }
+
         $lexer = new Lexer([
             'usedAttributes' => [
                 'comments', 'startLine', 'endLine',
@@ -121,7 +131,9 @@ class BaseGenerator
             return null;
         }
 
-        return $statements;
+        $this->parsedFile = $statements;
+
+        return $this->parsedFile;
     }
 
     protected function getExistingMethods(): array
