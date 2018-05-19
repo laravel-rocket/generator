@@ -15,7 +15,7 @@ class AdminCRUDGenerator extends MWBGenerator
 {
     protected $name = 'rocket:make:crud:admin';
 
-    protected $signature = 'rocket:make:crud:admin {name}  {--rebuild} {--file=} {--json=}';
+    protected $signature = 'rocket:make:crud:admin {name?} {--rebuild} {--file=} {--json=}';
 
     protected $description = 'Create Admin CRUD';
 
@@ -66,25 +66,34 @@ class AdminCRUDGenerator extends MWBGenerator
             new SideBarFileUpdater($this->config, $this->files, $this->view),
         ];
 
-        $name  = $this->normalizeName($this->argument('name'));
-        $table = $this->findTableFromName($name);
-        if (empty($table)) {
-            $this->output('No table definition found: '.$name, 'red');
+        $name = $this->argument('name');
+        if (!empty($name)) {
+            $name = $this->normalizeName($name);
 
-            return;
+            $table = $this->findTableFromName($name);
+            if (empty($table)) {
+                $this->output('No table definition found: '.$name, 'red');
+
+                return;
+            }
+            $tables = [$table];
+        } else {
+            $tables = $this->tables;
         }
-
-        $this->output('Processing '.$table->getName().' Admin CRUD...', 'green');
 
         if (!$rebuild) {
             $this->output('  Warning: if you want to update existing files, please set \'--rebuild\' option', 'yellow');
         }
 
-        foreach ($generators as $generator) {
-            $generator->generate($table, $this->tables, $this->json);
-        }
-        foreach ($fileUpdaters as $fileUpdater) {
-            $fileUpdater->insert($table, $this->tables, $this->json);
+        foreach ($tables as $table) {
+            $this->output('Processing '.$table->getName().' Admin CRUD...', 'green');
+
+            foreach ($generators as $generator) {
+                $generator->generate($table, $this->tables, $this->json);
+            }
+            foreach ($fileUpdaters as $fileUpdater) {
+                $fileUpdater->insert($table, $this->tables, $this->json);
+            }
         }
     }
 }

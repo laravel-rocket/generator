@@ -65,8 +65,9 @@ class AdminAPIGenerator extends MWBGenerator
             new RouterFileUpdater($this->config, $this->files, $this->view, $rebuild),
         ];
 
+        $name = $this->argument('name');
         if (!empty($name)) {
-            $name = $this->normalizeName($this->argument('name'));
+            $name = $this->normalizeName($name);
 
             $table = $this->findTableFromName($name);
             if (empty($table)) {
