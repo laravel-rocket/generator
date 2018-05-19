@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
         'LaravelRocket\Foundation\Models\Base',
         'Illuminate\Database\Eloquent\SoftDeletes'
     ]))
-use {!! $trait !!};
+use {!! $use !!};
 @endif
 @endForeach
 

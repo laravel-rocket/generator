@@ -248,4 +248,32 @@ class TableBaseGenerator extends BaseGenerator
 
         return 'id';
     }
+
+    protected function getConstants(): array
+    {
+        $constants  = [];
+        $statements = $this->parseFile();
+        if (empty($statements)) {
+            return [];
+        }
+
+        $this->getAllConstants($statements, $constants);
+
+        $columns = $this->json->get(['tables', $this->table->getName().'.columns'], []);
+        foreach ($columns as $name => $column) {
+            $type = array_get($column, 'type');
+            if ($type === 'type') {
+                $options = array_get($column, 'options', []);
+                foreach ($options as $option) {
+                    $value                    = array_get($option, 'value');
+                    $constantName             = $this->generateConstantName($name, $value);
+                    $constants[$constantName] = "$constantName = '$value'";
+                }
+            }
+        }
+
+        asort($constants);
+
+        return $constants;
+    }
 }

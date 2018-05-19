@@ -12,7 +12,7 @@ use PhpParser\Error;
 use PhpParser\Lexer;
 use PhpParser\ParserFactory;
 
-class BaseGenerator
+class TestClass
 {
     /** @var \Illuminate\Config\Repository */
     protected $config;
@@ -31,8 +31,6 @@ class BaseGenerator
 
     protected $parsedFile;
 
-    use \AbstractTrait;
-    use LocaleStorable,PaginationTrait;
 
     /**
      * @param \Illuminate\Config\Repository     $config

@@ -27,8 +27,6 @@ class BaseGenerator
     /** @var bool */
     protected $rebuild;
 
-    protected $parsedFile;
-
     /**
      * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
@@ -103,18 +101,14 @@ class BaseGenerator
     }
 
     /**
-     * @param string $filePath
-     *
      * @return null|\PhpParser\Node[]
      */
-    protected function parseFile(string $filePath = '')
+    protected function parseFile()
     {
-        if (!empty($this->parsedFile)) {
-            return $this->parsedFile;
-        }
+        $filePath = $this->getPath();
 
-        if (empty($filePath)) {
-            $filePath = $this->getPath();
+        if (!file_exists($filePath)) {
+            return null;
         }
 
         $lexer = new Lexer([
@@ -131,9 +125,7 @@ class BaseGenerator
             return null;
         }
 
-        $this->parsedFile = $statements;
-
-        return $this->parsedFile;
+        return $statements;
     }
 
     protected function getExistingMethods(): array
@@ -179,19 +171,6 @@ class BaseGenerator
 
         $this->getAllConstants($statements, $constants);
 
-        $columns = $this->json->get(['tables', $this->table->getName().'.columns'], []);
-        foreach ($columns as $name => $column) {
-            $type = array_get($column, 'type');
-            if ($type === 'type') {
-                $options = array_get($column, 'options', []);
-                foreach ($options as $option) {
-                    $value                    = array_get($option, 'value');
-                    $constantName             = $this->generateConstantName($name, $value);
-                    $constants[$constantName] = "$constantName = '$value'";
-                }
-            }
-        }
-
         asort($constants);
 
         return $constants;
@@ -218,7 +197,8 @@ class BaseGenerator
         foreach ($statements as $statement) {
             if (get_class($statement) === \PhpParser\Node\Stmt\Use_::class) {
                 foreach ($statement->uses as $use) {
-                    $result[$use->name] = ltrim($prettyPrinter->prettyPrint([$use]));
+                    $name          = ltrim($prettyPrinter->prettyPrint([$use]));
+                    $result[$name] = $name;
                 }
             } elseif (property_exists($statement, 'stmts')) {
                 $return = $this->getAllTraits($statement->stmts, $result);
@@ -227,6 +207,8 @@ class BaseGenerator
                 }
             }
         }
+
+        return null;
     }
 
     protected function getAllTraits($statements, &$result)
@@ -234,6 +216,7 @@ class BaseGenerator
         $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
         foreach ($statements as $statement) {
             if (get_class($statement) === \PhpParser\Node\Stmt\TraitUse::class) {
+                /** @var \PhpParser\Node\Name $trait */
                 foreach ($statement->traits as $trait) {
                     $result[$trait->toString()] = ltrim($prettyPrinter->prettyPrint([$trait]));
                 }
@@ -244,6 +227,8 @@ class BaseGenerator
                 }
             }
         }
+
+        return null;
     }
 
     protected function getAllConstants($statements, &$result)
@@ -261,5 +246,7 @@ class BaseGenerator
                 }
             }
         }
+
+        return null;
     }
 }
