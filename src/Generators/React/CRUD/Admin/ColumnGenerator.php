@@ -51,6 +51,7 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                     'editable'  => $column->isEditable(),
                     'queryName' => $column->getQueryName(),
                     'apiName'   => $column->getAPIName(),
+                    'options'   => $column->getEditFieldOptions(),
                 ];
                 if ($column->isListable()) {
                     $result['list'][] = $column->getName();
