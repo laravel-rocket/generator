@@ -102,7 +102,8 @@ class Column
     public function getQueryName()
     {
         $name = $this->getName();
-        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+        //        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+        if ($this->hasFileRelation() || $this->hasImageRelation()) {
             $name = substr($name, 0, strlen($name) - 3);
         }
 
@@ -464,6 +465,12 @@ class Column
             $this->editFieldType = 'textarea';
 
             return;
+        }
+
+        if ($this->hasRelation()) {
+            if ($this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+                $this->editFieldType = 'select_single';
+            }
         }
 
         return;

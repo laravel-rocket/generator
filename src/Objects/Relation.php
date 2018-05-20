@@ -171,8 +171,15 @@ class Relation
      */
     public function isEditable(): bool
     {
-        return !$this->hasPostFix($this->getName(), $this->uneditables)
-            && ($this->getType() === self::TYPE_BELONGS_TO || $this->isRoles() || $this->isTypes());
+        if ($this->hasPostFix($this->getName(), $this->uneditables)) {
+            return false;
+        }
+
+        if ($this->getType() === self::TYPE_BELONGS_TO) {
+            return false;
+        }
+
+        return $this->isRoles() || $this->isTypes();
     }
 
     /**
