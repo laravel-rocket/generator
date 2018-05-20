@@ -5,6 +5,11 @@ import columns from './_columns'
 import info from "./_info";
 import {withRouter} from 'react-router-dom'
 import Edit from "../CRUDBase/Edit";
+@foreach( $relations as $relationName => $relationModelName )
+@if( $relationModelName !== $modelName )
+import {{ $relationModelName }}Repository from "../../repositories/{{ $relationModelName }}Repository";
+@endif
+@endforeach
 
 class {{ $modelName }}Edit extends Edit {
 
@@ -19,6 +24,14 @@ class {{ $modelName }}Edit extends Edit {
 
   setColumnInfo() {
     this.columns = columns;
+  }
+
+  setRelationRepository() {
+    this.relationRepositories = {
+@foreach( $relations as $relationName => $relationModelName )
+      "{{ $relationName }}": new {{ $relationModelName }}Repository(),
+@endforeach
+    };
   }
 }
 

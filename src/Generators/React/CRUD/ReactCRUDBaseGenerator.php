@@ -32,6 +32,21 @@ class ReactCRUDBaseGenerator extends TableBaseGenerator
         $modelName   = $this->getModelName();
         $tableObject = new Table($this->table, $this->tables, $this->json);
 
+        $relations = [];
+        foreach ($tableObject->getColumns() as $column) {
+            if ($column->isAPIReturnable()) {
+                $relation = $column->getRelation();
+                if (!empty($relation)) {
+                    $referenceTableObject            = new Table(
+                        $this->findTableFromName($relation->getReferenceTableName()),
+                        $this->tables,
+                        $this->json
+                    );
+                    $relations[$relation->getName()] = $referenceTableObject->getModelName();
+                }
+            }
+        }
+
         $variables = [
             'table'        => $tableObject,
             'modelName'    => $modelName,
@@ -39,6 +54,7 @@ class ReactCRUDBaseGenerator extends TableBaseGenerator
             'variableName' => lcfirst($modelName),
             'className'    => $this->getClassName(),
             'title'        => $tableObject->getDisplayName(),
+            'relations'    => $relations,
         ];
 
         return array_merge($variables, $tableObject->getTestColumn());

@@ -40,7 +40,7 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
             'list'      => [],
             'show'      => [],
             'edit'      => [],
-            'relations' => [],
+            'relations' => $variables['relations'],
         ];
 
         foreach ($tableObject->getColumns() as $column) {
@@ -65,8 +65,6 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                 $relation = $column->getRelation();
                 if (!empty($relation)) {
                     $result['columns'][$column->getName()]['relation'] = $relation->getName();
-                    $referenceTableObject                              = new Table($this->findTableFromName($relation->getReferenceTableName()), $this->tables, $this->json);
-                    $result['relations'][$relation->getName()]         = $referenceTableObject->getModelName();
                 }
             }
         }
