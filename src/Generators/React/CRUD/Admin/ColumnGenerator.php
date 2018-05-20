@@ -36,10 +36,11 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
         $tableObject = $variables['table'];
 
         $result = [
-            'columns' => [],
-            'list'    => [],
-            'show'    => [],
-            'edit'    => [],
+            'columns'   => [],
+            'list'      => [],
+            'show'      => [],
+            'edit'      => [],
+            'relations' => [],
         ];
 
         foreach ($tableObject->getColumns() as $column) {
@@ -60,6 +61,12 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                 if ($column->isEditable()) {
                     $result['edit'][] = $column->getName();
                 }
+                $relation = $column->getRelation();
+                if (!empty($relation)) {
+                    $result['columns'][$column->getName()]['relation'] = $relation->getName();
+                    $referenceTableObject                              = new Table($this->findTableFromName($relation->getReferenceTableName()), $this->tables);
+                    $result['relations'][$relation->getName()]         = $referenceTableObject->getModelName();
+                }
             }
         }
 
@@ -77,7 +84,7 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                     'apiName'     => $relation->getAPIName(),
                     'options'     => $options,
                     'optionNames' => $optionNames,
-                    'link'        => $referenceTableObject->getPathName(),
+                    'link'        => '/'.$referenceTableObject->getPathName(),
                 ];
                 if ($relation->isListable()) {
                     $result['list'][] = $relation->getName();
