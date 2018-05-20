@@ -5,7 +5,7 @@ import columns from './_columns'
 import info from "./_info";
 import {withRouter} from 'react-router-dom'
 import Edit from "../CRUDBase/Edit";
-@foreach( $relations as $relationName => $relationModelName )
+@foreach( array_unique($relations) as $relationModelName )
 @if( $relationModelName !== $modelName )
 import {{ $relationModelName }}Repository from "../../repositories/{{ $relationModelName }}Repository";
 @endif
