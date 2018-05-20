@@ -30,7 +30,7 @@ class ReactCRUDBaseGenerator extends TableBaseGenerator
     protected function getVariables(): array
     {
         $modelName   = $this->getModelName();
-        $tableObject = new Table($this->table, $this->tables);
+        $tableObject = new Table($this->table, $this->tables, $this->json);
 
         $variables = [
             'table'        => $tableObject,

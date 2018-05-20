@@ -65,7 +65,7 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                 $relation = $column->getRelation();
                 if (!empty($relation)) {
                     $result['columns'][$column->getName()]['relation'] = $relation->getName();
-                    $referenceTableObject                              = new Table($this->findTableFromName($relation->getReferenceTableName()), $this->tables);
+                    $referenceTableObject                              = new Table($this->findTableFromName($relation->getReferenceTableName()), $this->tables, $this->json);
                     $result['relations'][$relation->getName()]         = $referenceTableObject->getModelName();
                 }
             }
@@ -75,7 +75,7 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
             if ($relation->shouldIncludeInAPI()) {
                 $options              = [];
                 $optionNames          = [];
-                $referenceTableObject = new Table($this->findTableFromName($relation->getReferenceTableName()), $this->tables);
+                $referenceTableObject = new Table($this->findTableFromName($relation->getReferenceTableName()), $this->tables, $this->json);
 
                 $result['columns'][$relation->getName()] = [
                     'name'        => $relation->getDisplayName(),

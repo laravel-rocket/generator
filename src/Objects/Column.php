@@ -412,7 +412,7 @@ class Column
         }
 
         if (ends_with($name, 'type') || $type === 'type') {
-            $this->editFieldType    = 'select';
+            $this->editFieldType    = 'select_single';
             $this->editFieldOptions = array_get($this->definition, 'options', []);
 
             return;
@@ -449,7 +449,7 @@ class Column
         }
 
         if (ends_with($name, 'gender') && $type === 'varchar') {
-            $this->editFieldType    = 'select';
+            $this->editFieldType    = 'select_single';
             $this->editFieldOptions = array_get($this->definition, 'options', [[
                 'name'  => 'Male',
                 'value' => 'male',

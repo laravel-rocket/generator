@@ -66,7 +66,7 @@ class TableBaseFileUpdater extends BaseFileUpdater
     {
         $this->table       = $table;
         $this->tables      = $tables;
-        $this->tableObject = new Table($table, $tables);
+        $this->tableObject = new Table($table, $tables, $this->json);
     }
 
     public function needGenerate()

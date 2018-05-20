@@ -62,6 +62,11 @@ class BaseCommand extends Command
 
         $data = file_get_contents($file);
 
+        $check = json_decode($data);
+        if ($check === null) {
+            $this->output('JSON file  ( '.$file.' ) is not valid.', 'error');
+        }
+
         $this->json = new Definitions($data);
 
         return true;

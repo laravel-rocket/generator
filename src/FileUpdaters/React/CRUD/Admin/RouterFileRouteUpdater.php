@@ -70,7 +70,7 @@ class RouterFileRouteUpdater extends TableBaseFileUpdater
     {
         $modelName   = $this->getModelName();
         $pathName    = snake_case(pluralize($modelName));
-        $tableObject = new Table($this->table, $this->tables);
+        $tableObject = new Table($this->table, $this->tables, $this->json);
         $displayName = $tableObject->getDisplayName();
 
         return <<< EOS
