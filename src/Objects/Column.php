@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Objects;
 
 class Column
@@ -33,25 +34,25 @@ class Column
      * Column constructor.
      *
      * @param \TakaakiMizuno\MWBParser\Elements\Column|\Doctrine\DBAL\Schema\Column $column
-     * @param \TakaakiMizuno\MWBParser\Elements\Table|null                          $table
-     * @param array                                                                 $definition
+     * @param \TakaakiMizuno\MWBParser\Elements\Table|null $table
+     * @param array $definition
      */
     public function __construct($column, $table = null, $definition = [])
     {
         $this->column     = $column;
         $this->definition = $definition;
 
-        if (!empty($table)) {
-            foreach ($table->getForeignKey() as $foreignKey) {
+        if(!empty($table)) {
+            foreach($table->getForeignKey() as $foreignKey) {
                 $columns          = $foreignKey->getColumns();
                 $referenceColumns = $foreignKey->getReferenceColumns();
-                if (count($columns) == 0) {
+                if(count($columns) == 0) {
                     continue;
                 }
-                if (count($referenceColumns) == 0) {
+                if(count($referenceColumns) == 0) {
                     continue;
                 }
-                if ($columns[0]->getName() === $column->getName()) {
+                if($columns[0]->getName() === $column->getName()) {
                     $this->relation = new Relation(
                         Relation::TYPE_BELONGS_TO,
                         $table->getName(),
@@ -89,9 +90,9 @@ class Column
     public function getAPIName()
     {
         $name = $this->getName();
-//        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
-//            $name = substr($name, 0, strlen($name) - 3);
-//        }
+        //        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+        //            $name = substr($name, 0, strlen($name) - 3);
+        //        }
 
         return camel_case($name);
     }
@@ -103,7 +104,7 @@ class Column
     {
         $name = $this->getName();
         //        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
-        if ($this->hasFileRelation() || $this->hasImageRelation()) {
+        if($this->hasFileRelation() || $this->hasImageRelation()) {
             $name = substr($name, 0, strlen($name) - 3);
         }
 
@@ -117,7 +118,7 @@ class Column
     {
         $type = $this->column->getType();
 
-        if (get_class($this->column) == \Doctrine\DBAL\Schema\Column::class || !is_string($type)) {
+        if(get_class($this->column) == \Doctrine\DBAL\Schema\Column::class || !is_string($type)) {
             return $type->getName();
         }
 
@@ -169,7 +170,7 @@ class Column
      */
     public function isEditable(): bool
     {
-        if ($this->hasImageRelation() || $this->hasFileRelation()) {
+        if($this->hasImageRelation() || $this->hasFileRelation()) {
             return false;
         }
 
@@ -181,19 +182,19 @@ class Column
      */
     public function isListable(): bool
     {
-        if ($this->isPrimaryKey()) {
+        if($this->isPrimaryKey()) {
             return true;
         }
 
-        if (in_array($this->getName(), $this->unlistables)) {
+        if(in_array($this->getName(), $this->unlistables)) {
             return false;
         }
 
-        if (in_array($this->getType(), $this->unlistableTypes)) {
+        if(in_array($this->getType(), $this->unlistableTypes)) {
             return false;
         }
 
-        if ($this->hasRelation()) {
+        if($this->hasRelation()) {
             return false;
         }
 
@@ -205,15 +206,15 @@ class Column
      */
     public function isShowable(): bool
     {
-        if ($this->isPrimaryKey()) {
+        if($this->isPrimaryKey()) {
             return true;
         }
 
-        if (in_array($this->column->getName(), $this->unshowables)) {
+        if(in_array($this->column->getName(), $this->unshowables)) {
             return false;
         }
 
-        if ($this->hasRelation()) {
+        if($this->hasRelation()) {
             return false;
         }
 
@@ -225,7 +226,7 @@ class Column
      */
     public function isAPIReturnable(): bool
     {
-        if (in_array($this->getName(), $this->unshowables)) {
+        if(in_array($this->getName(), $this->unshowables)) {
             return false;
         }
 
@@ -245,7 +246,7 @@ class Column
      */
     public function isQueryable(): bool
     {
-        if (ends_with($this->getName(), 'name')) {
+        if(ends_with($this->getName(), 'name')) {
             return true;
         }
 
@@ -257,12 +258,12 @@ class Column
      */
     public function isBoolean(): bool
     {
-        switch ($this->getType()) {
+        switch($this->getType()) {
             case 'tinyint':
                 return true;
             case 'bigint':
             case 'int':
-                if (starts_with($this->getName(), 'is_') || starts_with($this->getName(), 'has_')) {
+                if(starts_with($this->getName(), 'is_') || starts_with($this->getName(), 'has_')) {
                     return true;
                 }
                 break;
@@ -276,7 +277,7 @@ class Column
      */
     public function isTimestamp(): bool
     {
-        switch ($this->getType()) {
+        switch($this->getType()) {
             case 'timestamp':
             case 'timestamp_f':
                 return true;
@@ -290,9 +291,9 @@ class Column
      */
     public function isUnixTimestamp(): bool
     {
-        switch ($this->getType()) {
+        switch($this->getType()) {
             case 'int':
-                if (ends_with($this->getName(), '_at')) {
+                if(ends_with($this->getName(), '_at')) {
                     return true;
                 }
                 break;
@@ -306,10 +307,10 @@ class Column
      */
     public function isNumber(): bool
     {
-        if ($this->isBoolean() || $this->isUnixTimestamp()) {
+        if($this->isBoolean() || $this->isUnixTimestamp()) {
             return false;
         }
-        switch ($this->getType()) {
+        switch($this->getType()) {
             case 'bigint':
             case 'int':
             case 'decimal':
@@ -325,7 +326,7 @@ class Column
      */
     public function isString(): bool
     {
-        switch ($this->getType()) {
+        switch($this->getType()) {
             case 'varchar':
             case 'text':
             case 'mediumtext':
@@ -342,7 +343,7 @@ class Column
      */
     public function isNullable(): bool
     {
-        if (get_class($this->column) == \Doctrine\DBAL\Schema\Column::class) {
+        if(get_class($this->column) == \Doctrine\DBAL\Schema\Column::class) {
             return !$this->column->getNotnull();
         }
 
@@ -354,7 +355,7 @@ class Column
      */
     public function getDefaultValue()
     {
-        if (get_class($this->column) == \Doctrine\DBAL\Schema\Column::class) {
+        if(get_class($this->column) == \Doctrine\DBAL\Schema\Column::class) {
             return $this->column->getDefault();
         }
 
@@ -366,15 +367,15 @@ class Column
      */
     public function getDefaultAPIResponse()
     {
-        $defaultValue = ''.$this->getDefaultValue();
-        if (empty($defaultValue)) {
-            if ($this->isNullable()) {
+        $defaultValue = '' . $this->getDefaultValue();
+        if(empty($defaultValue)) {
+            if($this->isNullable()) {
                 $defaultValue = 'null';
-            } elseif ($this->isBoolean()) {
+            } elseif($this->isBoolean()) {
                 $defaultValue = 'false';
-            } elseif ($this->isUnixTimestamp() || $this->isNumber()) {
+            } elseif($this->isUnixTimestamp() || $this->isNumber()) {
                 $defaultValue = '0';
-            } elseif ($this->isString()) {
+            } elseif($this->isString()) {
                 $defaultValue = "''";
             } else {
                 $defaultValue = 'null';
@@ -392,63 +393,69 @@ class Column
         $this->editFieldType    = 'text';
         $this->editFieldOptions = [];
 
-        if (starts_with($type, 'bool') || (starts_with($name, 'is_') ||
+        if(starts_with($type, 'bool') || (starts_with($name, 'is_') ||
                 starts_with($name, 'has_')) && ($type === 'int' || $type === 'tinyint')) {
             $this->editFieldType = 'boolean';
 
             return;
         }
 
-        if (ends_with($name, 'image_id') && ($type === 'int' || $type === 'bigint')) {
+        if(ends_with($name, 'image_id') && ($type === 'int' || $type === 'bigint')) {
             $this->editFieldType = 'image';
 
             return;
         }
 
-        if (ends_with($name, 'file_id') && ($type === 'int' || $type === 'bigint')) {
+        if(ends_with($name, 'file_id') && ($type === 'int' || $type === 'bigint')) {
             $this->editFieldType = 'file';
 
             return;
         }
 
-        if (ends_with($name, 'type') || $type === 'type') {
+        if(ends_with($name, 'type') || $type === 'type') {
             $this->editFieldType    = 'select_single';
             $this->editFieldOptions = array_get($this->definition, 'options', []);
 
             return;
         }
 
-        if ($name === 'password') {
+        if($this->isUnixTimestamp() || $this->isTimestamp()) {
+            $this->editFieldType    = 'datetime';
+
+            return;
+        }
+
+        if($name === 'password') {
             $this->editFieldType = 'password';
 
             return;
         }
 
-        if ($name === 'email') {
+        if($name === 'email') {
             $this->editFieldType = 'email';
 
             return;
         }
 
-        if (ends_with($name, 'country_code') && $type === 'varchar') {
+        if(ends_with($name, 'country_code') && $type === 'varchar') {
             $this->editFieldType = 'country';
 
             return;
         }
 
-        if (ends_with($name, 'currency_code') && $type === 'varchar') {
+        if(ends_with($name, 'currency_code') && $type === 'varchar') {
             $this->editFieldType = 'currency';
 
             return;
         }
 
-        if ($type === 'date') {
+        if($type === 'date') {
             $this->editFieldType = 'date';
 
             return;
         }
 
-        if (ends_with($name, 'gender') && $type === 'varchar') {
+        if(ends_with($name, 'gender') && $type === 'varchar') {
             $this->editFieldType    = 'select_single';
             $this->editFieldOptions = array_get($this->definition, 'options', [[
                 'name'  => 'Male',
@@ -461,14 +468,14 @@ class Column
             return;
         }
 
-        if (in_array($type, ['text', 'mediumtext', 'longtext', 'smalltext', 'tinytext'])) {
+        if(in_array($type, ['text', 'mediumtext', 'longtext', 'smalltext', 'tinytext'])) {
             $this->editFieldType = 'textarea';
 
             return;
         }
 
-        if ($this->hasRelation()) {
-            if ($this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+        if($this->hasRelation()) {
+            if($this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
                 $this->editFieldType = 'select_single';
             }
         }
@@ -485,7 +492,7 @@ class Column
     {
         $column  = $this->column;
         $postfix = '';
-        switch ($this->getType()) {
+        switch($this->getType()) {
             case 'tinyint':
                 $type = 'boolean';
                 break;
@@ -505,8 +512,8 @@ class Column
             case 'varchar':
             case 'string':
                 $type = 'string';
-                if ($column->getLength() != 255) {
-                    $postfix = ', '.$column->getLength();
+                if($column->getLength() != 255) {
+                    $postfix = ', ' . $column->getLength();
                 }
                 break;
             case 'text':
@@ -520,29 +527,29 @@ class Column
                 break;
             case 'decimal':
                 $type    = 'decimal';
-                $postfix = ', '.$column->getPrecision().', '.$column->getScale();
+                $postfix = ', ' . $column->getPrecision() . ', ' . $column->getScale();
                 break;
             default:
                 $type = 'unknown';
         }
-        $line = '$table->'.$type.'(\''.$this->getName().'\''.$postfix.')';
+        $line = '$table->' . $type . '(\'' . $this->getName() . '\'' . $postfix . ')';
 
-        if ($this->isNullable()) {
+        if($this->isNullable()) {
             $line .= '->nullable()';
         }
-        if (!is_null($this->getDefaultValue()) && $this->getDefaultValue() !== '') {
+        if(!is_null($this->getDefaultValue()) && $this->getDefaultValue() !== '') {
             $defaultValue = $this->getDefaultValue();
-            if (starts_with($defaultValue, "'") && ends_with($defaultValue, "'")) {
+            if(starts_with($defaultValue, "'") && ends_with($defaultValue, "'")) {
                 $defaultValue = substr($defaultValue, 1, strlen($defaultValue) - 2);
             }
-            switch ($this->getType()) {
+            switch($this->getType()) {
                 case 'tinyint':
-                    $defaultValue = (int) $defaultValue == 1 ? 'true' : 'false';
-                    $line .= '->default('.$defaultValue.')';
+                    $defaultValue = (int)$defaultValue == 1 ? 'true' : 'false';
+                    $line         .= '->default(' . $defaultValue . ')';
                     break;
                 case 'bigint':
                 case 'int':
-                    $line .= '->default('.((int) $defaultValue).')';
+                    $line .= '->default(' . ((int)$defaultValue) . ')';
                     break;
                 case 'timestamp':
                 case 'timestamp_f':
@@ -551,18 +558,18 @@ class Column
                 case 'text':
                 case 'mediumtext':
                 case 'longtext':
-                    $line .= '->default(\''.$defaultValue.'\')';
+                    $line .= '->default(\'' . $defaultValue . '\')';
                     break;
                 case 'decimal':
-                    $line .= '->default('.((float) $defaultValue).')';
+                    $line .= '->default(' . ((float)$defaultValue) . ')';
                     break;
                 default:
-                    $line .= '->default(\''.$defaultValue.'\')';
+                    $line .= '->default(\'' . $defaultValue . '\')';
                     break;
             }
         }
-        if (!empty($previousColumnName)) {
-            $line .= '->after(\''.$previousColumnName.'\')';
+        if(!empty($previousColumnName)) {
+            $line .= '->after(\'' . $previousColumnName . '\')';
         }
 
         return $line;
@@ -573,25 +580,25 @@ class Column
      */
     public function generateDropMigration()
     {
-        $line = '$table->dropColumn(\''.$this->column->getName().'\')';
+        $line = '$table->dropColumn(\'' . $this->column->getName() . '\')';
 
         return $line;
     }
 
     /**
-     * @param string       $haystack
+     * @param string $haystack
      * @param array|string $needles
      *
      * @return bool
      */
     protected function hasPostFix($haystack, $needles)
     {
-        if (!is_array($needles)) {
+        if(!is_array($needles)) {
             $needles = [$needles];
         }
 
-        foreach ($needles as $needle) {
-            if ($haystack === $needle || ends_with($haystack, '_'.$needle)) {
+        foreach($needles as $needle) {
+            if($haystack === $needle || ends_with($haystack, '_' . $needle)) {
                 return true;
             }
         }
@@ -601,7 +608,7 @@ class Column
 
     public function isPrimaryKey()
     {
-        if ($this->column->getAutoincrement() && $this->getName() == 'id') {
+        if($this->column->getAutoincrement() && $this->getName() == 'id') {
             return true;
         }
 
