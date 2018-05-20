@@ -65,8 +65,9 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
 
         foreach ($tableObject->getRelations() as $relation) {
             if ($relation->shouldIncludeInAPI()) {
-                $options     = [];
-                $optionNames = [];
+                $options              = [];
+                $optionNames          = [];
+                $referenceTableObject = new Table($this->findTableFromName($relation->getReferenceTableName()), $this->tables);
 
                 $result['columns'][$relation->getName()] = [
                     'name'        => $relation->getDisplayName(),
@@ -76,6 +77,7 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                     'apiName'     => $relation->getAPIName(),
                     'options'     => $options,
                     'optionNames' => $optionNames,
+                    'link'        => $referenceTableObject->getPathName(),
                 ];
                 if ($relation->isListable()) {
                     $result['list'][] = $relation->getName();

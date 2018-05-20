@@ -45,7 +45,7 @@ class {{ $className }} extends Response
 @elseif( $relation->isImage() )
                 '{{ $relation->getName() }}' => Image::updateWithModel($model->{{ camel_case($relation->getName()) }}),
 @else
-                '{{ $relation->getName() }}' => {{ ucfirst(camel_case(\ICanBoogie\singularize($relation->getReferenceModel()))) }}::updateWithModel($model->{{ camel_case($relation->getName()) }}),
+                '{{ $relation->getName() }}' => empty($model->{{ camel_case($relation->getName()) }}) ? null : {{ ucfirst(camel_case(\ICanBoogie\singularize($relation->getReferenceModel()))) }}::updateWithModel($model->{{ camel_case($relation->getName()) }}),
 @endif
 @endif
 @endforeach

@@ -276,4 +276,20 @@ class TableBaseGenerator extends BaseGenerator
 
         return $constants;
     }
+
+    /**
+     * @param string $name
+     *
+     * @return null|\TakaakiMizuno\MWBParser\Elements\Table
+     */
+    protected function findTableFromName($name)
+    {
+        foreach ($this->tables as $table) {
+            if ($table->getName() === $name) {
+                return $table;
+            }
+        }
+
+        return null;
+    }
 }
