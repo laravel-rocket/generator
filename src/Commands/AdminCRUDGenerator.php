@@ -7,7 +7,9 @@ use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\SideBarFileUpdater;
 use LaravelRocket\Generator\Generators\React\CRUD\Admin\ColumnGenerator;
 use LaravelRocket\Generator\Generators\React\CRUD\Admin\InfoGenerator;
 use LaravelRocket\Generator\Generators\React\CRUD\Admin\RepositoryGenerator;
+use LaravelRocket\Generator\Generators\React\CRUD\Admin\RoleConfigGenerator;
 use LaravelRocket\Generator\Generators\React\CRUD\Admin\ViewGenerator;
+use LaravelRocket\Generator\Objects\Table;
 use LaravelRocket\Generator\Services\DatabaseService;
 use function ICanBoogie\pluralize;
 
@@ -51,6 +53,14 @@ class AdminCRUDGenerator extends MWBGenerator
     {
         $rebuild = !empty($this->input->getOption('rebuild'));
 
+        $singleGenerators = [
+            new RoleConfigGenerator($this->config, $this->files, $this->view, $rebuild),
+        ];
+
+        foreach ($singleGenerators as $generator) {
+            $generator->generate($this->json);
+        }
+
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
             new RepositoryGenerator($this->config, $this->files, $this->view, $rebuild),
@@ -86,6 +96,22 @@ class AdminCRUDGenerator extends MWBGenerator
         }
 
         foreach ($tables as $table) {
+            $tableObject = new Table($table, $this->tables, $this->json);
+
+            $excludes = $this->json->get('admin.cruds.exclude', []);
+            if (in_array($tableObject->getName(), $excludes)) {
+                $this->output('Skip '.$table->getName().' Admin CRUD... ( exists in exclude list )', 'yellow');
+                continue;
+            }
+
+            $includes = $this->json->get('admin.cruds.include', []);
+            if (!in_array($tableObject->getName(), $includes)) {
+                if ($tableObject->isRelationTable()) {
+                    $this->output('Skip '.$table->getName().' Admin CRUD... ( this is relation table )', 'yellow');
+                    continue;
+                }
+            }
+
             $this->output('Processing '.$table->getName().' Admin CRUD...', 'green');
 
             foreach ($generators as $generator) {

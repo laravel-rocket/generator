@@ -149,6 +149,9 @@ class Table
         return $this->hasColumn('remember_token');
     }
 
+    /**
+     * @return array
+     */
     public function getTestColumn()
     {
         $variables = [
@@ -323,6 +326,9 @@ class Table
         return false;
     }
 
+    /**
+     * @return string
+     */
     public function getIconClass()
     {
         $mappings = [
@@ -335,6 +341,8 @@ class Table
             'notifications' => 'fa fa-bell',
             'tags'          => 'fa fa-tags',
             'articles'      => 'fa fa-pencil',
+            'messages'      => 'fa fa-comments-o',
+            'comments'      => 'fa fa-comments-o',
         ];
 
         $name = $this->getName();
@@ -362,5 +370,19 @@ class Table
         $relation = $this->getRelation($table->getName()) ?: $this->getRelation(singularize($table->getName()));
 
         return $relation;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAccessRoles()
+    {
+        $definition    = $this->json->getTableDefinition($this->table->getName());
+        $requiredRoles = array_get($definition, 'requiredRoles', []);
+        if (!is_array($requiredRoles)) {
+            $requiredRoles = [$requiredRoles];
+        }
+
+        return $requiredRoles;
     }
 }

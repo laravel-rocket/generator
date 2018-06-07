@@ -96,9 +96,10 @@ class SideBarFileUpdater extends TableBaseFileUpdater
     protected function insertItem($json): array
     {
         $json['items'][] = [
-            'name' => $this->tableObject->getDisplayName(),
-            'url'  => '/'.$this->tableObject->getPathName(),
-            'icon' => $this->tableObject->getIconClass(),
+            'name'  => $this->tableObject->getDisplayName(),
+            'url'   => '/'.$this->tableObject->getPathName(),
+            'icon'  => $this->tableObject->getIconClass(),
+            'roles' => $this->tableObject->getAccessRoles(),
         ];
 
         return $json;
