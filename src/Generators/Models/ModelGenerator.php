@@ -58,6 +58,8 @@ class ModelGenerator extends ModelBaseGenerator
                 $casts[$column->getName()] = 'boolean';
             } elseif ($definitionType === 'array') {
                 $casts[$column->getName()] = 'array';
+            } elseif ($columnObject->isJson()) {
+                $casts[$column->getName()] = 'array';
             }
         }
 

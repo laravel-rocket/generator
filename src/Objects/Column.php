@@ -340,6 +340,27 @@ class Column
     /**
      * @return bool
      */
+    public function isJson(): bool
+    {
+        switch ($this->getType()) {
+            case 'text':
+            case 'mediumtext':
+            case 'longtext':
+                if (in_array($this->getName(), [
+                    'json',
+                    'data',
+                ])) {
+                    return true;
+                }
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
     public function isNullable(): bool
     {
         if (get_class($this->column) == \Doctrine\DBAL\Schema\Column::class) {
