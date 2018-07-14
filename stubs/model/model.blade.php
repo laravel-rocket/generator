@@ -118,7 +118,7 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
 
 @if( array_key_exists($relation->getName(), $existingMethods))
 @php
-    unset($existingMethods['buildQueryByFilter']);
+    unset($existingMethods[$relation->getName()]);
 @endphp
 @endif
 
