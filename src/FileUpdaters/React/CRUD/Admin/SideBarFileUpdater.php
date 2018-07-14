@@ -13,6 +13,11 @@ class SideBarFileUpdater extends TableBaseFileUpdater
             }
         }
 
+        $excludes = $this->json->get('admin.cruds.exclude', []);
+        if (in_array($this->table->getName(), $excludes)) {
+            return false;
+        }
+
         return !$this->detectRelationTable($this->table);
     }
 

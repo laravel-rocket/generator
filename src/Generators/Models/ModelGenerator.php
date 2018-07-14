@@ -28,16 +28,17 @@ class ModelGenerator extends ModelBaseGenerator
      */
     protected function getVariables(): array
     {
-        $modelName                  = $this->getModelName();
-        $variables                  = $this->getFillableColumns();
-        $variables['className']     = $modelName;
-        $variables['tableName']     = $this->table->getName();
-        $variables['relationTable'] = $this->detectRelationTable($this->table);
-        $variables['relations']     = $this->getRelations();
-        $variables['constants']     = $this->getConstants();
-        $variables['casts']         = $this->getCasts();
-        $variables['traits']        = $this->getTraits();
-        $variables['uses']          = $this->getUses();
+        $modelName                    = $this->getModelName();
+        $variables                    = $this->getFillableColumns();
+        $variables['className']       = $modelName;
+        $variables['tableName']       = $this->table->getName();
+        $variables['relationTable']   = $this->detectRelationTable($this->table);
+        $variables['relations']       = $this->getRelations();
+        $variables['constants']       = $this->getConstants();
+        $variables['casts']           = $this->getCasts();
+        $variables['traits']          = $this->getTraits();
+        $variables['uses']            = $this->getUses();
+        $variables['existingMethods'] = $this->getExistingMethods();
 
         return $variables;
     }

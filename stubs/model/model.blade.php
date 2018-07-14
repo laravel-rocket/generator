@@ -112,10 +112,21 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
     {
         return $this->belongsToMany(\App\Models\{{ $relation->getReferenceModel() }}::class, '{{ $relation->getReferenceTableName() }}', '{{ $relation->getReferenceColumn()->getName() }}', '{{ $relation->getColumn()->getName() }}');
     }
-
+@else
+@continue
 @endif
+
+@if( array_key_exists($relation->getName(), $existingMethods))
+@php
+    unset($existingMethods['buildQueryByFilter']);
+@endphp
+@endif
+
 @endforeach
 
     // Utility Functions
 
+@foreach( $existingMethods as $name => $method )
+    {!! $method !!}
+@endforeach
 }
