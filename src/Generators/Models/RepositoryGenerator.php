@@ -39,8 +39,8 @@ class RepositoryGenerator extends ModelBaseGenerator
         $variables['existingMethods'] = $this->getExistingMethods();
 
         if ($variables['relationTable']) {
-            $variables['parentKey'] = '';
-            $variables['childKey']  = '';
+            $keys = $this->getRelationKey($this->table);
+            $variables = array_merge($variables, $keys);
         }
 
         $targetColumns   = ['name', 'title', 'content', 'note', 'description'];
