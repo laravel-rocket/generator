@@ -152,13 +152,13 @@ class TableBaseGenerator extends BaseGenerator
         if (count($tables) === 2) {
             if ($table->getName() === implode('_', [singularize($tables[0]), $tables[1]])) {
                 return [
-                    'parentKey' => array_get($columns, '0.0', ''),
-                    'childKey'  => array_get($columns, '1.0', ''),
+                    'parentKey' => array_get($columns, '0.0') ? (array_get($columns, '0.0'))->getName() : '',
+                    'childKey'  => array_get($columns, '1.0') ? (array_get($columns, '1.0'))->getName() : '',
                 ];
             } elseif ($table->getName() === implode('_', [singularize($tables[1]), $tables[0]])) {
                 return [
-                    'parentKey' => array_get($columns, '1.0', ''),
-                    'childKey'  => array_get($columns, '0.0', ''),
+                    'parentKey' => array_get($columns, '1.0') ? (array_get($columns, '1.0'))->getName() : '',
+                    'childKey'  => array_get($columns, '0.0') ? (array_get($columns, '0.0'))->getName() : '',
                 ];
             }
         }
