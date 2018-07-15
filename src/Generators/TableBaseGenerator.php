@@ -123,6 +123,53 @@ class TableBaseGenerator extends BaseGenerator
     }
 
     /**
+     * @param Table $table
+     *
+     * @return array
+     */
+    protected function getRelationKey($table)
+    {
+        $foreignKeys = $table->getForeignKey();
+        if (count($foreignKeys) != 2) {
+            return [
+                'parentKey' => '',
+                'childKey'  => '',
+            ];
+        }
+        $tables  = [];
+        $columns = [];
+        foreach ($foreignKeys as $foreignKey) {
+            if (!$foreignKey->hasMany()) {
+                return [
+                    'parentKey' => '',
+                    'childKey'  => '',
+                ];
+            }
+            $tables[]  = $foreignKey->getReferenceTableName();
+            $columns[] = $foreignKey->getColumns();
+        }
+
+        if (count($tables) === 2) {
+            if ($table->getName() === implode('_', [singularize($tables[0]), $tables[1]])) {
+                return [
+                    'parentKey' => array_get($columns, '0.0', ''),
+                    'childKey'  => array_get($columns, '1.0', ''),
+                ];
+            } elseif ($table->getName() === implode('_', [singularize($tables[1]), $tables[0]])) {
+                return [
+                    'parentKey' => array_get($columns, '1.0', ''),
+                    'childKey'  => array_get($columns, '0.0', ''),
+                ];
+            }
+        }
+
+        return [
+            'parentKey' => '',
+            'childKey'  => '',
+        ];
+    }
+
+    /**
      * @return \LaravelRocket\Generator\Objects\Relation[]
      */
     public function getRelations(): array

@@ -150,7 +150,7 @@ class BaseCommand extends Command
         \Artisan::call('ide-helper:models', ['-W' => true, '--env' => 'rocket']);
         \Artisan::call('ide-helper:generate');
 
-        foreach (['app', 'tests', 'config', 'database'] as $path) {
+        foreach (['app', 'tests', 'config', 'database', 'resources/lang'] as $path) {
             $path = base_path($path);
             $this->command('php-cs-fixer fix -v '.$path);
         }

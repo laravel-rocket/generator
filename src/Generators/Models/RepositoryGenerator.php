@@ -38,6 +38,11 @@ class RepositoryGenerator extends ModelBaseGenerator
         $variables['keywordColumns']  = [];
         $variables['existingMethods'] = $this->getExistingMethods();
 
+        if ($variables['relationTable']) {
+            $variables['parentKey'] = '';
+            $variables['childKey']  = '';
+        }
+
         $targetColumns   = ['name', 'title', 'content', 'note', 'description'];
         $targetPostfixes = ['_name', '_code'];
         foreach ($this->table->getColumns() as $column) {

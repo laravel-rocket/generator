@@ -7,6 +7,12 @@ use App\Models\{{ $modelName }};
 class {{ $modelName }}Repository extends {{ $baseClass }} implements {{ $modelName }}RepositoryInterface
 {
 
+@if( $relationTable )
+    protected $parentKey = '{{ $parentKey }}';
+
+    protected $childKey = '{{ $childKey }}';
+
+@endif
     protected $querySearchTargets = [
 @foreach( $keywordColumns as $index => $keywordColumn )
         '{{ $keywordColumn  }}',
