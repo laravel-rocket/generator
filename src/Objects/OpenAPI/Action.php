@@ -340,10 +340,10 @@ class Action
     protected function parse()
     {
         $this->elements = array_reverse(PathElement::parsePath($this->path, $this->httpMethod));
+        $this->setResponse();
         $this->setControllerAndAction();
         $this->setRelationWithParent();
         $this->setParams();
-        $this->setResponse();
         $this->setRequest();
     }
 
@@ -411,6 +411,11 @@ class Action
         return 'User';
     }
 
+    protected function convertToMethodName($name)
+    {
+        return ucfirst(camel_case($name));
+    }
+
     protected function setControllerAndAction()
     {
         $this->type = self::CONTEXT_TYPE_UNKNOWN;
@@ -453,20 +458,25 @@ class Action
 
                 if ($element->isPlural()) {
                     $this->controllerName = $element->getModelName();
-                    switch ($this->httpMethod) {
-                        case 'get':
-                            $this->type   = self::CONTEXT_TYPE_LIST;
-                            $this->action = 'index';
+                    if (!empty($this->targetTable)) {
+                        switch ($this->httpMethod) {
+                            case 'get':
+                                if ($this->response && $this->response->getType() == Definition::TYPE_LIST) {
+                                    $this->type   = self::CONTEXT_TYPE_LIST;
+                                    $this->action = 'index';
 
-                            return;
-                        case 'post':
-                            $this->type   = self::CONTEXT_TYPE_STORE;
-                            $this->action = 'store';
+                                    return;
+                                }
+                                break;
+                            case 'post':
+                                $this->type   = self::CONTEXT_TYPE_STORE;
+                                $this->action = 'store';
 
-                            return;
+                                return;
+                        }
                     }
                 }
-                $this->action = $this->httpMethod.ucfirst($element->elementName());
+                $this->action = $this->httpMethod.$this->convertToMethodName($element->elementName());
                 $this->type   = self::CONTEXT_TYPE_UNKNOWN;
 
                 return;
@@ -512,7 +522,7 @@ class Action
 
                 $this->targetTable    = $this->spec->findTable($subElement->elementName(), $element->elementName());
                 $this->controllerName = $element->getModelName();
-                $this->action         = $this->httpMethod.ucfirst($subElement->elementName());
+                $this->action         = $this->httpMethod.$this->convertToMethodName($subElement->elementName());
                 $this->type           = self::CONTEXT_TYPE_UNKNOWN;
 
                 return;
@@ -536,26 +546,25 @@ class Action
                         case 'get':
                             if ($targetElement->isPlural()) {
                                 $this->type   = self::CONTEXT_TYPE_LIST;
-                                $this->action = 'get'.ucfirst($targetElement->elementName());
                             } else {
                                 $this->type   = self::CONTEXT_TYPE_UNKNOWN;
-                                $this->action = 'get'.ucfirst($targetElement->elementName());
                             }
+                            $this->action = 'get'.$this->convertToMethodName($targetElement->elementName());
 
                             return;
                         case 'put':
                         case 'patch':
                             $this->type   = self::CONTEXT_TYPE_UPDATE;
-                            $this->action = 'update'.ucfirst($targetElement->elementName());
+                            $this->action = 'update'.$this->convertToMethodName($targetElement->elementName());
 
                             return;
                         case 'post':
                             if ($targetElement->isPlural()) {
                                 $this->type   = self::CONTEXT_TYPE_STORE;
-                                $this->action = 'create'.ucfirst($targetElement->elementName());
+                                $this->action = 'create'.$this->convertToMethodName($targetElement->elementName());
                             } else {
                                 $this->type        = self::CONTEXT_TYPE_UPDATE;
-                                $this->action      = 'post'.ucfirst($parentElement->elementName()).ucfirst($targetElement->elementName());
+                                $this->action      = 'post'.$this->convertToMethodName($parentElement->elementName()).ucfirst($targetElement->elementName());
                                 $this->targetTable = $this->parentTable;
                                 $this->hasParent   = false;
                                 $this->parentTable = null;
@@ -564,7 +573,7 @@ class Action
                             return;
                         case 'delete':
                             $this->type   = self::CONTEXT_TYPE_DESTROY;
-                            $this->action = 'destroy'.ucfirst($targetElement->elementName());
+                            $this->action = 'destroy'.$this->convertToMethodName($targetElement->elementName());
 
                             return;
                     }
@@ -580,31 +589,31 @@ class Action
                     switch ($this->httpMethod) {
                         case 'get':
                             $this->type   = self::CONTEXT_TYPE_SHOW;
-                            $this->action = 'show'.ucfirst($subElement->elementName());
+                            $this->action = 'show'.$this->convertToMethodName($subElement->elementName());
 
                             return;
                         case 'put':
                         case 'patch':
                         case 'post':
                             $this->type   = self::CONTEXT_TYPE_UPDATE;
-                            $this->action = 'update'.ucfirst($subElement->elementName());
+                            $this->action = 'update'.$this->convertToMethodName($subElement->elementName());
 
                             return;
                         case 'delete':
                             $this->type   = self::CONTEXT_TYPE_DESTROY;
-                            $this->action = 'delete'.ucfirst(singularize($subElement->elementName()));
+                            $this->action = 'delete'.$this->convertToMethodName(singularize($subElement->elementName()));
 
                             return;
                     }
                 }
-                $this->action = $this->httpMethod.ucfirst($targetElement->elementName());
+                $this->action = $this->httpMethod.$this->convertToMethodName($targetElement->elementName());
                 $this->type   = self::CONTEXT_TYPE_UNKNOWN;
 
                 return;
         }
 
         $targetElement = $this->elements[0];
-        $this->action  = $this->httpMethod.ucfirst($targetElement->elementName());
+        $this->action  = $this->httpMethod.$this->convertToMethodName($targetElement->elementName());
         $this->type    = self::CONTEXT_TYPE_UNKNOWN;
     }
 

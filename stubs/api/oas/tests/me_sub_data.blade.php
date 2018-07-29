@@ -45,7 +45,7 @@
         $this->assertResponseOk();
         $data = json_decode($response->getContent(), true);
 @elseif( $action->getResponse()->getType() === \LaravelRocket\Generator\Objects\OpenAPI\Definition::TYPE_MODEL )
-        $model = factory(\App\Models\{{ $action->getResponse()->getListItem()->getModelName() }}::class)->create([
+        $model = factory(\App\Models\{{ $action->getResponse()->getModelName() }}::class)->create([
             'user_id' => $userId,
         ]);
         $variables = [
