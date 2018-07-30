@@ -13,12 +13,16 @@
         /** @var \App\Models\User $user */
         $user = $this->userService->getUser();
 
+@foreach( $action->getQueries() as $param )
+        ${{ camel_case($param->getName()) }} = $request->get('{{ $param->getName() }}');
+@endforeach
+
         // [TODO] Need to implement
 
         $dataArray = [
-        @foreach($action->getResponse()->getProperties() as $property )
+@foreach($action->getResponse()->getProperties() as $property )
             '{{ $property['name'] }}' => $request->get('{{ $property['name'] }}',{!! $property['default'] !!}),
-        @endforeach
+@endforeach
         ];
         $response = new {!! $action->getResponse()->getName() !!}($dataArray, 200);
 

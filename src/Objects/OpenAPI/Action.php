@@ -107,6 +107,9 @@ class Action
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\Parameter[] */
     protected $params = [];
 
+    /** @var \LaravelRocket\Generator\Objects\OpenAPI\Parameter[] */
+    protected $queries = [];
+
     /** @var \LaravelRocket\Generator\Objects\OpenAPI\Definition|null */
     protected $response;
 
@@ -249,6 +252,14 @@ class Action
     /**
      * @return string[]
      */
+    public function getQueries(): array
+    {
+        return $this->queries;
+    }
+
+    /**
+     * @return string[]
+     */
     public function getParamNames(): array
     {
         $ret = [];
@@ -344,6 +355,7 @@ class Action
         $this->setControllerAndAction();
         $this->setRelationWithParent();
         $this->setParams();
+        $this->setQueries();
         $this->setRequest();
     }
 
@@ -382,6 +394,17 @@ class Action
         $parameters   = $this->info->parameters;
         foreach ($parameters as $parameter) {
             if ($parameter->in === 'path') {
+                $this->params[] = new Parameter($parameter, $this->spec);
+            }
+        }
+    }
+
+    protected function setQueries()
+    {
+        $this->params = [];
+        $parameters   = $this->info->parameters;
+        foreach ($parameters as $parameter) {
+            if ($parameter->in !== 'path') {
                 $this->params[] = new Parameter($parameter, $this->spec);
             }
         }
