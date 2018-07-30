@@ -405,7 +405,7 @@ class Action
         $parameters   = $this->info->parameters;
         foreach ($parameters as $parameter) {
             if ($parameter->in !== 'path') {
-                $this->params[] = new Parameter($parameter, $this->spec);
+                $this->queries[] = new Parameter($parameter, $this->spec);
             }
         }
     }
