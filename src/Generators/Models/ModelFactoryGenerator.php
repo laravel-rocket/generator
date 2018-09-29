@@ -74,11 +74,23 @@ class ModelFactoryGenerator extends ModelBaseGenerator
             ];
 
             foreach ($fakers as $faker) {
-                if (ends_with($name, $faker)) {
+                if ($name == $faker || ends_with($name, '_'.$faker)) {
                     $value = '$faker->'.camel_case($faker);
                     break;
                 }
             }
+
+            $fakerFunctions = [
+                'date',
+            ];
+
+            foreach ($fakerFunctions as $faker) {
+                if ($name == $faker || ends_with($name, '_'.$faker)) {
+                    $value = '$faker->'.camel_case($faker).'()';
+                    break;
+                }
+            }
+
             if ($column->isNullable()) {
                 $value = 'null';
             }

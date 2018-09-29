@@ -16,7 +16,7 @@ class {{ $className }} extends Response
     public static function updateWithResponse($array)
     {
         $response = new static([], 400);
-        if (!empty($body)) {
+        if (!empty($array)) {
             $modelArray = [
 @foreach( $properties as $property)
                 '{{ $property['name'] }}' => {!! $property['cast'] !!} array_get($array, '{!! $property['name'] !!}', {!! $property['default'] !!}),

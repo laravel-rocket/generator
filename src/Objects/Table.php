@@ -190,6 +190,19 @@ class Table
                 if (in_array($column->getName(), ['remember_token', 'id', 'deleted_at', 'created_at', 'updated_at'])) {
                     continue;
                 }
+                if (in_array($column->getType(), ['date'])) {
+                    $variables['testColumnName'] = $column->getName();
+                    $variables['testData']       = '$faker->date()';
+                    break;
+                }
+            }
+        }
+
+        if (!$found) {
+            foreach ($this->table->getColumns() as $column) {
+                if (in_array($column->getName(), ['remember_token', 'id', 'deleted_at', 'created_at', 'updated_at'])) {
+                    continue;
+                }
                 $variables['testColumnName'] = $column->getName();
                 $variables['testData']       = 'rand(50,100)';
                 break;
