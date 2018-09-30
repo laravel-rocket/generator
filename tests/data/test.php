@@ -139,6 +139,7 @@ class TestClass
         return $this->parsedFile;
     }
 
+    // TEXT COMMENT
     protected function getExistingMethods(): array
     {
         if (!file_exists($this->getPath())) {

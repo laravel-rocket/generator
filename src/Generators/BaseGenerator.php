@@ -128,7 +128,7 @@ class BaseGenerator
         return $statements;
     }
 
-    protected function getExistingMethods(): array
+    protected function getExistingMethods(bool $removeComments = false): array
     {
         if (!file_exists($this->getPath())) {
             return [];
@@ -140,7 +140,20 @@ class BaseGenerator
         $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
         $result        = [];
         foreach ($methods as $name => $method) {
-            $result[$name] = $prettyPrinter->prettyPrint([$method]);
+            $statement = $prettyPrinter->prettyPrint([$method]);
+            if ($removeComments) {
+                $comments       = $method->getAttribute('comments');
+                if ($comments && is_array($comments)) {
+                    foreach ($comments as $comment) {
+                        if ($comment instanceof \PhpParser\Comment\Doc) {
+                            continue;
+                        }
+                        $commentString = $comment->getText();
+                        $statement     = preg_replace("/^\s*".preg_quote($commentString, '/')."\s*/", '', $statement);
+                    }
+                }
+            }
+            $result[$name] = $statement;
         }
 
         return $result;

@@ -177,9 +177,9 @@ class Table
                 if (in_array($column->getName(), ['remember_token', 'id', 'deleted_at', 'created_at', 'updated_at'])) {
                     continue;
                 }
-                if (in_array($column->getType(), ['int', 'bigint', 'decimal'])) {
+                if (in_array($column->getType(), ['date'])) {
                     $variables['testColumnName'] = $column->getName();
-                    $variables['testData']       = 'rand(50,100)';
+                    $variables['testData']       = '$faker->date()';
                     break;
                 }
             }
@@ -190,9 +190,9 @@ class Table
                 if (in_array($column->getName(), ['remember_token', 'id', 'deleted_at', 'created_at', 'updated_at'])) {
                     continue;
                 }
-                if (in_array($column->getType(), ['date'])) {
+                if (in_array($column->getType(), ['int', 'bigint', 'decimal'])) {
                     $variables['testColumnName'] = $column->getName();
-                    $variables['testData']       = '$faker->date()';
+                    $variables['testData']       = 'rand(50,100)';
                     break;
                 }
             }
