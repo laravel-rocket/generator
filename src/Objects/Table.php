@@ -165,9 +165,9 @@ class Table
                 continue;
             }
             if (in_array($column->getType(), ['varchar', 'text', 'mediumtext', 'longtext'])) {
-                $variables['testColumnName'] = $column->getName();
-                $variables['testData']       = 'str_random(10)';
-                $found                       = true;
+                $variables['testColumnName']  = $column->getName();
+                $variables['/testData']       = 'str_random(10)';
+                $found                        = true;
                 break;
             }
         }
@@ -180,6 +180,7 @@ class Table
                 if (in_array($column->getType(), ['date'])) {
                     $variables['testColumnName'] = $column->getName();
                     $variables['testData']       = '$faker->date()';
+                    $found                       = true;
                     break;
                 }
             }
@@ -193,6 +194,7 @@ class Table
                 if (in_array($column->getType(), ['int', 'bigint', 'decimal'])) {
                     $variables['testColumnName'] = $column->getName();
                     $variables['testData']       = 'rand(50,100)';
+                    $found                       = true;
                     break;
                 }
             }

@@ -140,7 +140,7 @@ class ClassLike
      * @param string                                   $name
      * @param \PhpParser\Node\Stmt[]|\PhpParser\Node[] $statements
      *
-     * @return null|StmtClassLike
+     * @return null|StmtClassLike|\PhpParser\Node\Stmt
      */
     protected function getClassLikeObject(string $name, $statements)
     {
@@ -182,6 +182,32 @@ class ClassLike
                 $this->properties[] = $statement;
             } elseif (is_a($statement, ClassConst::class)) {
                 $this->constants[] = $statement;
+            }
+        }
+    }
+
+    public function getConstructor(array $additionalParams = [])
+    {
+        $methods       = $this->getMethods();
+        $constructor   = null;
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        foreach ($methods as $method) {
+            if ($methods->name === '__construct') {
+                $constructor = $method;
+            }
+        }
+        $params    = [];
+        $statement = '';
+        if ($constructor) {
+            foreach ($constructor->params as $param) {
+                $name          = $param->name;
+                $type          = $param->type->toString();
+                $params[$type] = $name;
+            }
+            $statement = $prettyPrinter->prettyPrint($constructor->getStmts());
+        }
+        foreach ($additionalParams as $type => $name) {
+            if (!array_key_exists($type, $params)) {
             }
         }
     }

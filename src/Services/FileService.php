@@ -88,7 +88,7 @@ class FileService
 
         $data = $this->view->make($view, $variables)->render();
         if ($addHeader) {
-            $data = '<?PHP'.PHP_EOL.PHP_EOL.$data;
+            $data = '<?php'.PHP_EOL.PHP_EOL.$data;
         }
         $data = str_replace('＠', '@', $data);
         if ($isBladeTemplate) {

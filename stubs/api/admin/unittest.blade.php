@@ -45,7 +45,7 @@ class {{ $modelName }}ControllerTest extends TestCase
 
         ${{ $variableName }} = factory(\App\Models\{{ $modelName }}::class)->create();
 
-        $testData = {{ $testData }};
+        $testData = {!! $testData !!};
         $id = ${{ $variableName }}->id;
 
         ${{ $variableName }}->{{ $testColumnName }} = $testData;

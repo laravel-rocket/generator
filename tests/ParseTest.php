@@ -22,6 +22,7 @@ class ParseTest extends TestCase
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
 
         $statements = $parser->parse(file_get_contents(__DIR__ . '/data/test.php'));
+        print_r($statements);
         $this->travarse($statements);
         $const = $this->getConst($statements);
 
@@ -64,7 +65,7 @@ class ParseTest extends TestCase
         foreach($statements as $statement) {
             print get_class($statement) . PHP_EOL;
             if(get_class($statement) === 'PhpParser\Node\Stmt\ClassMethod') {
-                print_r($statement->getAttribute('comments'));
+                print_r($statement);
             }
             if(get_class($statement) == \PhpParser\Node\Stmt\Use_::class) {
                 foreach($statement->uses as $use) {
