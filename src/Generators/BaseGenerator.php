@@ -250,7 +250,7 @@ class BaseGenerator
         foreach ($statements as $statement) {
             if (get_class($statement) === \PhpParser\Node\Stmt\ClassConst::class) {
                 foreach ($statement->consts as $constant) {
-                    $result[$constant->name] = ltrim($prettyPrinter->prettyPrint([$constant]));
+                    $result[$constant->name->name] = ltrim($prettyPrinter->prettyPrint([$constant]));
                 }
             } elseif (property_exists($statement, 'stmts')) {
                 $return = $this->getAllConstants($statement->stmts, $result);

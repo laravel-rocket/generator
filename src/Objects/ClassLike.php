@@ -175,8 +175,8 @@ class ClassLike
         }
         foreach ($classLike->stmts as $statement) {
             if (is_a($statement, ClassMethod::class)) {
-                if (!in_array($statement->name, $this->excludeMethods) && !starts_with($statement->name, '__')) {
-                    $this->methods[$statement->name] = $statement;
+                if (!in_array($statement->name->name, $this->excludeMethods) && !starts_with($statement->name, '__')) {
+                    $this->methods[$statement->name->name] = $statement;
                 }
             } elseif (is_a($statement, Property::class)) {
                 $this->properties[] = $statement;
