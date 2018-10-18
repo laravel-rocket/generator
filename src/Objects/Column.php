@@ -517,10 +517,22 @@ class Column
                 $type = 'boolean';
                 break;
             case 'bigint':
-                $type = $column->isUnsigned() ? 'unsignedBigInteger' : 'bigInteger';
+                $isUnsigned = false;
+                if (method_exists($column, 'isUnsigned')) {
+                    $isUnsigned = $column->isUnsigned();
+                } elseif (method_exists($column, 'getUnsigned')) {
+                    $isUnsigned = $column->getUnsigned();
+                }
+                $type = $isUnsigned ? 'unsignedBigInteger' : 'bigInteger';
                 break;
             case 'int':
-                $type = $column->isUnsigned() ? 'unsignedInteger' : 'integer';
+                $isUnsigned = false;
+                if (method_exists($column, 'isUnsigned')) {
+                    $isUnsigned = $column->isUnsigned();
+                } elseif (method_exists($column, 'getUnsigned')) {
+                    $isUnsigned = $column->getUnsigned();
+                }
+                $type = $isUnsigned ? 'unsignedInteger' : 'integer';
                 break;
             case 'timestamp':
             case 'timestamp_f':

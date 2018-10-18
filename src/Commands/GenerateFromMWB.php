@@ -124,7 +124,7 @@ class GenerateFromMWB extends MWBGenerator
      */
     protected function generateMigration()
     {
-        $generateAlterTableMigrationFile = !$this->input->hasOption('rebuild');
+        $generateAlterTableMigrationFile = empty($this->input->getOption('rebuild'));
         $generator                       = new MigrationFileGenerator($this->config, $this->files, $this->view);
         foreach ($this->tables as $table) {
             $generator->generate($table, $generateAlterTableMigrationFile);

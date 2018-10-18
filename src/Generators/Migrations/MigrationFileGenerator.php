@@ -49,12 +49,12 @@ class MigrationFileGenerator extends BaseGenerator
         }
 
         if ($isAlterMigration) {
-            $result              = $this->getAlterTableInfo($table);
+            $result = $this->getAlterTableInfo($table);
             if (!$result) {
                 return false;
             }
         } else {
-            $result              = $this->generateColumns($table);
+            $result = $this->generateColumns($table);
         }
         $result['tableName'] = $table->getName();
         $result['indexes']   = $this->generateIndexes($table);
@@ -108,7 +108,7 @@ class MigrationFileGenerator extends BaseGenerator
     protected function getClassName($name, $dateTime, $isAlterMigration = false): string
     {
         if ($isAlterMigration) {
-            return 'Alter'.ucfirst(camel_case($name)).'Table'.$dateTime->format('Y_m_d_His');
+            return 'Alter'.ucfirst(camel_case($name)).'Table'.$dateTime->format('YmdHis');
         }
 
         return 'Create'.ucfirst(camel_case($name)).'Table';
@@ -127,7 +127,9 @@ class MigrationFileGenerator extends BaseGenerator
 
         $type = $isAlterMigration ? 'alter' : 'create';
 
-        return $basePath.DIRECTORY_SEPARATOR.$dateTime->format('Y_m_d_His').'_'.$type.'_'.$name.'_table.php';
+        $postfix = $isAlterMigration ? '_'.$dateTime->format('YmdHis').'_' : '';
+
+        return $basePath.DIRECTORY_SEPARATOR.$dateTime->format('Y_m_d_His').'_'.$type.'_'.$name.'_table'.$postfix.'.php';
     }
 
     /**
@@ -233,6 +235,16 @@ class MigrationFileGenerator extends BaseGenerator
         $oldColumnNames = array_map(function ($column) {
             return $column->getName();
         }, $currentColumns);
+
+        $mustHaveColumns = ['created_at', 'updated_at'];
+        foreach ($mustHaveColumns as $column) {
+            if (!in_array($column, $newColumnNames)) {
+                $newColumnNames[] = $column;
+            }
+            if (!in_array($column, $oldColumnNames)) {
+                $oldColumnNames[] = $column;
+            }
+        }
 
         $addedColumns   = array_diff($newColumnNames, $oldColumnNames);
         $removedColumns = array_diff($oldColumnNames, $newColumnNames);
