@@ -87,7 +87,6 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
 
     protected $presenter = \App\Presenters\{{ $className }}Presenter::class;
 
-    // Relations
 @foreach( $relations as $relation)
 @if( $relation->getType() === 'belongsTo')
     public function {{ $relation->getName() }}()
@@ -123,8 +122,6 @@ class {{ $className }} extends {{ $authenticatable ? 'AuthenticatableBase' : 'Ba
 @endif
 
 @endforeach
-
-    // Utility Functions
 
 @foreach( $existingMethods as $name => $method )
     {!! $method !!}

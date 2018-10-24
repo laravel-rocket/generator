@@ -22,6 +22,23 @@ class RepositoryGenerator extends ModelBaseGenerator
     }
 
     /**
+     * @return string
+     */
+    protected function getBaseClass(): string
+    {
+        $relationTable = $this->detectRelationTable($this->table);
+        if (!empty($relationTable)) {
+            return 'RelationModelRepository';
+        }
+
+        if ($this->hasAuthenticationModel()) {
+            return 'AuthenticatableRepository';
+        }
+
+        return 'SingleKeyModelRepository';
+    }
+
+    /**
      * @return array
      */
     protected function getVariables(): array
@@ -34,7 +51,7 @@ class RepositoryGenerator extends ModelBaseGenerator
         $variables['tableName']       = $this->table->getName();
         $variables['relationTable']   = $this->detectRelationTable($this->table);
         $variables['relations']       = $this->getRelations();
-        $variables['baseClass']       = $variables['relationTable'] ? 'RelationModelRepository' : 'SingleKeyModelRepository';
+        $variables['baseClass']       = $this->getBaseClass();
         $variables['keywordColumns']  = [];
         $variables['existingMethods'] = $this->getExistingMethods();
 

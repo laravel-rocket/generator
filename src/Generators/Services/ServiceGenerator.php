@@ -63,7 +63,7 @@ class ServiceGenerator extends NameBaseGenerator
      */
     protected function isAuthService(): bool
     {
-        $modelPath = app_path('Models'.DIRECTORY_SEPARATOR.$this->name);
+        $modelPath = app_path('Models'.DIRECTORY_SEPARATOR.$this->name.'.php');
         if (!file_exists($modelPath)) {
             return false;
         }

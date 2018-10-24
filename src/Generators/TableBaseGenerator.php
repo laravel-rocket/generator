@@ -90,6 +90,26 @@ class TableBaseGenerator extends BaseGenerator
     }
 
     /**
+     * @return bool
+     */
+    protected function hasAuthenticationModel(): bool
+    {
+        $modelName = $this->getModelName();
+
+        $modelPath = app_path('Models'.DIRECTORY_SEPARATOR.$modelName.'.php');
+        if (!file_exists($modelPath)) {
+            return false;
+        }
+
+        $contents = file_get_contents($modelPath);
+        if (strpos($contents, 'extends AuthenticatableBase') === false) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @return array
      */
     protected function getVariables(): array

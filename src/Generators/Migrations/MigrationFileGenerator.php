@@ -127,7 +127,7 @@ class MigrationFileGenerator extends BaseGenerator
 
         $type = $isAlterMigration ? 'alter' : 'create';
 
-        $postfix = $isAlterMigration ? '_'.$dateTime->format('YmdHis').'_' : '';
+        $postfix = $isAlterMigration ? '_'.$dateTime->format('YmdHis') : '';
 
         return $basePath.DIRECTORY_SEPARATOR.$dateTime->format('Y_m_d_His').'_'.$type.'_'.$name.'_table'.$postfix.'.php';
     }
