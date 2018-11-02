@@ -101,6 +101,7 @@ class OpenAPISpec
     public function findTable(string $name, string $prefix = '')
     {
         $name = pluralize($name);
+        $name = str_replace('-', '_', $name);
 
         foreach ($this->tables as $table) {
             if ($table->getName() === $name) {
