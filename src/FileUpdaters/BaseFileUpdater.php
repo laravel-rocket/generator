@@ -277,12 +277,18 @@ class BaseFileUpdater
     protected function getPropertyRecursive(string $name, $statements)
     {
         foreach ($statements as $statement) {
-            if (get_class($statement) == \PhpParser\Node\Stmt\PropertyProperty::class && $statement->name === $name) {
+            if ($statement instanceof \PhpParser\Node\Stmt\PropertyProperty && $statement->name == $name) {
                 return $statement;
             } elseif (property_exists($statement, 'stmts')) {
                 $result = $this->getPropertyRecursive($name, $statement->stmts);
-            } elseif (property_exists($statement, 'expr')) {
+            } elseif (property_exists($statement, 'expr')
+                && property_exists($statement->expr, 'items')
+            ) {
                 $result = $this->getPropertyRecursive($name, $statement->expr->items);
+            } elseif (property_exists($statement, 'default')
+                && property_exists($statement->default, 'items')
+            ) {
+                $result = $this->getPropertyRecursive($name, $statement->default->items);
             } elseif (property_exists($statement, 'props')) {
                 $result = $this->getPropertyRecursive($name, $statement->props);
             }
