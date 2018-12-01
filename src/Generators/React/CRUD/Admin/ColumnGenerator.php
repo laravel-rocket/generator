@@ -45,7 +45,7 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
 
         foreach ($tableObject->getColumns() as $column) {
             if ($column->isAPIReturnable()) {
-                $result['columns'][$column->getName()] = [
+                $result['columns'][$column->getKeyName()] = [
                     'name'      => $column->getDisplayName(),
                     'type'      => $column->getEditFieldType(),
                     'editable'  => $column->isEditable(),
@@ -54,17 +54,17 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                     'options'   => $column->getEditFieldOptions(),
                 ];
                 if ($column->isListable()) {
-                    $result['list'][] = $column->getName();
+                    $result['list'][] = $column->getKeyName();
                 }
                 if ($column->isShowable()) {
-                    $result['show'][] = $column->getName();
+                    $result['show'][] = $column->getKeyName();
                 }
                 if ($column->isEditable()) {
-                    $result['edit'][] = $column->getName();
+                    $result['edit'][] = $column->getKeyName();
                 }
                 $relation = $column->getRelation();
                 if (!empty($relation)) {
-                    $result['columns'][$column->getName()]['relation'] = $relation->getName();
+                    $result['columns'][$column->getKeyName()]['relation'] = $relation->getName();
                 }
             }
         }

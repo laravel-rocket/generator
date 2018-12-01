@@ -78,6 +78,14 @@ class Column
     /**
      * @return string
      */
+    public function getKeyName()
+    {
+        return $this->getAPIName();
+    }
+
+    /**
+     * @return string
+     */
     public function getDisplayName()
     {
         return title_case(str_replace('_', ' ', $this->column->getName()));
