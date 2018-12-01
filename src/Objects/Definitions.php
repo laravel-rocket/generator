@@ -26,11 +26,33 @@ class Definitions
         return array_get($this->json, $key, $default);
     }
 
+    /**
+     * @param string $table
+     * @param string $column
+     *
+     * @return array
+     */
     public function getColumnDefinition($table, $column)
     {
         return $this->get(['tables', $table, 'columns', $column], []);
     }
 
+    /**
+     * @param string $table
+     * @param string $type
+     *
+     * @return array
+     */
+    public function getCRUDDefinition($table, $type)
+    {
+        return $this->get(['tables', $table, 'crud', $type], []);
+    }
+
+    /**
+     * @param string $table
+     *
+     * @return array
+     */
     public function getTableDefinition($table)
     {
         return $this->get(['tables', $table], []);

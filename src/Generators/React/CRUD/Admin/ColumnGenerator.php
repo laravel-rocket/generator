@@ -43,6 +43,10 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
             'relations' => $variables['relations'],
         ];
 
+        $crudListColumns = array_get($this->json->getCRUDDefinition($tableObject->getName(), 'list'), 'columns', []);
+        $crudShowColumns = array_get($this->json->getCRUDDefinition($tableObject->getName(), 'show'), 'columns', []);
+        $crudEditColumns = array_get($this->json->getCRUDDefinition($tableObject->getName(), 'edit'), 'columns', []);
+
         foreach ($tableObject->getColumns() as $column) {
             if ($column->isAPIReturnable()) {
                 $result['columns'][$column->getKeyName()] = [
@@ -53,13 +57,13 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                     'apiName'   => $column->getAPIName(),
                     'options'   => $column->getEditFieldOptions(),
                 ];
-                if ($column->isListable()) {
+                if ($column->isListable() || (count($crudListColumns) > 0 && in_array($column->getKeyName(), $crudListColumns))) {
                     $result['list'][] = $column->getKeyName();
                 }
-                if ($column->isShowable()) {
+                if ($column->isShowable() || (count($crudShowColumns) > 0 && in_array($column->getKeyName(), $crudShowColumns))) {
                     $result['show'][] = $column->getKeyName();
                 }
-                if ($column->isEditable()) {
+                if ($column->isEditable() || (count($crudEditColumns) > 0 && in_array($column->getKeyName(), $crudEditColumns))) {
                     $result['edit'][] = $column->getKeyName();
                 }
                 $relation = $column->getRelation();
@@ -85,13 +89,13 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                     'optionNames' => $optionNames,
                     'link'        => '/'.$referenceTableObject->getPathName(),
                 ];
-                if ($relation->isListable()) {
+                if ($relation->isListable() || (count($crudListColumns) > 0 && in_array($relation->getName(), $crudListColumns))) {
                     $result['list'][] = $relation->getName();
                 }
-                if ($relation->isShowable()) {
+                if ($relation->isShowable() || (count($crudShowColumns) > 0 && in_array($relation->getName(), $crudShowColumns))) {
                     $result['show'][] = $relation->getName();
                 }
-                if ($relation->isEditable()) {
+                if ($relation->isEditable() || (count($crudEditColumns) > 0 && in_array($relation->getName(), $crudEditColumns))) {
                     $result['edit'][] = $relation->getName();
                 }
             }
