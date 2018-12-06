@@ -1,0 +1,31 @@
+Arguments: 
+  /usr/local/Cellar/node/10.9.0/bin/node /usr/local/Cellar/yarn/1.5.1_1/libexec/bin/yarn.js dev
+
+PATH: 
+  /usr/local/opt/php@7.1/sbin:/usr/local/opt/php@7.1/bin:/Users/takaaki/.jenv/shims:/Users/takaaki/.jenv/bin:/Users/takaaki/Library/Android/sdk/tools:/Users/takaaki/Library/Android/sdk/platform-tools:/Users/takaaki/Library/Android/sdk:/Users/takaaki/Library/Android/sdk/ndk-bundle:/Users/takaaki/cocos2d-x/templates:/Users/takaaki:/Users/takaaki/cocos2d-x/tools/cocos2d-console/bin:/Users/takaaki/.pyenv/plugins/pyenv-virtualenv/shims:/Users/takaaki/.pyenv/shims:/Users/takaaki/.pyenv/bin:/Users/takaaki/.rbenv/shims:/Users/takaaki/.rbenv/bin:/usr/local/sbin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:/Users/takaaki/go/bin:/usr/local/opt/go/libexec/bin:/Users/takaaki/.rvm/bin:/Users/takaaki/.composer/vendor/bin:/Users/takaaki/Library/Android/sdk/tools:/Users/takaaki/Library/Android/sdk/platform-tools
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  10.9.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  No manifest
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Couldn't find a package.json file in "/Users/takaaki/Documents/development/laravel-rocket/generator"
+      at new MessageError (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:186:110)
+      at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:40048:15
+      at Generator.next (<anonymous>)
+      at step (/usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:98:30)
+      at /usr/local/Cellar/yarn/1.5.1_1/libexec/lib/cli.js:109:13

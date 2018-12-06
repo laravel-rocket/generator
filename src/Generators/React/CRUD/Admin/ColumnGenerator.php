@@ -57,13 +57,13 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                     'apiName'   => $column->getAPIName(),
                     'options'   => $column->getEditFieldOptions(),
                 ];
-                if ($column->isListable() || (count($crudListColumns) > 0 && in_array($column->getKeyName(), $crudListColumns))) {
+                if ((count($crudListColumns) === 0 && $column->isListable()) || (count($crudListColumns) > 0 && in_array($column->getKeyName(), $crudListColumns))) {
                     $result['list'][] = $column->getKeyName();
                 }
-                if ($column->isShowable() || (count($crudShowColumns) > 0 && in_array($column->getKeyName(), $crudShowColumns))) {
+                if ((count($crudShowColumns) === 0 && $column->isShowable()) || (count($crudShowColumns) > 0 && in_array($column->getKeyName(), $crudShowColumns))) {
                     $result['show'][] = $column->getKeyName();
                 }
-                if ($column->isEditable() || (count($crudEditColumns) > 0 && in_array($column->getKeyName(), $crudEditColumns))) {
+                if ((count($crudEditColumns) === 0 && $column->isEditable()) || (count($crudEditColumns) > 0 && in_array($column->getKeyName(), $crudEditColumns))) {
                     $result['edit'][] = $column->getKeyName();
                 }
                 $relation = $column->getRelation();

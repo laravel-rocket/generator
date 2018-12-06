@@ -459,20 +459,18 @@ class Column
             return;
         }
 
-        if ($name === 'email') {
+        if ($name === 'email' || ends_with($name, '_email')) {
             $this->editFieldType = 'email';
 
             return;
         }
 
         if (ends_with($name, 'country_code') && $type === 'varchar') {
-            $this->editFieldType = 'country';
-
-            return;
-        }
-
-        if (ends_with($name, 'currency_code') && $type === 'varchar') {
-            $this->editFieldType = 'currency';
+            if (str_contains($name, 'phone')) {
+                $this->editFieldType = 'phone_country';
+            } else {
+                $this->editFieldType = 'country';
+            }
 
             return;
         }
