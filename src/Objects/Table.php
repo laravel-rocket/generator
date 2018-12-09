@@ -150,6 +150,17 @@ class Table
     }
 
     /**
+     * @return bool
+     */
+    public function isExportable(): bool
+    {
+        $definition = $this->json->getTableDefinition($this->table->getName());
+        $attributes = array_get($definition, 'attributes', []);
+
+        return array_get($attributes, 'exportable', false);
+    }
+
+    /**
      * @return array
      */
     public function getTestColumn()
@@ -165,9 +176,9 @@ class Table
                 continue;
             }
             if (in_array($column->getType(), ['varchar', 'text', 'mediumtext', 'longtext'])) {
-                $variables['testColumnName']  = $column->getName();
-                $variables['testData']        = 'str_random(10)';
-                $found                        = true;
+                $variables['testColumnName'] = $column->getName();
+                $variables['testData']       = 'str_random(10)';
+                $found                       = true;
                 break;
             }
         }

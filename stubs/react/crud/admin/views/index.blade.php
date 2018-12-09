@@ -11,6 +11,7 @@ class {{ $modelName }}Index extends Index {
   setPageInfo() {
     this.title = info.title;
     this.path = info.path;
+    this.exportable = info.exportable;
   }
 
   setRepository() {
