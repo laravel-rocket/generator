@@ -54,7 +54,7 @@ class {{ $modelName }}Controller extends Controller
             $filter['query'] = $queryWord;
         }
 
-        $count      = $this->{{ $variableName }}Repository->count();
+        $count      = $this->{{ $variableName }}Repository->countByFilter();
         ${{ \ICanBoogie\pluralize($variableName) }} = $this->{{ $variableName }}Repository->getByFilter($filter, $order, $direction, $offset, $limit);
 
         return {{ \ICanBoogie\pluralize($modelName) }}::updateListWithModel(${{ \ICanBoogie\pluralize($variableName) }}, $offset, $limit, $count)->response();
