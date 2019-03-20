@@ -11,21 +11,21 @@
   ],
   "require": {
     "php": "^7.1.3",
-    "symfony/yaml": "~3.3",
+    "symfony/yaml": "^3.4",
     "takaaki-mizuno/php-code-manipulator": "0.*",
     "takaaki-mizuno/swagger-parser": "0.*",
     "doctrine/dbal": "~2.5",
     "takaaki-mizuno/mwb-parser": "0.*",
-    "nikic/PHP-Parser": "~4.0"
+    "nikic/PHP-Parser": "^4.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~7.0",
+    "phpunit/phpunit": "~8.0",
     "icanboogie/inflector": "^1.4",
-    "laravel/framework": "5.7.*",
-    "laravel-rocket/foundation": "2.5.*",
+    "laravel/framework": "5.8.*",
+    "laravel-rocket/foundation": "2.6.*",
     "friendsofphp/php-cs-fixer": "^2.8",
     "fzaninotto/faker": "~1.5",
-    "laravel/laravel": "5.7.*"
+    "laravel/laravel": "5.8.*"
   },
   "autoload": {
     "psr-4": {
