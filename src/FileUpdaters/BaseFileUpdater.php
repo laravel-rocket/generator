@@ -191,7 +191,7 @@ class BaseFileUpdater
 
     /**
      * @param string $name
-     * @param $statements
+     * @param \PhpParser\Node[] $statements
      *
      * @return null
      */
@@ -210,6 +210,29 @@ class BaseFileUpdater
         }
 
         return null;
+    }
+
+    /**
+     * @param \PhpParser\Node[] $statements
+     *
+     * @return array
+     */
+    protected function getAllMethods($statements)
+    {
+        $methods = [];
+        foreach ($statements as $statement) {
+            if (get_class($statement) == ClassMethod::class ) {
+                $methods[$statement->name] = $statement;
+            }
+            if (property_exists($statement, 'stmts')) {
+                $result = $this->getAllMethods($statement->stmts);
+                if (!empty($result)) {
+                    $methods = array_merge($methods, $result);
+                }
+            }
+        }
+
+        return $methods;
     }
 
     /**

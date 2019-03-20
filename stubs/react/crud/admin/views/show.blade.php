@@ -8,9 +8,9 @@ import Show from "../CRUDBase/Show";
 
 class {{ $modelName }}Show extends Show {
 
-  setPageInfo() {
-    this.title = info.title;
-    this.path = info.path;
+  setInfo()
+  {
+    this.info = info;
   }
 
   setRepository() {

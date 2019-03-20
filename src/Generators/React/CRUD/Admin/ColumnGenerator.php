@@ -43,9 +43,9 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
             'relations' => $variables['relations'],
         ];
 
-        $crudListColumns = array_get($this->json->getCRUDDefinition($tableObject->getName(), 'list'), 'columns', []);
-        $crudShowColumns = array_get($this->json->getCRUDDefinition($tableObject->getName(), 'show'), 'columns', []);
-        $crudEditColumns = array_get($this->json->getCRUDDefinition($tableObject->getName(), 'edit'), 'columns', []);
+        $crudListColumns = array_get($this->json->getTableCRUDDefinition($tableObject->getName(), 'list'), 'columns', []);
+        $crudShowColumns = array_get($this->json->getTableCRUDDefinition($tableObject->getName(), 'show'), 'columns', []);
+        $crudEditColumns = array_get($this->json->getTableCRUDDefinition($tableObject->getName(), 'edit'), 'columns', []);
 
         foreach ($tableObject->getColumns() as $column) {
             if ($column->isAPIReturnable()) {

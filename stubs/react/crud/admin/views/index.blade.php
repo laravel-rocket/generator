@@ -8,10 +8,9 @@ import Index from "../CRUDBase/Index";
 
 class {{ $modelName }}Index extends Index {
 
-  setPageInfo() {
-    this.title = info.title;
-    this.path = info.path;
-    this.exportable = info.exportable;
+  setInfo()
+  {
+    this.info = info;
   }
 
   setRepository() {

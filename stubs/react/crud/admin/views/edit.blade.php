@@ -13,9 +13,9 @@ import {{ $relationModelName }}Repository from "../../repositories/{{ $relationM
 
 class {{ $modelName }}Edit extends Edit {
 
-  setPageInfo() {
-    this.title = info.title;
-    this.path = info.path;
+  setInfo()
+  {
+    this.info = info;
   }
 
   setRepository() {

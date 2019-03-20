@@ -43,9 +43,9 @@ class Definitions
      *
      * @return array
      */
-    public function getCRUDDefinition($table, $type)
+    public function getTableCRUDDefinition($table, $type)
     {
-        return $this->get(['tables', $table, 'crud', $type], []);
+        return $this->get(['admin','cruds','ables', $table, $type], []);
     }
 
     /**
