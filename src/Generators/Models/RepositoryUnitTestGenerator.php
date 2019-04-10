@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use Illuminate\Support\Str;
+
 class RepositoryUnitTestGenerator extends ModelBaseGenerator
 {
     /**
@@ -29,7 +31,7 @@ class RepositoryUnitTestGenerator extends ModelBaseGenerator
         $modelName                  = $this->getModelName();
         $variables                  = [];
         $variables['modelName']     = $modelName;
-        $variables['variableName']  = camel_case($modelName);
+        $variables['variableName']  = Str::camel($modelName);
         $variables['className']     = $modelName.'RepositoryInterface';
         $variables['tableName']     = $this->table->getName();
         $variables['relationTable'] = $this->detectRelationTable($this->table);

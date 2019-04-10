@@ -2,6 +2,7 @@
 namespace LaravelRocket\Generator\Generators\Migrations;
 
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Generators\BaseGenerator;
 use LaravelRocket\Generator\Objects\Column;
 use LaravelRocket\Generator\Objects\Index;
@@ -108,10 +109,10 @@ class MigrationFileGenerator extends BaseGenerator
     protected function getClassName($name, $dateTime, $isAlterMigration = false): string
     {
         if ($isAlterMigration) {
-            return 'Alter'.ucfirst(camel_case($name)).'Table'.$dateTime->format('YmdHis');
+            return 'Alter'.ucfirst(Str::camel($name)).'Table'.$dateTime->format('YmdHis');
         }
 
-        return 'Create'.ucfirst(camel_case($name)).'Table';
+        return 'Create'.ucfirst(Str::camel($name)).'Table';
     }
 
     /**

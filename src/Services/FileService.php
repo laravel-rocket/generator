@@ -3,6 +3,7 @@ namespace LaravelRocket\Generator\Services;
 
 use Illuminate\Config\Repository as ConfigRepository;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Illuminate\View\Factory as ViewFactory;
 
 class FileService
@@ -80,8 +81,8 @@ class FileService
      */
     public function render(string $view, string $destinationPath, array $variables = [])
     {
-        $addHeader      = ends_with($destinationPath, '.php');
-        $isBladeTemplate= ends_with($destinationPath, '.blade.php');
+        $addHeader      = Str::endsWith($destinationPath, '.php');
+        $isBladeTemplate= Str::endsWith($destinationPath, '.blade.php');
 
         \View::addLocation(resource_path('stubs'));
         \View::addLocation(implode(DIRECTORY_SEPARATOR, [__DIR__, '..', '..', 'stubs']));

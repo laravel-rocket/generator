@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators\React\CRUD;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Generators\TableBaseGenerator;
 use LaravelRocket\Generator\Objects\Table;
 
@@ -9,7 +10,7 @@ class ReactCRUDBaseGenerator extends TableBaseGenerator
     protected function canGenerate(): bool
     {
         foreach ($this->excludePostfixes as $excludePostfix) {
-            if (ends_with($this->table->getName(), $excludePostfix)) {
+            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
                 return false;
             }
         }

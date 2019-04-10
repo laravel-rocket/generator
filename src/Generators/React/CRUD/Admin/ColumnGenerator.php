@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators\React\CRUD\Admin;
 
+use Illuminate\Support\Arr;
 use LaravelRocket\Generator\Generators\React\CRUD\ReactCRUDBaseGenerator;
 use LaravelRocket\Generator\Objects\Table;
 use function ICanBoogie\pluralize;
@@ -43,9 +44,9 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
             'relations' => $variables['relations'],
         ];
 
-        $crudListColumns = array_get($this->json->getTableCRUDDefinition($tableObject->getName(), 'list'), 'columns', []);
-        $crudShowColumns = array_get($this->json->getTableCRUDDefinition($tableObject->getName(), 'show'), 'columns', []);
-        $crudEditColumns = array_get($this->json->getTableCRUDDefinition($tableObject->getName(), 'edit'), 'columns', []);
+        $crudListColumns = Arr::get($this->json->getTableCRUDDefinition($tableObject->getName(), 'list'), 'columns', []);
+        $crudShowColumns = Arr::get($this->json->getTableCRUDDefinition($tableObject->getName(), 'show'), 'columns', []);
+        $crudEditColumns = Arr::get($this->json->getTableCRUDDefinition($tableObject->getName(), 'edit'), 'columns', []);
 
         foreach ($tableObject->getColumns() as $column) {
             if ($column->isAPIReturnable()) {

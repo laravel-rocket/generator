@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater;
 use LaravelRocket\Generator\Objects\Table;
 use function ICanBoogie\pluralize;
@@ -10,7 +11,7 @@ class RouterFileRouteUpdater extends TableBaseFileUpdater
     public function needGenerate()
     {
         foreach ($this->excludePostfixes as $excludePostfix) {
-            if (ends_with($this->table->getName(), $excludePostfix)) {
+            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
                 return false;
             }
         }
@@ -69,7 +70,7 @@ class RouterFileRouteUpdater extends TableBaseFileUpdater
     protected function getInsertData(): string
     {
         $modelName   = $this->getModelName();
-        $pathName    = snake_case(pluralize($modelName));
+        $pathName    = Str::snake(pluralize($modelName));
         $tableObject = new Table($this->table, $this->tables, $this->json);
         $displayName = $tableObject->getDisplayName();
 

@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Helpers;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Generators\NameBaseGenerator;
 use function ICanBoogie\singularize;
 
@@ -13,11 +14,11 @@ class HelperGenerator extends NameBaseGenerator
 
     protected function normalizeName(string $name): string
     {
-        if (ends_with(strtolower($name), 'helper')) {
+        if (Str::endsWith(strtolower($name), 'helper')) {
             $name = substr($name, 0, strlen($name) - 7);
         }
 
-        return ucfirst(camel_case(singularize($name)));
+        return ucfirst(Str::camel(singularize($name)));
     }
 
     /**

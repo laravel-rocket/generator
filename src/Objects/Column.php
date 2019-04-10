@@ -1,6 +1,9 @@
 <?php
 namespace LaravelRocket\Generator\Objects;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 class Column
 {
     protected $uneditables     = ['id', 'remember_token', 'created_at', 'deleted_at', 'updated_at'];
@@ -88,7 +91,7 @@ class Column
      */
     public function getDisplayName()
     {
-        return title_case(str_replace('_', ' ', $this->column->getName()));
+        return Str::title(str_replace('_', ' ', $this->column->getName()));
     }
 
     /**
@@ -97,11 +100,11 @@ class Column
     public function getAPIName()
     {
         $name = $this->getName();
-        //        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+        //        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && Str::endsWith($name, '_id')) {
         //            $name = substr($name, 0, strlen($name) - 3);
         //        }
 
-        return camel_case($name);
+        return Str::camel($name);
     }
 
     /**
@@ -110,12 +113,12 @@ class Column
     public function getQueryName()
     {
         $name = $this->getName();
-        //        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+        //        if ($this->hasRelation() && $this->relation->getType() === Relation::TYPE_BELONGS_TO && Str::endsWith($name, '_id')) {
         if ($this->hasFileRelation() || $this->hasImageRelation()) {
             $name = substr($name, 0, strlen($name) - 3);
         }
 
-        return snake_case($name);
+        return Str::snake($name);
     }
 
     /**
@@ -253,7 +256,7 @@ class Column
      */
     public function isQueryable(): bool
     {
-        if (ends_with($this->getName(), 'name')) {
+        if (Str::endsWith($this->getName(), 'name')) {
             return true;
         }
 
@@ -300,7 +303,7 @@ class Column
     {
         switch ($this->getType()) {
             case 'int':
-                if (ends_with($this->getName(), '_at')) {
+                if (Str::endsWith($this->getName(), '_at')) {
                     return true;
                 }
                 break;
@@ -416,33 +419,33 @@ class Column
     protected function setEditFieldType()
     {
         $name = $this->getName();
-        $type = empty($this->definition) ? $this->getType() : strtolower(array_get($this->definition, 'type', $this->getType()));
+        $type = empty($this->definition) ? $this->getType() : strtolower(Arr::get($this->definition, 'type', $this->getType()));
 
         $this->editFieldType    = 'text';
         $this->editFieldOptions = [];
 
-        if (starts_with($type, 'bool') || (starts_with($name, 'is_') ||
-                starts_with($name, 'has_')) && ($type === 'int' || $type === 'tinyint')) {
+        if (Str::startsWith($type, 'bool') || (Str::startsWith($name, 'is_') ||
+                Str::startsWith($name, 'has_')) && ($type === 'int' || $type === 'tinyint')) {
             $this->editFieldType = 'boolean';
 
             return;
         }
 
-        if (ends_with($name, 'image_id') && ($type === 'int' || $type === 'bigint')) {
+        if (Str::endsWith($name, 'image_id') && ($type === 'int' || $type === 'bigint')) {
             $this->editFieldType = 'image';
 
             return;
         }
 
-        if (ends_with($name, 'file_id') && ($type === 'int' || $type === 'bigint')) {
+        if (Str::endsWith($name, 'file_id') && ($type === 'int' || $type === 'bigint')) {
             $this->editFieldType = 'file';
 
             return;
         }
 
-        if (ends_with($name, 'type') || $type === 'type') {
+        if (Str::endsWith($name, 'type') || $type === 'type') {
             $this->editFieldType    = 'select_single';
-            $this->editFieldOptions = array_get($this->definition, 'options', []);
+            $this->editFieldOptions = Arr::get($this->definition, 'options', []);
 
             return;
         }
@@ -459,13 +462,13 @@ class Column
             return;
         }
 
-        if ($name === 'email' || ends_with($name, '_email')) {
+        if ($name === 'email' || Str::endsWith($name, '_email')) {
             $this->editFieldType = 'email';
 
             return;
         }
 
-        if (ends_with($name, 'country_code') && $type === 'varchar') {
+        if (Str::endsWith($name, 'country_code') && $type === 'varchar') {
             if (str_contains($name, 'phone')) {
                 $this->editFieldType = 'phone_country';
             } else {
@@ -481,9 +484,9 @@ class Column
             return;
         }
 
-        if (ends_with($name, 'gender') && $type === 'varchar') {
+        if (Str::endsWith($name, 'gender') && $type === 'varchar') {
             $this->editFieldType    = 'select_single';
-            $this->editFieldOptions = array_get($this->definition, 'options', [[
+            $this->editFieldOptions = Arr::get($this->definition, 'options', [[
                 'name'  => 'Male',
                 'value' => 'male',
             ], [
@@ -501,7 +504,7 @@ class Column
         }
 
         if ($this->hasRelation()) {
-            if ($this->relation->getType() === Relation::TYPE_BELONGS_TO && ends_with($name, '_id')) {
+            if ($this->relation->getType() === Relation::TYPE_BELONGS_TO && Str::endsWith($name, '_id')) {
                 $this->editFieldType = 'select_single';
             }
         }
@@ -577,7 +580,7 @@ class Column
         }
         if (!is_null($this->getDefaultValue()) && $this->getDefaultValue() !== '') {
             $defaultValue = $this->getDefaultValue();
-            if (starts_with($defaultValue, "'") && ends_with($defaultValue, "'")) {
+            if (Str::startsWith($defaultValue, "'") && Str::endsWith($defaultValue, "'")) {
                 $defaultValue = substr($defaultValue, 1, strlen($defaultValue) - 2);
             }
             switch ($this->getType()) {
@@ -636,7 +639,7 @@ class Column
         }
 
         foreach ($needles as $needle) {
-            if ($haystack === $needle || ends_with($haystack, '_'.$needle)) {
+            if ($haystack === $needle || Str::endsWith($haystack, '_'.$needle)) {
                 return true;
             }
         }

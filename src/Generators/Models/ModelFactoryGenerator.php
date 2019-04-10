@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use Illuminate\Support\Str;
+
 class ModelFactoryGenerator extends ModelBaseGenerator
 {
     /**
@@ -29,7 +31,7 @@ class ModelFactoryGenerator extends ModelBaseGenerator
         $modelName                 = $this->getModelName();
         $variables                 = $this->getFillableColumns();
         $variables['modelName']    = $modelName;
-        $variables['variableName'] = camel_case($modelName);
+        $variables['variableName'] = Str::camel($modelName);
 
         return $variables;
     }
@@ -74,8 +76,8 @@ class ModelFactoryGenerator extends ModelBaseGenerator
             ];
 
             foreach ($fakers as $faker) {
-                if ($name == $faker || ends_with($name, '_'.$faker)) {
-                    $value = '$faker->'.camel_case($faker);
+                if ($name == $faker || Str::endsWith($name, '_'.$faker)) {
+                    $value = '$faker->'.Str::camel($faker);
                     break;
                 }
             }
@@ -85,8 +87,8 @@ class ModelFactoryGenerator extends ModelBaseGenerator
             ];
 
             foreach ($fakerFunctions as $faker) {
-                if ($name == $faker || ends_with($name, '_'.$faker)) {
-                    $value = '$faker->'.camel_case($faker).'()';
+                if ($name == $faker || Str::endsWith($name, '_'.$faker)) {
+                    $value = '$faker->'.Str::camel($faker).'()';
                     break;
                 }
             }

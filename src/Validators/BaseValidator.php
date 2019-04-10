@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Validators;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Services\FileService;
 
 class BaseValidator
@@ -50,7 +51,7 @@ class BaseValidator
         $files   = array_diff(scandir($path), ['..', '.']);
         foreach ($files as $file) {
             $absolutePath = $path.DIRECTORY_SEPARATOR.$file;
-            if (!is_dir($absolutePath) && empty($postfix) || ends_with($file, $postfix)) {
+            if (!is_dir($absolutePath) && empty($postfix) || Str::endsWith($file, $postfix)) {
                 $results[] = $absolutePath;
             }
         }

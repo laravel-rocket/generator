@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
+use Illuminate\Support\Str;
 use function ICanBoogie\pluralize;
 use function ICanBoogie\singularize;
 
@@ -114,6 +115,6 @@ class PathElement
      */
     public function getModelName(): string
     {
-        return ucfirst(camel_case(singularize($this->element)));
+        return ucfirst(Str::camel(singularize($this->element)));
     }
 }

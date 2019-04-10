@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater;
 use function ICanBoogie\pluralize;
 
@@ -9,7 +10,7 @@ class RouterFileUseUpdater extends TableBaseFileUpdater
     public function needGenerate()
     {
         foreach ($this->excludePostfixes as $excludePostfix) {
-            if (ends_with($this->table->getName(), $excludePostfix)) {
+            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
                 return false;
             }
         }

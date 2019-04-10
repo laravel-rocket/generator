@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Validators\Tables\Rules\Tables;
 
+use Illuminate\Support\Arr;
 use LaravelRocket\Generator\Validators\BaseRule;
 use LaravelRocket\Generator\Validators\Error;
 
@@ -9,7 +10,7 @@ class PrimaryKeyName extends BaseRule
     public function validate($data)
     {
         /** @var \TakaakiMizuno\MWBParser\Elements\Table $table */
-        $table = array_get($data, 'table', null);
+        $table = Arr::get($data, 'table', null);
         if (empty($table)) {
             return $this->response(new Error('No table passed.', Error::LEVEL_ERROR, 'System'));
         }

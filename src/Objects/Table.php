@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Objects;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use function ICanBoogie\singularize;
 
 class Table
@@ -61,7 +63,7 @@ class Table
      */
     public function getModelName(): string
     {
-        return ucfirst(camel_case(singularize($this->table->getName())));
+        return ucfirst(Str::camel(singularize($this->table->getName())));
     }
 
     /**
@@ -69,12 +71,12 @@ class Table
      */
     public function getDisplayName()
     {
-        return title_case(str_replace('_', ' ', $this->table->getName()));
+        return Str::title(str_replace('_', ' ', $this->table->getName()));
     }
 
     public function getPathName()
     {
-        return kebab_case($this->table->getName());
+        return Str::kebab($this->table->getName());
     }
 
     /**
@@ -102,7 +104,7 @@ class Table
      */
     public function getColumn($name)
     {
-        return array_get($this->columnHash, $name);
+        return Arr::get($this->columnHash, $name);
     }
 
     /**
@@ -130,7 +132,7 @@ class Table
      */
     public function getRelation($name)
     {
-        return array_get($this->relationHash, $name);
+        return Arr::get($this->relationHash, $name);
     }
 
     /**
@@ -155,9 +157,9 @@ class Table
     public function isExportable(): bool
     {
         $definition = $this->json->getTableDefinition($this->table->getName());
-        $attributes = array_get($definition, 'attributes', []);
+        $attributes = Arr::get($definition, 'attributes', []);
 
-        return array_get($attributes, 'exportable', false);
+        return Arr::get($attributes, 'exportable', false);
     }
 
     /**
@@ -373,7 +375,7 @@ class Table
 
         $name = $this->getName();
         foreach ($mappings as $mapping => $iconClass) {
-            if (ends_with($name, $mapping)) {
+            if (Str::endsWith($name, $mapping)) {
                 return $iconClass;
             }
         }
@@ -404,7 +406,7 @@ class Table
     public function getAccessRoles()
     {
         $definition    = $this->json->getTableDefinition($this->table->getName());
-        $requiredRoles = array_get($definition, 'requiredRoles', []);
+        $requiredRoles = Arr::get($definition, 'requiredRoles', []);
         if (!is_array($requiredRoles)) {
             $requiredRoles = [$requiredRoles];
         }

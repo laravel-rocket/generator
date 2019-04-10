@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater;
 
 class SideBarFileUpdater extends TableBaseFileUpdater
@@ -8,7 +10,7 @@ class SideBarFileUpdater extends TableBaseFileUpdater
     public function needGenerate()
     {
         foreach ($this->excludePostfixes as $excludePostfix) {
-            if (ends_with($this->table->getName(), $excludePostfix)) {
+            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
                 return false;
             }
         }
@@ -60,8 +62,8 @@ class SideBarFileUpdater extends TableBaseFileUpdater
     protected function checkItAlreadyExists($json): bool
     {
         $pathName = $this->tableObject->getPathName();
-        foreach (array_get($json, 'items', []) as $item) {
-            if (array_get($item, 'url', '') == '/'.$pathName) {
+        foreach (Arr::get($json, 'items', []) as $item) {
+            if (Arr::get($item, 'url', '') == '/'.$pathName) {
                 return true;
             }
         }

@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Generators\Models\ColumnLanguageFileGenerator;
 use LaravelRocket\Generator\Generators\Models\ConfigFileGenerator;
 use LaravelRocket\Generator\Generators\Models\ModelFactoryGenerator;
@@ -44,7 +45,7 @@ class ModelGenerator extends MWBGenerator
 
     protected function normalizeName(string $name): string
     {
-        return snake_case(pluralize($name));
+        return Str::snake(pluralize($name));
     }
 
     protected function generate()

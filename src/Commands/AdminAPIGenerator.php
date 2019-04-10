@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\APIs\Admin\RouterFileUpdater;
 use LaravelRocket\Generator\Generators\APIs\Admin\ControllerGenerator;
 use LaravelRocket\Generator\Generators\APIs\Admin\ListResponseGenerator;
@@ -44,7 +45,7 @@ class AdminAPIGenerator extends MWBGenerator
 
     protected function normalizeName(string $name): string
     {
-        return snake_case(pluralize($name));
+        return Str::snake(pluralize($name));
     }
 
     protected function generate()

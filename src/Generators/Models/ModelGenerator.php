@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use Illuminate\Support\Arr;
 use LaravelRocket\Generator\Objects\Column;
 
 class ModelGenerator extends ModelBaseGenerator
@@ -53,7 +54,7 @@ class ModelGenerator extends ModelBaseGenerator
             $ediFieldType = $columnObject->getEditFieldType();
             $options      = $columnObject->getEditFieldOptions();
 
-            $definitionType = array_get($columnDefinition, 'type', '');
+            $definitionType = Arr::get($columnDefinition, 'type', '');
 
             if ($ediFieldType === 'boolean' || $definitionType == 'boolean') {
                 $casts[$column->getName()] = 'boolean';

@@ -4,7 +4,7 @@ use Tests\TestCase;
 
 class {{ $className }}Test extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $user = factory(\App\Models\User::class)->create();

@@ -2,7 +2,6 @@
 namespace LaravelRocket\Generator\Generators\APIs\Admin;
 
 use LaravelRocket\Generator\Generators\TableBaseGenerator;
-use LaravelRocket\Generator\Objects\Table;
 
 class BaseAdminAPIGenerator extends TableBaseGenerator
 {

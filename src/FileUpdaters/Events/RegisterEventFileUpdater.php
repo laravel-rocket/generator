@@ -1,13 +1,14 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters\Events;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater;
 
 class RegisterEventFileUpdater extends NameBaseFileUpdater
 {
     protected function normalizeName(string $name): string
     {
-        return ucfirst(camel_case($name));
+        return ucfirst(Str::camel($name));
     }
 
     protected function getTargetFilePath(): string

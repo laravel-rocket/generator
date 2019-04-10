@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use function ICanBoogie\pluralize;
 use function ICanBoogie\singularize;
 
@@ -345,7 +347,7 @@ class Action
      */
     public function getRouteIdentifier(): string
     {
-        return camel_case(lcfirst($this->controllerName)).'.'.$this->action;
+        return Str::camel(lcfirst($this->controllerName)).'.'.$this->action;
     }
 
     protected function parse()
@@ -419,14 +421,14 @@ class Action
     {
         $pathElement = $this->elements[$index];
 
-        $name = snake_case(pluralize($pathElement->elementName()));
+        $name = Str::snake(pluralize($pathElement->elementName()));
 
         $table = $this->spec->findTable($name);
         if (!empty($table)) {
             return $table->getModelName();
         }
 
-        $name = snake_case(singularize($pathElement->elementName()));
+        $name = Str::snake(singularize($pathElement->elementName()));
         if (array_key_exists($name, self::SPECIAL_PATH_NAMES)) {
             return self::SPECIAL_PATH_NAMES[$name]['model'];
         }
@@ -436,27 +438,27 @@ class Action
 
     protected function convertToMethodName($name)
     {
-        return ucfirst(camel_case($name));
+        return ucfirst(Str::camel($name));
     }
 
     protected function setControllerAndAction()
     {
         $this->type = self::CONTEXT_TYPE_UNKNOWN;
 
-        $path       = starts_with($this->path, '/') ? substr($this->path, 1) : $this->path;
+        $path       = Str::startsWith($this->path, '/') ? substr($this->path, 1) : $this->path;
         $specialKey = implode(':', [$this->httpMethod, $path]);
         if (array_key_exists($specialKey, self::SPECIAL_ACTIONS)) {
             $actionInfo           = self::SPECIAL_ACTIONS[$specialKey];
-            $this->action         = array_get($actionInfo, 'action', '');
-            $this->controllerName = array_get($actionInfo, 'controller', '');
-            $this->type           = array_get($actionInfo, 'type', '');
+            $this->action         = Arr::get($actionInfo, 'action', '');
+            $this->controllerName = Arr::get($actionInfo, 'controller', '');
+            $this->type           = Arr::get($actionInfo, 'type', '');
 
             return;
         }
 
         // Check SNS SignIn
         if ($this->httpMethod === 'post' && preg_match('/^\/?signin\/([^\/]+)$/', $this->path, $matches)) {
-            $name                 = camel_case($matches[1]);
+            $name                 = Str::camel($matches[1]);
             $this->action         = 'post'.ucfirst($name).'SignIn';
             $this->controllerName = ucfirst($name).'Auth';
             $this->type           = self::CONTEXT_TYPE_AUTH_SNS;
@@ -560,7 +562,7 @@ class Action
                     $this->parentTable = $this->spec->findTable($this->elements[2]->elementName());
                     $this->targetTable = $this->spec->findTable($this->elements[0]->elementName(), $this->elements[2]->elementName());
 
-                    $key                 = snake_case($this->parentTable->getModelName().'_'.$subElement->variableName());
+                    $key                 = Str::snake($this->parentTable->getModelName().'_'.$subElement->variableName());
                     $this->parentFilters = [
                         $key => $subElement->variableName(),
                     ];

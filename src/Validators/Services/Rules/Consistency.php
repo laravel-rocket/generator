@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Validators\Services\Rules;
 
+use Illuminate\Support\Arr;
 use LaravelRocket\Generator\Validators\BaseRule;
 use LaravelRocket\Generator\Validators\Error;
 
@@ -8,14 +9,14 @@ class Consistency extends BaseRule
 {
     public function validate($data)
     {
-        $name = array_get($data, 'name');
+        $name = Arr::get($data, 'name');
 
         /** @var \LaravelRocket\Generator\Objects\ClassLike $interface */
-        $interface = array_get($data, 'interface');
+        $interface = Arr::get($data, 'interface');
         /** @var \LaravelRocket\Generator\Objects\ClassLike $class */
-        $class = array_get($data, 'class');
+        $class = Arr::get($data, 'class');
         /** @var \LaravelRocket\Generator\Objects\ClassLike $test */
-        $test = array_get($data, 'test');
+        $test = Arr::get($data, 'test');
 
         $errors = [];
 

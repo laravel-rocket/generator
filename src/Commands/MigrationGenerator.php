@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Generators\Migrations\MigrationFileGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
 use function ICanBoogie\pluralize;
@@ -40,7 +41,7 @@ class MigrationGenerator extends MWBGenerator
 
     protected function normalizeName(string $name): string
     {
-        return snake_case(pluralize($name));
+        return Str::snake(pluralize($name));
     }
 
     /**

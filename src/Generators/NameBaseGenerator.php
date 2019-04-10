@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators;
 
+use Illuminate\Support\Str;
 use function ICanBoogie\singularize;
 
 class NameBaseGenerator extends BaseGenerator
@@ -49,7 +50,7 @@ class NameBaseGenerator extends BaseGenerator
      */
     protected function normalizeName(string $name): string
     {
-        return ucfirst(camel_case(singularize($name)));
+        return ucfirst(Str::camel(singularize($name)));
     }
 
     /**

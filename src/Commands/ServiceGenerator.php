@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\Services\RegisterServiceFileUpdater;
 use LaravelRocket\Generator\Generators\Services\ServiceInterfaceGenerator;
 use LaravelRocket\Generator\Generators\Services\ServiceUnitTestGenerator;
@@ -29,11 +30,11 @@ class ServiceGenerator extends BaseCommand
 
     protected function normalizeName(string $name): string
     {
-        if (ends_with(strtolower($name), 'service')) {
+        if (Str::endsWith(strtolower($name), 'service')) {
             $name = substr($name, 0, strlen($name) - 7);
         }
 
-        return ucfirst(camel_case(singularize($name)));
+        return ucfirst(Str::camel(singularize($name)));
     }
 
     protected function generateService()

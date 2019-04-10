@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use Illuminate\Support\Str;
 use function ICanBoogie\pluralize;
 
 class PresenterGenerator extends ModelBaseGenerator
@@ -31,8 +32,8 @@ class PresenterGenerator extends ModelBaseGenerator
         $modelName                         = $this->getModelName();
         $variables                         = $this->getColumnInfo();
         $variables['modelName']            = $modelName;
-        $variables['variableName']         = camel_case($modelName);
-        $variables['viewName']             = kebab_case(pluralize($modelName));
+        $variables['variableName']         = Str::camel($modelName);
+        $variables['viewName']             = Str::kebab(pluralize($modelName));
         $variables['tableName']            = $this->table->getName();
         $variables['relations']            = $this->getRelations();
         $variables['representativeColumn'] = $this->detectRepresentativeColumn();

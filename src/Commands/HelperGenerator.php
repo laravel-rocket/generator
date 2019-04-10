@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\Helpers\AppConfigFileUpdater;
 use LaravelRocket\Generator\FileUpdaters\Helpers\RegisterHelperFileUpdater;
 use LaravelRocket\Generator\Generators\Helpers\FacadeGenerator;
@@ -31,11 +32,11 @@ class HelperGenerator extends BaseCommand
 
     protected function normalizeName(string $name): string
     {
-        if (ends_with(strtolower($name), 'helper')) {
+        if (Str::endsWith(strtolower($name), 'helper')) {
             $name = substr($name, 0, strlen($name) - 6);
         }
 
-        return ucfirst(camel_case(singularize($name)));
+        return ucfirst(Str::camel(singularize($name)));
     }
 
     protected function generateHelper()

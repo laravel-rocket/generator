@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Objects;
 
+use Illuminate\Support\Str;
 use function ICanBoogie\singularize;
 
 class Relation
@@ -74,24 +75,24 @@ class Relation
     {
         switch ($this->type) {
             case self::TYPE_BELONGS_TO:
-                $this->name = camel_case(preg_replace('/_id$/', '', $this->column->getName()));
+                $this->name = Str::camel(preg_replace('/_id$/', '', $this->column->getName()));
 
                 return;
             case self::TYPE_HAS_MANY:
-                $this->name = camel_case($this->referenceTableName);
+                $this->name = Str::camel($this->referenceTableName);
 
                 return;
             case self::TYPE_HAS_ONE:
-                $this->name = camel_case(singularize($this->referenceTableName));
+                $this->name = Str::camel(singularize($this->referenceTableName));
 
                 return;
             case self::TYPE_BELONGS_TO_MANY:
-                $this->name = camel_case($this->referenceTableName);
+                $this->name = Str::camel($this->referenceTableName);
 
                 return;
         }
 
-        $this->name = camel_case($this->referenceTableName);
+        $this->name = Str::camel($this->referenceTableName);
     }
 
     /**
@@ -131,7 +132,7 @@ class Relation
      */
     public function getDisplayName()
     {
-        return title_case(str_replace('_', ' ', snake_case($this->getName())));
+        return Str::title(str_replace('_', ' ', Str::snake($this->getName())));
     }
 
     /**
@@ -233,7 +234,7 @@ class Relation
      */
     public function getViewName()
     {
-        return title_case(str_replace('_', ' ', snake_case($this->name)));
+        return Str::title(str_replace('_', ' ', Str::snake($this->name)));
     }
 
     /**
@@ -241,7 +242,7 @@ class Relation
      */
     public function getReferenceModel()
     {
-        return ucfirst(camel_case(singularize($this->referenceTableName)));
+        return ucfirst(Str::camel(singularize($this->referenceTableName)));
     }
 
     /**
@@ -257,7 +258,7 @@ class Relation
      */
     public function getIntermediateTableModel()
     {
-        return ucfirst(camel_case(singularize($this->intermediateTableName)));
+        return ucfirst(Str::camel(singularize($this->intermediateTableName)));
     }
 
     /**
@@ -290,14 +291,14 @@ class Relation
     public function detectEditType()
     {
         if ($this->isMultipleSelection()) {
-            if (ends_with($this->name, '_type') || ends_with($this->name, 'role')) {
+            if (Str::endsWith($this->name, '_type') || Str::endsWith($this->name, 'role')) {
                 return self::EDIT_TYPE_CHECKBOX;
             }
 
             return self::EDIT_TYPE_SELECT_MULTI;
         }
 
-        if (ends_with($this->name, '_type') || ends_with($this->name, 'role')) {
+        if (Str::endsWith($this->name, '_type') || Str::endsWith($this->name, 'role')) {
             return self::EDIT_TYPE_RADIO_BUTTON;
         }
 
@@ -317,7 +318,7 @@ class Relation
      */
     public function getAPIName()
     {
-        return camel_case($this->getName());
+        return Str::camel($this->getName());
     }
 
     /**
@@ -325,7 +326,7 @@ class Relation
      */
     public function getQueryName()
     {
-        return snake_case($this->getName());
+        return Str::snake($this->getName());
     }
 
     /**
@@ -341,7 +342,7 @@ class Relation
         }
 
         foreach ($needles as $needle) {
-            if ($haystack === $needle || ends_with($haystack, ucfirst($needle))) {
+            if ($haystack === $needle || Str::endsWith($haystack, ucfirst($needle))) {
                 return true;
             }
         }

@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Validators\Tables\Rules\Tables;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Validators\BaseRule;
 use LaravelRocket\Generator\Validators\Error;
 use function ICanBoogie\pluralize;
@@ -10,7 +12,7 @@ class TableName extends BaseRule
     public function validate($data)
     {
         /** @var \TakaakiMizuno\MWBParser\Elements\Table $table */
-        $table = array_get($data, 'table', null);
+        $table = Arr::get($data, 'table', null);
         if (empty($table)) {
             return $this->response(new Error('No table passed.', Error::LEVEL_ERROR, 'System'));
         }
@@ -30,9 +32,9 @@ class TableName extends BaseRule
             );
         }
 
-        $idealName = pluralize(snake_case($name));
+        $idealName = pluralize(Str::snake($name));
 
-        if (snake_case($name) != $name) {
+        if (Str::snake($name) != $name) {
             $errors[] = new Error(
                 'Table name must be snake case.',
                 Error::LEVEL_ERROR,

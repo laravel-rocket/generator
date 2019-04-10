@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\Models\RegisterRepositoryFileUpdater;
 use LaravelRocket\Generator\Generators\Models\RepositoryInterfaceGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryUnitTestGenerator;
@@ -40,11 +41,11 @@ class RepositoryGenerator extends MWBGenerator
 
     protected function normalizeName(string $name): string
     {
-        if (ends_with(strtolower($name), 'repository')) {
+        if (Str::endsWith(strtolower($name), 'repository')) {
             $name = substr($name, 0, strlen($name) - 10);
         }
 
-        return snake_case(pluralize($name));
+        return Str::snake(pluralize($name));
     }
 
     protected function generate()

@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters\APIs\Admin;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater;
 
 class RouterFileUpdater extends TableBaseFileUpdater
@@ -8,7 +9,7 @@ class RouterFileUpdater extends TableBaseFileUpdater
     public function needGenerate()
     {
         foreach ($this->excludePostfixes as $excludePostfix) {
-            if (ends_with($this->table->getName(), $excludePostfix)) {
+            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
                 return false;
             }
         }
@@ -72,7 +73,7 @@ class RouterFileUpdater extends TableBaseFileUpdater
     protected function getInsertData(): string
     {
         $modelName = $this->getModelName();
-        $viewName  = kebab_case($this->table->getName());
+        $viewName  = Str::kebab($this->table->getName());
 
         return <<< EOS
             Route::resource('$viewName', '{$modelName}Controller')->only([

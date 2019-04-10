@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Objects\Table;
 use function ICanBoogie\singularize;
 
@@ -72,7 +73,7 @@ class TableBaseFileUpdater extends BaseFileUpdater
     public function needGenerate()
     {
         foreach ($this->excludePostfixes as $excludePostfix) {
-            if (ends_with($this->table->getName(), $excludePostfix)) {
+            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
                 return false;
             }
         }
@@ -85,7 +86,7 @@ class TableBaseFileUpdater extends BaseFileUpdater
      */
     protected function getModelName(): string
     {
-        return ucfirst(camel_case(singularize($this->table->getName())));
+        return ucfirst(Str::camel(singularize($this->table->getName())));
     }
 
     /**

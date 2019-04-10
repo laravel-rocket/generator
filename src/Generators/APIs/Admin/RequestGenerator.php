@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\APIs\Admin;
 
+use Illuminate\Support\Str;
+
 class RequestGenerator extends BaseAdminAPIGenerator
 {
     /**
@@ -13,7 +15,7 @@ class RequestGenerator extends BaseAdminAPIGenerator
         $modelName = $this->getModelName();
         $nameSpace = ucfirst($modelName);
 
-        $className = ucfirst(camel_case($action)).'Request';
+        $className = ucfirst(Str::camel($action)).'Request';
 
         return app_path('Http/Requests/Api/Admin/'.$nameSpace.'/'.$className.'.php');
     }
@@ -72,7 +74,7 @@ class RequestGenerator extends BaseAdminAPIGenerator
         $modelName = $this->getModelName();
 
         $variables = [
-            'className' => ucfirst(camel_case($action)).'Request',
+            'className' => ucfirst(Str::camel($action)).'Request',
             'baseClass' => $action === 'index' ? 'PaginationRequest' : 'Request',
         ];
 

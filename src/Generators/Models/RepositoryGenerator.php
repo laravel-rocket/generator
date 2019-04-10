@@ -1,6 +1,9 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+
 class RepositoryGenerator extends ModelBaseGenerator
 {
     /**
@@ -47,7 +50,7 @@ class RepositoryGenerator extends ModelBaseGenerator
         $variables                    = [];
         $variables['modelName']       = $modelName;
         $variables['className']       = $modelName.'Repository';
-        $variables['variableName']    = camel_case($modelName);
+        $variables['variableName']    = Str::camel($modelName);
         $variables['tableName']       = $this->table->getName();
         $variables['relationTable']   = $this->detectRelationTable($this->table);
         $variables['relations']       = $this->getRelations();
@@ -58,15 +61,15 @@ class RepositoryGenerator extends ModelBaseGenerator
         if ($variables['relationTable']) {
             $keys                   = $this->getRelationKey($this->table);
             $variables              = array_merge($variables, $keys);
-            $variables['parentKey'] = array_get($keys, 'parentKey', '');
-            $variables['childKey']  = array_get($keys, 'childKey', '');
+            $variables['parentKey'] = Arr::get($keys, 'parentKey', '');
+            $variables['childKey']  = Arr::get($keys, 'childKey', '');
         }
 
         $targetColumns   = ['name', 'title', 'content', 'note', 'description'];
         $targetPostfixes = ['_name', '_code'];
         foreach ($this->table->getColumns() as $column) {
             $name = $column->getName();
-            if (in_array($name, $targetColumns) || ends_with($name, $targetPostfixes)) {
+            if (in_array($name, $targetColumns) || Str::endsWith($name, $targetPostfixes)) {
                 $variables['keywordColumns'][] = $name;
             }
         }

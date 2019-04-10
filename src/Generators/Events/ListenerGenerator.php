@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Events;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Generators\NameBaseGenerator;
 
 class ListenerGenerator extends NameBaseGenerator
@@ -12,7 +13,7 @@ class ListenerGenerator extends NameBaseGenerator
 
     protected function normalizeName(string $name): string
     {
-        return ucfirst(camel_case($name));
+        return ucfirst(Str::camel($name));
     }
 
     protected function getModels()

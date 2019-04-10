@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use Illuminate\Support\Str;
+
 class ModelUnitTestGenerator extends ModelBaseGenerator
 {
     /**
@@ -29,7 +31,7 @@ class ModelUnitTestGenerator extends ModelBaseGenerator
         $modelName                 = $this->getModelName();
         $variables                 = [];
         $variables['modelName']    = $modelName;
-        $variables['variableName'] = camel_case($modelName);
+        $variables['variableName'] = Str::camel($modelName);
 
         return $variables;
     }

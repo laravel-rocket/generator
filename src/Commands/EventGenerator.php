@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\Events\RegisterEventFileUpdater;
 use LaravelRocket\Generator\Generators\Events\ListenerGenerator;
 use LaravelRocket\Generator\Generators\Events\UnitTestGenerator;
@@ -28,7 +29,7 @@ class EventGenerator extends BaseCommand
 
     protected function normalizeName(string $name): string
     {
-        return ucfirst(camel_case($name));
+        return ucfirst(Str::camel($name));
     }
 
     protected function generateService()

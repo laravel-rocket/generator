@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters\Tests;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater;
 use function ICanBoogie\singularize;
 
@@ -8,11 +9,11 @@ class ServiceTestFileUpdater extends NameBaseFileUpdater
 {
     protected function normalizeName(string $name): string
     {
-        if (ends_with($name, 'Service')) {
+        if (Str::endsWith($name, 'Service')) {
             $name = substr($name, 0, strlen($name) - 7);
         }
 
-        return ucfirst(camel_case(singularize($name)));
+        return ucfirst(Str::camel(singularize($name)));
     }
 
     protected function getTargetFilePath(): string
@@ -64,6 +65,6 @@ class ServiceTestFileUpdater extends NameBaseFileUpdater
      */
     protected function getInsertData(): string
     {
-        return "";
+        return '';
     }
 }

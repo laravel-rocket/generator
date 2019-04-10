@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Objects\Table;
 use function ICanBoogie\pluralize;
 
@@ -166,7 +168,7 @@ class Definition
             }
         }
         if ($this->type === self::TYPE_OBJECT) {
-            $tableCandidateName = pluralize(snake_case($this->name));
+            $tableCandidateName = pluralize(Str::snake($this->name));
             if (array_key_exists($this->name, self::TABLE_ALIASES)) {
                 $tableCandidateName = self::TABLE_ALIASES[$this->name];
             }
@@ -251,25 +253,25 @@ class Definition
     protected function mappingColumns()
     {
         foreach ($this->properties as $index => $property) {
-            $column = $this->table->getColumn(snake_case($property['name']));
+            $column = $this->table->getColumn(Str::snake($property['name']));
             if (!empty($column)) {
                 $this->properties[$index]['column'] = $column;
                 continue;
             }
 
-            $relation = $this->table->getRelation(camel_case($property['name']));
+            $relation = $this->table->getRelation(Str::camel($property['name']));
             if (!empty($relation)) {
                 $this->properties[$index]['relation'] = $relation;
                 continue;
             }
 
-            $relation = $this->table->getRelation(camel_case($property['definition']));
+            $relation = $this->table->getRelation(Str::camel($property['definition']));
             if (!empty($relation)) {
                 $this->properties[$index]['relation'] = $relation;
                 continue;
             }
 
-            $relation = $this->table->getRelation(camel_case(pluralize($property['definition'])));
+            $relation = $this->table->getRelation(Str::camel(pluralize($property['definition'])));
             if (!empty($relation)) {
                 $this->properties[$index]['relation'] = $relation;
                 continue;
@@ -287,7 +289,7 @@ class Definition
         $parts = explode('/', $name);
         $name  = $parts[count($parts) - 1];
 
-        return array_get($definition, $name);
+        return Arr::get($definition, $name);
     }
 
     protected function getDefaultValue($type)

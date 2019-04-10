@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Objects;
 
+use Illuminate\Support\Arr;
+
 class Definitions
 {
     /** @var array */
@@ -23,7 +25,7 @@ class Definitions
             $key = implode('.', $key);
         }
 
-        return array_get($this->json, $key, $default);
+        return Arr::get($this->json, $key, $default);
     }
 
     /**
@@ -45,7 +47,7 @@ class Definitions
      */
     public function getTableCRUDDefinition($table, $type)
     {
-        return $this->get(['admin','cruds','ables', $table, $type], []);
+        return $this->get(['admin', 'cruds', 'ables', $table, $type], []);
     }
 
     /**

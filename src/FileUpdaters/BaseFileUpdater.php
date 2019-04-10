@@ -190,7 +190,7 @@ class BaseFileUpdater
     }
 
     /**
-     * @param string $name
+     * @param string            $name
      * @param \PhpParser\Node[] $statements
      *
      * @return null
@@ -221,7 +221,7 @@ class BaseFileUpdater
     {
         $methods = [];
         foreach ($statements as $statement) {
-            if (get_class($statement) == ClassMethod::class ) {
+            if (get_class($statement) == ClassMethod::class) {
                 $methods[$statement->name] = $statement;
             }
             if (property_exists($statement, 'stmts')) {

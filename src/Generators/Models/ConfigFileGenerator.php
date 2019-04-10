@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use Illuminate\Support\Arr;
+
 class ConfigFileGenerator extends ModelBaseGenerator
 {
     /**
@@ -45,7 +47,7 @@ class ConfigFileGenerator extends ModelBaseGenerator
             $columnDefinition = $this->json->getColumnDefinition($this->table->getName(), $column->getName());
 
             $name = $column->getName();
-            $type = array_get($columnDefinition, 'type', '');
+            $type = Arr::get($columnDefinition, 'type', '');
 
             $columnInfo['columns'][$name] = [
                 'options' => [],
@@ -53,10 +55,10 @@ class ConfigFileGenerator extends ModelBaseGenerator
 
             switch ($type) {
                 case 'type':
-                    $options = array_get($columnDefinition, 'options', []);
+                    $options = Arr::get($columnDefinition, 'options', []);
                     foreach ($options as $index => $option) {
-                        $optionValue                                           = array_get($option, 'value', $index);
-                        $optionName                                            = array_get($option, 'name', $index);
+                        $optionValue                                           = Arr::get($option, 'value', $index);
+                        $optionName                                            = Arr::get($option, 'name', $index);
                         $columnInfo['columns'][$name]['options'][$optionValue] = $optionName;
                     }
                     break;

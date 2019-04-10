@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Models;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Objects\Column;
 use function ICanBoogie\pluralize;
 
@@ -12,7 +14,7 @@ class ColumnLanguageFileGenerator extends ModelBaseGenerator
     protected function getPath(): string
     {
         $modelName = $this->getModelName();
-        $viewName  = kebab_case(pluralize($modelName));
+        $viewName  = Str::kebab(pluralize($modelName));
 
         return resource_path('lang/en/tables/'.$this->table->getName().'/columns.php');
     }
@@ -54,11 +56,11 @@ class ColumnLanguageFileGenerator extends ModelBaseGenerator
 
             $name = $column->getName();
 
-            $viewName = array_get($columnDefinition, 'name', '');
+            $viewName = Arr::get($columnDefinition, 'name', '');
             if (empty($viewName)) {
                 $viewName = $name;
                 $viewName = preg_replace('/_id$/', ' ', $viewName);
-                $viewName = title_case(preg_replace('/_/', ' ', $viewName));
+                $viewName = Str::title(preg_replace('/_/', ' ', $viewName));
             }
 
             $viewName                     = trim($viewName);
@@ -91,13 +93,13 @@ class ColumnLanguageFileGenerator extends ModelBaseGenerator
                     break;
             }
 
-            $definitionType = array_get($columnDefinition, 'type');
+            $definitionType = Arr::get($columnDefinition, 'type');
             if ($definitionType === 'type') {
-                $options = array_get($columnDefinition, 'options', []);
+                $options = Arr::get($columnDefinition, 'options', []);
                 $result  = [];
                 foreach ($options as $index => $option) {
-                    $optionValue          = array_get($option, 'value', $index);
-                    $optionNme            = array_get($option, 'name', $index);
+                    $optionValue          = Arr::get($option, 'value', $index);
+                    $optionNme            = Arr::get($option, 'name', $index);
                     $result[$optionValue] = $optionNme;
                 }
                 $columnInfo['columns'][$name]['options'] = $result;

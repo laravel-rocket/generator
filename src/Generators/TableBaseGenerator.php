@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators;
 
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Objects\Column;
 use TakaakiMizuno\MWBParser\Elements\Table;
 use function ICanBoogie\singularize;
@@ -73,7 +75,7 @@ class TableBaseGenerator extends BaseGenerator
     protected function canGenerate(): bool
     {
         foreach ($this->excludePostfixes as $excludePostfix) {
-            if (ends_with($this->table->getName(), $excludePostfix)) {
+            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
                 return false;
             }
         }
@@ -172,13 +174,13 @@ class TableBaseGenerator extends BaseGenerator
         if (count($tables) === 2) {
             if ($table->getName() === implode('_', [singularize($tables[0]), $tables[1]])) {
                 return [
-                    'parentKey' => array_get($columns, '0.0') ? (array_get($columns, '0.0'))->getName() : '',
-                    'childKey'  => array_get($columns, '1.0') ? (array_get($columns, '1.0'))->getName() : '',
+                    'parentKey' => Arr::get($columns, '0.0') ? (Arr::get($columns, '0.0'))->getName() : '',
+                    'childKey'  => Arr::get($columns, '1.0') ? (Arr::get($columns, '1.0'))->getName() : '',
                 ];
             } elseif ($table->getName() === implode('_', [singularize($tables[1]), $tables[0]])) {
                 return [
-                    'parentKey' => array_get($columns, '1.0') ? (array_get($columns, '1.0'))->getName() : '',
-                    'childKey'  => array_get($columns, '0.0') ? (array_get($columns, '0.0'))->getName() : '',
+                    'parentKey' => Arr::get($columns, '1.0') ? (Arr::get($columns, '1.0'))->getName() : '',
+                    'childKey'  => Arr::get($columns, '0.0') ? (Arr::get($columns, '0.0'))->getName() : '',
                 ];
             }
         }
@@ -229,7 +231,7 @@ class TableBaseGenerator extends BaseGenerator
             $this->copyTypeRelatedFiles($type);
 
             if (array_key_exists($name, $relationHash)) {
-                $relation = camel_case($relationHash[$name]->getName());
+                $relation = Str::camel($relationHash[$name]->getName());
             }
 
             if ($columnObject->isListable()) {
@@ -263,11 +265,11 @@ class TableBaseGenerator extends BaseGenerator
         $relationDefinitions = $this->json->get(['tables', $this->table->getName(), 'relations'], []);
         foreach ($relationDefinitions as $name => $relationDefinition) {
             if (array_key_exists($name, $columnInfo['editableColumns'])) {
-                $columnInfo['editableColumns']['name']['type'] = array_get($relationDefinitions, 'type', '');
+                $columnInfo['editableColumns']['name']['type'] = Arr::get($relationDefinitions, 'type', '');
             } else {
                 $columnInfo['editableColumns'][$name] = [
                     'name' => $name,
-                    'type' => array_get($relationDefinitions, 'type', ''),
+                    'type' => Arr::get($relationDefinitions, 'type', ''),
                 ];
             }
         }
@@ -305,7 +307,7 @@ class TableBaseGenerator extends BaseGenerator
 
         foreach ($this->table->getColumns() as $column) {
             $name = $column->getName();
-            if (ends_with($name, '_name')) {
+            if (Str::endsWith($name, '_name')) {
                 return $column->getName();
             }
             if ($name === 'title') {
@@ -328,11 +330,11 @@ class TableBaseGenerator extends BaseGenerator
 
         $columns = $this->json->get(['tables', $this->table->getName().'.columns'], []);
         foreach ($columns as $name => $column) {
-            $type = array_get($column, 'type');
+            $type = Arr::get($column, 'type');
             if ($type === 'type') {
-                $options = array_get($column, 'options', []);
+                $options = Arr::get($column, 'options', []);
                 foreach ($options as $option) {
-                    $value                    = array_get($option, 'value');
+                    $value                    = Arr::get($option, 'value');
                     $constantName             = $this->generateConstantName($name, $value);
                     $constants[$constantName] = "$constantName = '$value'";
                 }

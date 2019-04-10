@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters;
 
+use Illuminate\Support\Str;
 use function ICanBoogie\singularize;
 
 class NameBaseFileUpdater extends BaseFileUpdater
@@ -12,7 +13,7 @@ class NameBaseFileUpdater extends BaseFileUpdater
 
     protected function normalizeName(string $name): string
     {
-        return ucfirst(camel_case(singularize($name)));
+        return ucfirst(Str::camel(singularize($name)));
     }
 
     /**

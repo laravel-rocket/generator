@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Generators\Services;
 
+use Illuminate\Support\Str;
 use LaravelRocket\Generator\Generators\NameBaseGenerator;
 use function ICanBoogie\singularize;
 
@@ -13,11 +14,11 @@ class ServiceGenerator extends NameBaseGenerator
 
     protected function normalizeName(string $name): string
     {
-        if (ends_with(strtolower($name), 'service')) {
+        if (Str::endsWith(strtolower($name), 'service')) {
             $name = substr($name, 0, strlen($name) - 7);
         }
 
-        return ucfirst(camel_case(singularize($name)));
+        return ucfirst(Str::camel(singularize($name)));
     }
 
     /**
