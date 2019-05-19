@@ -273,7 +273,7 @@ class Column
                 return true;
             case 'bigint':
             case 'int':
-                if (starts_with($this->getName(), 'is_') || starts_with($this->getName(), 'has_')) {
+                if (Str::startsWith($this->getName(), 'is_') || Str::startsWith($this->getName(), 'has_')) {
                     return true;
                 }
                 break;
@@ -364,6 +364,8 @@ class Column
                     return true;
                 }
                 break;
+            case 'json':
+                return true;
         }
 
         return false;
@@ -469,7 +471,7 @@ class Column
         }
 
         if (Str::endsWith($name, 'country_code') && $type === 'varchar') {
-            if (str_contains($name, 'phone')) {
+            if (Str::contains($name, 'phone')) {
                 $this->editFieldType = 'phone_country';
             } else {
                 $this->editFieldType = 'country';
@@ -499,6 +501,12 @@ class Column
 
         if (in_array($type, ['text', 'mediumtext', 'longtext', 'smalltext', 'tinytext'])) {
             $this->editFieldType = 'textarea';
+
+            return;
+        }
+
+        if (in_array($type, ['json'])) {
+            $this->editFieldType = 'json';
 
             return;
         }
@@ -558,6 +566,7 @@ class Column
                 }
                 break;
             case 'text':
+            case 'json':
                 $type = 'text';
                 break;
             case 'mediumtext':

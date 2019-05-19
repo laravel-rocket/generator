@@ -87,7 +87,7 @@ class ColumnLanguageFileGenerator extends ModelBaseGenerator
                         }
                     } else {
                         foreach ($options as $option) {
-                            $columnInfo['columns'][$name]['booleans'][array_get($option, 'value', '')] = array_get($option, 'name', '');
+                            $columnInfo['columns'][$name]['booleans'][Arr::get($option, 'value', '')] = Arr::get($option, 'name', '');
                         }
                     }
                     break;

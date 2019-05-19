@@ -40,7 +40,7 @@ class EventGenerator extends NameBaseGenerator
         $relatedModels = [];
         $models        = $this->getModels();
         foreach ($models as $model) {
-            if (starts_with($this->name, $model)) {
+            if (Str::endsWith($this->name, $model)) {
                 $relatedModels[] = $model;
             }
         }

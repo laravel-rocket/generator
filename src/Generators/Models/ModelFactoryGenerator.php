@@ -121,6 +121,8 @@ class ModelFactoryGenerator extends ModelBaseGenerator
                     case 'date':
                         $value = '$faker->date()';
                         break;
+                    case 'json':
+                        $value = '[]';
                 }
             }
 

@@ -89,7 +89,7 @@
 @if( $column['type'] == 'textarea')
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label>
                     <textarea name="{{ $column['name'] }}" class="form-control" rows="5" placeholder="＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.name')">｛!!  old('{{ $column['name'] }}') ? old('{{ $column['name'] }}') : ${{ $variableName }}->{{ $column['name'] }} !!｝</textarea>
-@elseif( $column['type'] === 'boolean')
+@elseif( $column['type'] === 'boolean' || $column['type'] === 'json')
                     <label for="{{ $column['name'] }}">＠lang('tables/{{ $tableName }}/columns.{{ $column['name'] }}.name')</label><br/>
                     <input type="radio" name="{{ $column['name'] }}" value="0" ＠if( ${{ $variableName }}->{{ $column['name'] }} == 0 ) checked ＠endif> ＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.booleans.false')
                     <input type="radio" name="{{ $column['name'] }}" value="1" ＠if( ${{ $variableName }}->{{ $column['name'] }} == 1 ) checked ＠endif> ＠lang('tables/{{ $viewName }}/columns.{{ $column['name'] }}.booleans.true')
