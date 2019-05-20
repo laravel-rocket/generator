@@ -1,5 +1,4 @@
 <?php
-
 namespace LaravelRocket\Generator\Tests\Objects;
 
 use LaravelRocket\Generator\Objects\Table;
@@ -8,7 +7,6 @@ use TakaakiMizuno\MWBParser\Parser;
 
 class TableTest extends TestCase
 {
-
     protected function getTables()
     {
         $path = [
@@ -24,9 +22,10 @@ class TableTest extends TestCase
         return $tables;
     }
 
-    protected function getTable($name, $tables){
-        foreach( $tables as $table){
-            if( $table->getName() === $name){
+    protected function getTable($name, $tables)
+    {
+        foreach ($tables as $table) {
+            if ($table->getName() === $name) {
                 return $table;
             }
         }
@@ -37,7 +36,7 @@ class TableTest extends TestCase
     public function testGetInstance()
     {
         $tables = $this->getTables();
-        $table = $this->getTable('users', $tables);
+        $table  = $this->getTable('users', $tables);
 
         $tableObject = new Table($table, $tables);
         $this->assertNotEmpty($tableObject);
@@ -46,7 +45,7 @@ class TableTest extends TestCase
     public function testHasColumn()
     {
         $tables = $this->getTables();
-        $table = $this->getTable('users', $tables);
+        $table  = $this->getTable('users', $tables);
 
         $tableObject = new Table($table, $tables);
         $this->assertTrue($tableObject->hasColumn('id'));
@@ -55,7 +54,7 @@ class TableTest extends TestCase
     public function testHasRelation()
     {
         $tables = $this->getTables();
-        $table = $this->getTable('users', $tables);
+        $table  = $this->getTable('users', $tables);
 
         $tableObject = new Table($table, $tables);
 
@@ -65,7 +64,7 @@ class TableTest extends TestCase
     public function testCheckRelationTable()
     {
         $tables = $this->getTables();
-        $table = $this->getTable('branch_users', $tables);
+        $table  = $this->getTable('branch_users', $tables);
 
         $tableObject = new Table($table, $tables);
         $this->assertTrue($tableObject->isRelationTable());
@@ -74,7 +73,7 @@ class TableTest extends TestCase
     public function testCheckAuthTable()
     {
         $tables = $this->getTables();
-        $table = $this->getTable('users', $tables);
+        $table  = $this->getTable('users', $tables);
 
         $tableObject = new Table($table, $tables);
         $this->assertTrue($tableObject->hasRelation('branches'));
@@ -83,12 +82,11 @@ class TableTest extends TestCase
     public function testColumnHasRelation()
     {
         $tables = $this->getTables();
-        $table = $this->getTable('branch_users', $tables);
+        $table  = $this->getTable('branch_users', $tables);
 
         $tableObject = new Table($table, $tables);
-        $column = $tableObject->getColumn('user_id');
+        $column      = $tableObject->getColumn('user_id');
 
         $this->assertTrue($column->hasRelation());
     }
-
 }

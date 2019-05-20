@@ -6,6 +6,7 @@ use LaravelRocket\Generator\Validators\Tables\Rules\Columns\AvoidDateTime;
 use LaravelRocket\Generator\Validators\Tables\Rules\Columns\AvoidLongVarChar;
 use LaravelRocket\Generator\Validators\Tables\Rules\Columns\ColumnName;
 use LaravelRocket\Generator\Validators\Tables\Rules\Columns\GenderWithVarChar;
+use LaravelRocket\Generator\Validators\Tables\Rules\Columns\OptionDefined;
 use LaravelRocket\Generator\Validators\Tables\Rules\Tables\PrimaryKeyName;
 use LaravelRocket\Generator\Validators\Tables\Rules\Tables\TableName;
 
@@ -32,6 +33,7 @@ class TableSchemaValidator extends BaseValidator
             new AvoidLongVarChar(),
             new AvoidDateTime(),
             new GenderWithVarChar(),
+            new OptionDefined(),
         ];
 
         $success = true;
@@ -39,7 +41,12 @@ class TableSchemaValidator extends BaseValidator
 
         foreach ($tables as $table) {
             foreach ($tableRules as $rule) {
-                list($ruleSuccess, $ruleErrors) = $rule->validate(['table' => $table]);
+                list($ruleSuccess, $ruleErrors) = $rule->validate(
+                    [
+                        'table' => $table,
+                        $json ? $json->getTableDefinition($table->getName()) : [],
+                    ]
+                );
                 if (!$ruleSuccess) {
                     $success = false;
                 }
@@ -48,7 +55,13 @@ class TableSchemaValidator extends BaseValidator
 
             foreach ($table->getColumns() as $column) {
                 foreach ($columnRules as $rule) {
-                    list($ruleSuccess, $ruleErrors) = $rule->validate(['table' => $table, 'column' => $column]);
+                    list($ruleSuccess, $ruleErrors) = $rule->validate(
+                        [
+                            'table'      => $table,
+                            'column'     => $column,
+                            'definition' => $json ? $json->getColumnDefinition($table->getName(), $column->getName()) : [],
+                        ]
+                    );
                     if (!$ruleSuccess) {
                         $success = false;
                     }

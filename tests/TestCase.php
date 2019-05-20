@@ -12,7 +12,7 @@ class TestCase extends \Illuminate\Foundation\Testing\TestCase
     /**
      * Setup DB before each test.
      */
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->app->boot();

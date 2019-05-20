@@ -12,9 +12,7 @@ class OASService
     /** @var \LaravelRocket\Generator\Objects\Definitions|null */
     protected $json;
 
-    /**
-     * @var \TakaakiMizuno\MWBParser\Elements\Table[]
-     */
+    /** @var \TakaakiMizuno\MWBParser\Elements\Table[] */
     protected $tables;
 
     /** @var string $path */

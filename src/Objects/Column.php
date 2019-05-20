@@ -3,6 +3,7 @@ namespace LaravelRocket\Generator\Objects;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use LaravelRocket\Generator\Helpers\StringHelper;
 
 class Column
 {
@@ -369,6 +370,22 @@ class Column
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasOptionConfiguration()
+    {
+        if (in_array($this->getName(), ['country_code', 'language_code'])) {
+            return false;
+        }
+
+        return StringHelper::hasPrefix($this->getName(), [
+            'role',
+            'status',
+            'code',
+        ]);
     }
 
     /**

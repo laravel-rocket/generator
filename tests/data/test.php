@@ -4,8 +4,6 @@ namespace LaravelRocket\Generator\Generators;
 use Illuminate\Config\Repository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Factory;
-use LaravelRocket\Foundation\Http\Requests\Traits\PaginationTrait;
-use LaravelRocket\Foundation\Models\Traits\LocaleStorable;
 use LaravelRocket\Generator\Objects\ClassLike;
 use LaravelRocket\Generator\Services\FileService;
 use PhpParser\Error;
@@ -30,7 +28,6 @@ class TestClass
     protected $rebuild;
 
     protected $parsedFile;
-
 
     /**
      * @param \Illuminate\Config\Repository     $config
@@ -110,13 +107,13 @@ class TestClass
      *
      * @return null|\PhpParser\Node[]
      */
-    protected function parseFile(string $filePath = "")
+    protected function parseFile(string $filePath = '')
     {
-        if( !empty($this->parsedFile) ){
+        if (!empty($this->parsedFile)) {
             return $this->parsedFile;
         }
 
-        if( empty($filePath) ){
+        if (empty($filePath)) {
             $filePath = $this->getPath();
         }
 
@@ -157,5 +154,4 @@ class TestClass
 
         return $result;
     }
-
 }

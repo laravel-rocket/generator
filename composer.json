@@ -16,7 +16,9 @@
     "takaaki-mizuno/swagger-parser": "0.*",
     "doctrine/dbal": "~2.5",
     "takaaki-mizuno/mwb-parser": "0.*",
-    "nikic/PHP-Parser": "^4.0"
+    "nikic/PHP-Parser": "^4.0",
+    "ext-json": "*",
+    "ext-pdo": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "~8.0",
