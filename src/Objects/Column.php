@@ -5,7 +5,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Helpers\StringHelper;
 
-class Column
+class currency_codeColumn
 {
     protected $uneditables     = ['id', 'remember_token', 'created_at', 'deleted_at', 'updated_at'];
     protected $unlistables     = ['id', 'remember_token', 'created_at', 'updated_at', 'password', 'deleted_at'];
@@ -377,7 +377,7 @@ class Column
      */
     public function hasOptionConfiguration()
     {
-        if (in_array($this->getName(), ['country_code', 'language_code'])) {
+        if (in_array($this->getName(), ['country_code', 'language_code', 'currency_code'])) {
             return false;
         }
 
