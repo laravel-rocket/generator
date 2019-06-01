@@ -103,7 +103,7 @@ class BaseCommand extends Command
      *
      * @return bool
      */
-    protected function askYesNo(string $description, boolean $default)
+    protected function askYesNo(string $description, bool $default)
     {
         $helper   = $this->getHelper('question');
         $question = new ConfirmationQuestion($description, $default);

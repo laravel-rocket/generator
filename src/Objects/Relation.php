@@ -330,6 +330,22 @@ class Relation
     }
 
     /**
+     * @return string
+     */
+    public function getInterestedColumnName()
+    {
+        if ($this->isRoles()) {
+            return 'role';
+        }
+
+        if ($this->isTypes()) {
+            return 'type';
+        }
+
+        return 'id';
+    }
+
+    /**
      * @param string       $haystack
      * @param array|string $needles
      *

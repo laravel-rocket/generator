@@ -7,6 +7,8 @@ use LaravelRocket\Generator\Objects\Table;
 
 class ReactCRUDBaseGenerator extends TableBaseGenerator
 {
+    protected $excludePostfixes = ['password_resets', 'roles'];
+
     protected function canGenerate(): bool
     {
         foreach ($this->excludePostfixes as $excludePostfix) {

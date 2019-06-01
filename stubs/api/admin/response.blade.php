@@ -41,7 +41,7 @@ class {{ $className }} extends Response
 @foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI())
 @if( $relation->isMultipleSelection())
-                '{{ $relation->getName() }}' => !empty($model->{{ $relation->getName() }}) ? {{ ucfirst(\Illuminate\Support\Str::camel($relation->getName())) }}::updateWithModels($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}) : null,
+                '{{ $relation->getName() }}' => !empty($model->{{ $relation->getName() }}) ? {{ ucfirst(\Illuminate\Support\Str::camel($relation->getReferenceModel()->getName())) }}::updateWithModels($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}, {{ $relation->getInterestedColumnName() }}) : null,
 @elseif( $relation->isImage() )
                 '{{ $relation->getName() }}' => empty($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}) ? null : Image::updateWithModel($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}),
 @else
