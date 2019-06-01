@@ -2,6 +2,7 @@
 namespace LaravelRocket\Generator\Objects;
 
 use Illuminate\Support\Str;
+use LaravelRocket\Generator\Helpers\StringHelper;
 use function ICanBoogie\singularize;
 
 class Relation
@@ -98,7 +99,7 @@ class Relation
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -106,7 +107,7 @@ class Relation
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -114,7 +115,7 @@ class Relation
     /**
      * @return string
      */
-    public function getTableName()
+    public function getTableName(): string
     {
         return $this->tableName;
     }
@@ -122,7 +123,7 @@ class Relation
     /**
      * @return string
      */
-    public function getReferenceTableName()
+    public function getReferenceTableName(): string
     {
         return $this->referenceTableName;
     }
@@ -130,7 +131,7 @@ class Relation
     /**
      * @return string
      */
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
         return Str::title(str_replace('_', ' ', Str::snake($this->getName())));
     }
@@ -154,17 +155,25 @@ class Relation
     /**
      * @return bool
      */
-    public function isRoles()
+    public function isRoles(): bool
     {
-        return $this->getType() === self::TYPE_HAS_MANY && $this->hasPostFix($this->getName(), 'roles');
+        return $this->getType() === self::TYPE_HAS_MANY && StringHelper::hasPostFix($this->getName(), 'roles');
     }
 
     /**
      * @return bool
      */
-    public function isTypes()
+    public function isTypes(): bool
     {
-        return $this->getType() === self::TYPE_HAS_MANY && $this->hasPostFix($this->getName(), 'types');
+        return $this->getType() === self::TYPE_HAS_MANY && StringHelper::hasPostFix($this->getName(), 'types');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatues(): bool
+    {
+        return $this->getType() === self::TYPE_HAS_MANY && StringHelper::hasPostFix($this->getName(), 'statuses');
     }
 
     /**
@@ -172,7 +181,7 @@ class Relation
      */
     public function isEditable(): bool
     {
-        if ($this->hasPostFix($this->getName(), $this->uneditables)) {
+        if (StringHelper::hasPostFix($this->getName(), $this->uneditables)) {
             return false;
         }
 
@@ -188,7 +197,7 @@ class Relation
      */
     public function isListable(): bool
     {
-        return !$this->hasPostFix($this->getName(), $this->unlistables)
+        return !StringHelper::hasPostFix($this->getName(), $this->unlistables)
             && ($this->getType() === self::TYPE_BELONGS_TO || $this->isRoles() || $this->isTypes());
     }
 
@@ -197,7 +206,7 @@ class Relation
      */
     public function isShowable(): bool
     {
-        return !$this->hasPostFix($this->getName(), $this->unshowables)
+        return !StringHelper::hasPostFix($this->getName(), $this->unshowables)
             && ($this->getType() === self::TYPE_BELONGS_TO || $this->isRoles() || $this->isTypes());
     }
 
@@ -206,7 +215,7 @@ class Relation
      */
     public function shouldIncludeInAPI(): bool
     {
-        if ($this->hasPostFix($this->getName(), $this->unshowables)) {
+        if (StringHelper::hasPostFix($this->getName(), $this->unshowables)) {
             return false;
         }
 
@@ -216,23 +225,23 @@ class Relation
     /**
      * @return bool
      */
-    public function isImage()
+    public function isImage(): bool
     {
-        return $this->hasPostFix($this->getName(), 'image');
+        return StringHelper::hasPostFix($this->getName(), 'image');
     }
 
     /**
      * @return bool
      */
-    public function isFile()
+    public function isFile(): bool
     {
-        return $this->hasPostFix($this->getName(), ['file', 'image']);
+        return StringHelper::hasPostFix($this->getName(), ['file', 'image']);
     }
 
     /**
      * @return string
      */
-    public function getViewName()
+    public function getViewName(): string
     {
         return Str::title(str_replace('_', ' ', Str::snake($this->name)));
     }
@@ -240,7 +249,7 @@ class Relation
     /**
      * @return string
      */
-    public function getReferenceModel()
+    public function getReferenceModel(): string
     {
         return ucfirst(Str::camel(singularize($this->referenceTableName)));
     }
@@ -248,7 +257,7 @@ class Relation
     /**
      * @return string
      */
-    public function getIntermediateTableName()
+    public function getIntermediateTableName(): string
     {
         return $this->intermediateTableName;
     }
@@ -256,7 +265,7 @@ class Relation
     /**
      * @return string
      */
-    public function getIntermediateTableModel()
+    public function getIntermediateTableModel(): string
     {
         return ucfirst(Str::camel(singularize($this->intermediateTableName)));
     }
@@ -264,7 +273,7 @@ class Relation
     /**
      * @return bool
      */
-    public function isMultipleSelection()
+    public function isMultipleSelection(): bool
     {
         return $this->type === self::TYPE_HAS_MANY || $this->type === self::TYPE_BELONGS_TO_MANY;
     }
@@ -272,7 +281,7 @@ class Relation
     /**
      * @return string
      */
-    public function getEditFieldType()
+    public function getEditFieldType(): string
     {
         return $this->editFieldType;
     }
@@ -280,7 +289,7 @@ class Relation
     /**
      * @return array
      */
-    public function getEditFieldOptions()
+    public function getEditFieldOptions(): array
     {
         return $this->editFieldOptions;
     }
@@ -288,7 +297,7 @@ class Relation
     /**
      * @return string
      */
-    public function detectEditType()
+    public function detectEditType(): string
     {
         if ($this->isMultipleSelection()) {
             if (Str::endsWith($this->name, '_type') || Str::endsWith($this->name, 'role')) {
@@ -316,7 +325,7 @@ class Relation
     /**
      * @return string
      */
-    public function getAPIName()
+    public function getAPIName(): string
     {
         return Str::camel($this->getName());
     }
@@ -324,7 +333,7 @@ class Relation
     /**
      * @return string
      */
-    public function getQueryName()
+    public function getQueryName(): string
     {
         return Str::snake($this->getName());
     }
@@ -332,7 +341,19 @@ class Relation
     /**
      * @return string
      */
-    public function getInterestedColumnName()
+    public function getPresentation(): string
+    {
+        if ($this->isTypes() || $this->isRoles() || $this->isStatues()) {
+            return 'badge';
+        }
+
+        return 'normal';
+    }
+
+    /**
+     * @return string
+     */
+    public function getInterestedColumnName(): string
     {
         if ($this->isRoles()) {
             return 'role';
@@ -343,26 +364,5 @@ class Relation
         }
 
         return 'id';
-    }
-
-    /**
-     * @param string       $haystack
-     * @param array|string $needles
-     *
-     * @return bool
-     */
-    protected function hasPostFix($haystack, $needles)
-    {
-        if (!is_array($needles)) {
-            $needles = [$needles];
-        }
-
-        foreach ($needles as $needle) {
-            if ($haystack === $needle || Str::endsWith($haystack, ucfirst($needle))) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

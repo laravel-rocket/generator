@@ -51,12 +51,14 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
         foreach ($tableObject->getColumns() as $column) {
             if ($column->isAPIReturnable()) {
                 $result['columns'][$column->getKeyName()] = [
-                    'name'      => $column->getDisplayName(),
-                    'type'      => $column->getEditFieldType(),
-                    'editable'  => $column->isEditable(),
-                    'queryName' => $column->getQueryName(),
-                    'apiName'   => $column->getAPIName(),
-                    'options'   => $column->getEditFieldOptions(),
+                    'name'         => $column->getDisplayName(),
+                    'type'         => $column->getEditFieldType(),
+                    'editable'     => $column->isEditable(),
+                    'queryName'    => $column->getQueryName(),
+                    'apiName'      => $column->getAPIName(),
+                    'options'      => $column->getEditFieldOptions(),
+                    'presentation' => $column->getPresentation(),
+                    'presentation' => $column->getPresentation(),
                 ];
                 if ((count($crudListColumns) === 0 && $column->isListable()) || (count($crudListColumns) > 0 && in_array($column->getKeyName(), $crudListColumns))) {
                     $result['list'][] = $column->getKeyName();
@@ -81,14 +83,15 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
                 $referenceTableObject = new Table($this->findTableFromName($relation->getReferenceTableName()), $this->tables, $this->json);
 
                 $result['columns'][$relation->getName()] = [
-                    'name'        => $relation->getDisplayName(),
-                    'type'        => $relation->getEditFieldType(),
-                    'editable'    => $relation->isEditable(),
-                    'queryName'   => $relation->getQueryName(),
-                    'apiName'     => $relation->getAPIName(),
-                    'options'     => $options,
-                    'optionNames' => $optionNames,
-                    'link'        => '/'.$referenceTableObject->getPathName(),
+                    'name'         => $relation->getDisplayName(),
+                    'type'         => $relation->getEditFieldType(),
+                    'editable'     => $relation->isEditable(),
+                    'queryName'    => $relation->getQueryName(),
+                    'apiName'      => $relation->getAPIName(),
+                    'options'      => $options,
+                    'optionNames'  => $optionNames,
+                    'link'         => '/'.$referenceTableObject->getPathName(),
+                    'presentation' => $relation->getPresentation(),
                 ];
                 if ($relation->isListable() || (count($crudListColumns) > 0 && in_array($relation->getName(), $crudListColumns))) {
                     $result['list'][] = $relation->getName();

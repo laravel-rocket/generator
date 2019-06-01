@@ -177,6 +177,18 @@ class Column
     }
 
     /**
+     * @return string
+     */
+    public function getPresentation()
+    {
+        if ($this->isStatus() || $this->isType()) {
+            return 'badge';
+        }
+
+        return 'normal';
+    }
+
+    /**
      * @return bool
      */
     public function isEditable(): bool
@@ -375,16 +387,11 @@ class Column
     /**
      * @return bool
      */
-    public function hasOptionConfiguration()
+    public function hasOptionConfiguration(): bool
     {
-        if (in_array($this->getName(), ['country_code', 'language_code', 'currency_code'])) {
-            return false;
-        }
-
-        return StringHelper::hasPrefix($this->getName(), [
+        return StringHelper::hasPostFix($this->getName(), [
             'role',
             'status',
-            'code',
         ]);
     }
 
@@ -398,6 +405,22 @@ class Column
         }
 
         return $this->column->isNullable();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStatus(): bool
+    {
+        return $this->isString() && StringHelper::hasPostFix($this->getName(), 'status');
+    }
+
+    /**
+     * @return bool
+     */
+    public function isType(): bool
+    {
+        return $this->isString() && StringHelper::hasPostFix($this->getName(), 'type');
     }
 
     /**
@@ -470,7 +493,7 @@ class Column
         }
 
         if ($this->isUnixTimestamp() || $this->isTimestamp()) {
-            $this->editFieldType    = 'datetime';
+            $this->editFieldType = 'datetime';
 
             return;
         }
