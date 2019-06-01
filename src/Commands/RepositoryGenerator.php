@@ -52,9 +52,9 @@ class RepositoryGenerator extends MWBGenerator
     {
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\Models\RepositoryGenerator($this->config, $this->files, $this->view),
-            new RepositoryInterfaceGenerator($this->config, $this->files, $this->view),
-            new RepositoryUnitTestGenerator($this->config, $this->files, $this->view),
+            new \LaravelRocket\Generator\Generators\Models\RepositoryGenerator($this->config, $this->files, $this->view, $this->json),
+            new RepositoryInterfaceGenerator($this->config, $this->files, $this->view, $this->json),
+            new RepositoryUnitTestGenerator($this->config, $this->files, $this->view, $this->json),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */

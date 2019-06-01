@@ -43,10 +43,10 @@ class HelperGenerator extends BaseCommand
     {
         /** @var \LaravelRocket\Generator\Generators\NameBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\Helpers\HelperGenerator($this->config, $this->files, $this->view),
-            new HelperInterfaceGenerator($this->config, $this->files, $this->view),
-            new HelperUnitTestGenerator($this->config, $this->files, $this->view),
-            new FacadeGenerator($this->config, $this->files, $this->view),
+            new \LaravelRocket\Generator\Generators\Helpers\HelperGenerator($this->config, $this->files, $this->view, $this->json),
+            new HelperInterfaceGenerator($this->config, $this->files, $this->view, $this->json),
+            new HelperUnitTestGenerator($this->config, $this->files, $this->view, $this->json),
+            new FacadeGenerator($this->config, $this->files, $this->view, $this->json),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater[] $fileUpdaters */

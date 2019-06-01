@@ -15,6 +15,9 @@ class BaseRule
      */
     public function response($errors = [])
     {
+        if (!is_array($errors)) {
+            $errors = [$errors];
+        }
         $success = true;
         foreach ($errors as $error) {
             if ($error->getLevel() === Error::LEVEL_ERROR) {

@@ -52,13 +52,13 @@ class ModelGenerator extends MWBGenerator
     {
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\Models\ModelGenerator($this->config, $this->files, $this->view),
-            new ModelFactoryGenerator($this->config, $this->files, $this->view),
-            new ModelUnitTestGenerator($this->config, $this->files, $this->view),
-            new PresenterGenerator($this->config, $this->files, $this->view),
-            new ColumnLanguageFileGenerator($this->config, $this->files, $this->view),
-            new RelationLanguageFileGenerator($this->config, $this->files, $this->view),
-            new ConfigFileGenerator($this->config, $this->files, $this->view),
+            new \LaravelRocket\Generator\Generators\Models\ModelGenerator($this->config, $this->files, $this->view, $this->json),
+            new ModelFactoryGenerator($this->config, $this->files, $this->view, $this->json),
+            new ModelUnitTestGenerator($this->config, $this->files, $this->view, $this->json),
+            new PresenterGenerator($this->config, $this->files, $this->view, $this->json),
+            new ColumnLanguageFileGenerator($this->config, $this->files, $this->view, $this->json),
+            new RelationLanguageFileGenerator($this->config, $this->files, $this->view, $this->json),
+            new ConfigFileGenerator($this->config, $this->files, $this->view, $this->json),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */

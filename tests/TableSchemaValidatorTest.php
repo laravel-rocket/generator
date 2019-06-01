@@ -19,11 +19,10 @@ class TableSchemaValidatorTest extends TestCase
         $parser    = new Parser(__DIR__.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'db.mwb');
         $tables    = $parser->getTables();
         $json      = new Definitions(file_get_contents(__DIR__.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'app.json'));
-
         list($success, $errors) = $validator->validate($tables, $json);
         foreach ($errors as $error) {
             if (!empty($error)) {
-                print $error->getMessage().'/'.$error->getTarget().PHP_EOL;
+                print $error->getMessage().' / '.$error->getTarget().PHP_EOL;
             }
         }
         $this->assertEquals(true, $success);

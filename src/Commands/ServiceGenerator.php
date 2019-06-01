@@ -43,9 +43,9 @@ class ServiceGenerator extends BaseCommand
 
         /** @var \LaravelRocket\Generator\Generators\NameBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\Services\ServiceGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ServiceInterfaceGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ServiceUnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
+            new \LaravelRocket\Generator\Generators\Services\ServiceGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ServiceInterfaceGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ServiceUnitTestGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater[] $fileUpdaters */

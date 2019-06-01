@@ -49,7 +49,7 @@ class ModelGenerator extends ModelBaseGenerator
         $casts = [];
         foreach ($this->table->getColumns() as $column) {
             $columnDefinition = $this->json->getColumnDefinition($this->table->getName(), $column->getName());
-            $columnObject     = new Column($column);
+            $columnObject     = new Column($column, $this->table, $this->json);
 
             $ediFieldType = $columnObject->getEditFieldType();
             $options      = $columnObject->getEditFieldOptions();

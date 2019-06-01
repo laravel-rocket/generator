@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Objects;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Helpers\StringHelper;
 use function ICanBoogie\singularize;
@@ -37,6 +38,11 @@ class Relation
      */
     protected $editFieldOptions = [];
 
+    /**
+     * @var \LaravelRocket\Generator\Objects\Definitions|null
+     */
+    protected $json = null;
+
     const TYPE_BELONGS_TO      = 'belongsTo';
     const TYPE_HAS_MANY        = 'hasMany';
     const TYPE_HAS_ONE         = 'hasOne';
@@ -59,7 +65,7 @@ class Relation
      * @param \TakaakiMizuno\MWBParser\Elements\Column $referenceColumn
      * @param string                                   $intermediateTableName
      */
-    public function __construct($type, $tableName, $column, $referenceTableName, $referenceColumn, $intermediateTableName = '')
+    public function __construct($type, $tableName, $column, $referenceTableName, $referenceColumn, $json, $intermediateTableName = '')
     {
         $this->type                  = $type;
         $this->tableName             = $tableName;
@@ -67,6 +73,7 @@ class Relation
         $this->referenceTableName    = $referenceTableName;
         $this->referenceColumn       = $referenceColumn;
         $this->intermediateTableName = $intermediateTableName;
+        $this->json                  = $json;
 
         $this->setName();
         $this->editFieldType = $this->detectEditType();
@@ -300,7 +307,8 @@ class Relation
     public function detectEditType(): string
     {
         if ($this->isMultipleSelection()) {
-            if (Str::endsWith($this->name, '_type') || Str::endsWith($this->name, 'role')) {
+            if (StringHelper::hasPostFix($this->name, 'type') || StringHelper::hasPostFix($this->name, 'role')
+                || StringHelper::hasPostFix($this->name, 'types') || StringHelper::hasPostFix($this->name, 'roles')) {
                 return self::EDIT_TYPE_CHECKBOX;
             }
 
@@ -364,5 +372,24 @@ class Relation
         }
 
         return 'id';
+    }
+
+    /**
+     * @return array
+     */
+    public function getInterestedColumnOptions(): array
+    {
+        if (empty($this->json)) {
+            return [];
+        }
+        $definition = $this->json->getColumnDefinition($this->getReferenceTableName(), $this->getInterestedColumnName());
+
+        $type    = Arr::get($definition, 'type');
+        $options = Arr::get($definition, 'options', []);
+        if ($type === 'type' && is_array($options) && count($options) > 0) {
+            return $options;
+        }
+
+        return [];
     }
 }

@@ -43,8 +43,9 @@ class TableSchemaValidator extends BaseValidator
             foreach ($tableRules as $rule) {
                 list($ruleSuccess, $ruleErrors) = $rule->validate(
                     [
-                        'table' => $table,
-                        $json ? $json->getTableDefinition($table->getName()) : [],
+                        'table'      => $table,
+                        'definition' => $json ? $json->getTableDefinition($table->getName()) : [],
+                        'json'       => $json,
                     ]
                 );
                 if (!$ruleSuccess) {
@@ -60,6 +61,7 @@ class TableSchemaValidator extends BaseValidator
                             'table'      => $table,
                             'column'     => $column,
                             'definition' => $json ? $json->getColumnDefinition($table->getName(), $column->getName()) : [],
+                            'json'       => $json,
                         ]
                     );
                     if (!$ruleSuccess) {

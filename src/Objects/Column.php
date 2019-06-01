@@ -34,16 +34,28 @@ class Column
     protected $definition = [];
 
     /**
+     * @var \LaravelRocket\Generator\Objects\Definitions|null
+     */
+    protected $json = [];
+
+    /**
+     * @var \TakaakiMizuno\MWBParser\Elements\Table|null
+     */
+    protected $table = null;
+
+    /**
      * Column constructor.
      *
      * @param \TakaakiMizuno\MWBParser\Elements\Column|\Doctrine\DBAL\Schema\Column $column
      * @param \TakaakiMizuno\MWBParser\Elements\Table|null                          $table
-     * @param array                                                                 $definition
+     * @param \LaravelRocket\Generator\Objects\Definitions                          $json
      */
-    public function __construct($column, $table = null, $definition = [])
+    public function __construct($column, $table = null, $json = null)
     {
         $this->column     = $column;
-        $this->definition = $definition;
+        $this->json       = $json;
+        $this->definition = empty($json) ? [] : $json->getColumnDefinition($table->getName(), $column->getName());
+        $this->table      = $table;
 
         if (!empty($table)) {
             foreach ($table->getForeignKey() as $foreignKey) {
@@ -61,7 +73,8 @@ class Column
                         $table->getName(),
                         $column,
                         $foreignKey->getReferenceTableName(),
-                        $referenceColumns[0]
+                        $referenceColumns[0],
+                        $json
                     );
                     break;
                 }
@@ -389,10 +402,19 @@ class Column
      */
     public function hasOptionConfiguration(): bool
     {
-        return StringHelper::hasPostFix($this->getName(), [
-            'role',
-            'status',
-        ]);
+        if ($this->isType() || $this->isStatus()) {
+            return true;
+        }
+
+        if (!empty($this->definition)) {
+            $type    = Arr::get($this->definition, 'type');
+            $options = Arr::get($this->definition, 'options', []);
+            if ($type === 'type' && is_array($options) && count($options) > 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -565,7 +587,7 @@ class Column
      *
      * @return string
      */
-    public function generateAddMigration($previousColumnName = null)
+    public function generateAddMigration($previousColumnName = null): string
     {
         $column  = $this->column;
         $postfix = '';
@@ -668,7 +690,7 @@ class Column
     /**
      * @return string
      */
-    public function generateDropMigration()
+    public function generateDropMigration(): string
     {
         $line = '$table->dropColumn(\''.$this->column->getName().'\')';
 
@@ -681,7 +703,7 @@ class Column
      *
      * @return bool
      */
-    protected function hasPostFix($haystack, $needles)
+    protected function hasPostFix($haystack, $needles): bool
     {
         if (!is_array($needles)) {
             $needles = [$needles];
@@ -696,12 +718,23 @@ class Column
         return false;
     }
 
-    public function isPrimaryKey()
+    /**
+     * @return bool
+     */
+    public function isPrimaryKey(): bool
     {
         if ($this->column->getAutoincrement() && $this->getName() == 'id') {
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * @return \TakaakiMizuno\MWBParser\Elements\Table|null
+     */
+    public function getTable()
+    {
+        return $this->table;
     }
 }

@@ -38,9 +38,9 @@ class EventGenerator extends BaseCommand
 
         /** @var \LaravelRocket\Generator\Generators\NameBaseGenerator[] $generators */
         $generators = [
-            new \LaravelRocket\Generator\Generators\Events\EventGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ListenerGenerator($this->config, $this->files, $this->view, $rebuild),
-            new UnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
+            new \LaravelRocket\Generator\Generators\Events\EventGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ListenerGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new UnitTestGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater[] $fileUpdaters */

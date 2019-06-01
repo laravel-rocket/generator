@@ -221,9 +221,8 @@ class TableBaseGenerator extends BaseGenerator
         foreach ($this->table->getColumns() as $column) {
             $name             = $column->getName();
             $relation         = '';
-            $columnDefinition = $this->json->getColumnDefinition($this->table->getName(), $column->getName());
 
-            $columnObject = new Column($column);
+            $columnObject = new Column($column, $this->table, $this->json);
 
             $type    = $columnObject->getEditFieldType();
             $options = $columnObject->getEditFieldOptions();

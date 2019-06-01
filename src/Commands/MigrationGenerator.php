@@ -56,7 +56,7 @@ class MigrationGenerator extends MWBGenerator
 
         $generateAlterTableMigrationFile = !$this->input->getOption('rebuild');
 
-        $generator                       = new MigrationFileGenerator($this->config, $this->files, $this->view);
+        $generator                       = new MigrationFileGenerator($this->config, $this->files, $this->view, $this->json);
         foreach ($this->tables as $table) {
             if (!empty($name) && $name != $table->getName()) {
                 continue;

@@ -55,7 +55,7 @@ class AdminCRUDGenerator extends MWBGenerator
         $rebuild = !empty($this->input->getOption('rebuild'));
 
         $singleGenerators = [
-            new RoleConfigGenerator($this->config, $this->files, $this->view, $rebuild),
+            new RoleConfigGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
         ];
 
         foreach ($singleGenerators as $generator) {
@@ -64,10 +64,10 @@ class AdminCRUDGenerator extends MWBGenerator
 
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
-            new RepositoryGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ViewGenerator($this->config, $this->files, $this->view, $rebuild),
-            new InfoGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ColumnGenerator($this->config, $this->files, $this->view, $rebuild),
+            new RepositoryGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ViewGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new InfoGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ColumnGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */

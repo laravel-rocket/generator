@@ -5,6 +5,7 @@ use Illuminate\Config\Repository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\View\Factory;
 use LaravelRocket\Generator\Objects\ClassLike;
+use LaravelRocket\Generator\Objects\Definitions;
 use LaravelRocket\Generator\Services\FileService;
 use PhpParser\Error;
 use PhpParser\Lexer;
@@ -24,24 +25,30 @@ class BaseGenerator
     /** @var \LaravelRocket\Generator\Services\FileService */
     protected $fileService;
 
-    /** @var bool */
+    /** @var bool $rebuild */
     protected $rebuild;
+
+    /** @var \LaravelRocket\Generator\Objects\Definitions $json */
+    protected $json;
 
     /**
      * @param \Illuminate\Config\Repository     $config
      * @param \Illuminate\Filesystem\Filesystem $files
      * @param \Illuminate\View\Factory          $view
+     * @param Definitions                       $json
      * @param bool                              $rebuild
      */
     public function __construct(
         Repository $config,
         Filesystem $files,
         Factory $view = null,
+        Definitions $json = null,
         bool $rebuild = false
     ) {
         $this->config  = $config;
         $this->files   = $files;
         $this->view    = $view;
+        $this->json    = $json;
         $this->rebuild = $rebuild;
 
         $this->fileService = new FileService($this->config, $this->files, $this->view);
@@ -142,7 +149,7 @@ class BaseGenerator
         foreach ($methods as $name => $method) {
             $statement = $prettyPrinter->prettyPrint([$method]);
             if ($removeComments) {
-                $comments       = $method->getAttribute('comments');
+                $comments = $method->getAttribute('comments');
                 if ($comments && is_array($comments)) {
                     foreach ($comments as $comment) {
                         if ($comment instanceof \PhpParser\Comment\Doc) {

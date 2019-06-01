@@ -22,15 +22,21 @@ class OptionDefined extends BaseRule
             return $this->response(new Error('No column passed.', Error::LEVEL_ERROR, 'System'));
         }
 
+        /** @var \LaravelRocket\Generator\Objects\Definitions|null */
+        $json = Arr::get($data, 'json', null);
+        if (empty($json)) {
+            return $this->response(new Error('No JSON passed.', Error::LEVEL_ERROR, 'System'));
+        }
+
         /** @var array */
-        $definition = Arr::get($data, 'definition', []);
-        if (empty($column)) {
-            return $this->response(new Error('No column passed.', Error::LEVEL_ERROR, 'System'));
+        $definition = Arr::get($data, 'definition', null);
+        if (empty($definition)) {
+            $definition = [];
         }
 
         $errors   = [];
 
-        $columnObject = new Column($column, $table, $definition);
+        $columnObject = new Column($column, $table, $json);
         if ($columnObject->hasOptionConfiguration()) {
             if (!is_array(Arr::get($definition, 'options'))) {
                 $errors[] = new Error(

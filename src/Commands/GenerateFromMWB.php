@@ -124,8 +124,10 @@ class GenerateFromMWB extends MWBGenerator
      */
     protected function generateMigration()
     {
+        $rebuild = !empty($this->input->getOption('rebuild'));
+
         $generateAlterTableMigrationFile = empty($this->input->getOption('rebuild'));
-        $generator                       = new MigrationFileGenerator($this->config, $this->files, $this->view);
+        $generator                       = new MigrationFileGenerator($this->config, $this->files, $this->view, $this->json, $rebuild);
         foreach ($this->tables as $table) {
             $generator->generate($table, $generateAlterTableMigrationFile);
         }
@@ -139,29 +141,29 @@ class GenerateFromMWB extends MWBGenerator
 
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
-            new ModelGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ModelFactoryGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ModelUnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
-            new PresenterGenerator($this->config, $this->files, $this->view, $rebuild),
-            new RepositoryGenerator($this->config, $this->files, $this->view, $rebuild),
-            new RepositoryInterfaceGenerator($this->config, $this->files, $this->view, $rebuild),
-            new RepositoryUnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ColumnLanguageFileGenerator($this->config, $this->files, $this->view, $rebuild),
-            new RelationLanguageFileGenerator($this->config, $this->files, $this->view),
-            new ConfigFileGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ModelGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ModelFactoryGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ModelUnitTestGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new PresenterGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new RepositoryGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new RepositoryInterfaceGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new RepositoryUnitTestGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ColumnLanguageFileGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new RelationLanguageFileGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ConfigFileGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
 
             //Admin API
-            new ResponseGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ListResponseGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ControllerGenerator($this->config, $this->files, $this->view, $rebuild),
-            new UnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
-            new RequestGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ResponseGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ListResponseGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ControllerGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new UnitTestGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new RequestGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
 
             // Admin CRUD
-            new \LaravelRocket\Generator\Generators\React\CRUD\Admin\RepositoryGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ViewGenerator($this->config, $this->files, $this->view, $rebuild),
-            new InfoGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ColumnGenerator($this->config, $this->files, $this->view, $rebuild),
+            new \LaravelRocket\Generator\Generators\React\CRUD\Admin\RepositoryGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ViewGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new InfoGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ColumnGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */

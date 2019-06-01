@@ -54,11 +54,11 @@ class AdminAPIGenerator extends MWBGenerator
 
         /** @var \LaravelRocket\Generator\Generators\TableBaseGenerator[] $generators */
         $generators = [
-            new ResponseGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ListResponseGenerator($this->config, $this->files, $this->view, $rebuild),
-            new ControllerGenerator($this->config, $this->files, $this->view, $rebuild),
-            new UnitTestGenerator($this->config, $this->files, $this->view, $rebuild),
-            new RequestGenerator($this->config, $this->files, $this->view, $rebuild),
+            new ResponseGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ListResponseGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new ControllerGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new UnitTestGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
+            new RequestGenerator($this->config, $this->files, $this->view, $this->json, $rebuild),
         ];
 
         /** @var \LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater[] $fileUpdaters */

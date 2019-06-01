@@ -50,15 +50,24 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
 
         foreach ($tableObject->getColumns() as $column) {
             if ($column->isAPIReturnable()) {
+                $options              = [];
+                $optionNames          = [];
+                foreach ($column->getEditFieldOptions() as $option) {
+                    $optionValue               = Arr::get($option, 'value', 'unknown');
+                    $optionName                = Arr::get($option, 'name', 'Unknown');
+                    $options[]                 = $optionValue;
+                    $optionNames[$optionValue] = $optionName;
+                }
+
                 $result['columns'][$column->getKeyName()] = [
                     'name'         => $column->getDisplayName(),
                     'type'         => $column->getEditFieldType(),
                     'editable'     => $column->isEditable(),
                     'queryName'    => $column->getQueryName(),
                     'apiName'      => $column->getAPIName(),
-                    'options'      => $column->getEditFieldOptions(),
                     'presentation' => $column->getPresentation(),
-                    'presentation' => $column->getPresentation(),
+                    'options'      => $options,
+                    'optionNames'  => $optionNames,
                 ];
                 if ((count($crudListColumns) === 0 && $column->isListable()) || (count($crudListColumns) > 0 && in_array($column->getKeyName(), $crudListColumns))) {
                     $result['list'][] = $column->getKeyName();
@@ -80,6 +89,12 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
             if ($relation->shouldIncludeInAPI()) {
                 $options              = [];
                 $optionNames          = [];
+                foreach ($relation->getEditFieldOptions() as $option) {
+                    $optionValue               = Arr::get($option, 'value', 'unknown');
+                    $optionName                = Arr::get($option, 'name', 'Unknown');
+                    $options[]                 = $optionValue;
+                    $optionNames[$optionValue] = $optionName;
+                }
                 $referenceTableObject = new Table($this->findTableFromName($relation->getReferenceTableName()), $this->tables, $this->json);
 
                 $result['columns'][$relation->getName()] = [

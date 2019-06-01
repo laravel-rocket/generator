@@ -41,8 +41,7 @@ class Table
         $this->json  = $json;
         $columns     = $table->getColumns();
         foreach ($columns as $column) {
-            $columnDefinition                           = empty($this->json) ? [] : $this->json->getColumnDefinition($table->getName(), $column->getName());
-            $columnObject                               = new Column($column, $table, $columnDefinition);
+            $columnObject                               = new Column($column, $table, $this->json);
             $this->columns[]                            = $columnObject;
             $this->columnHash[$columnObject->getName()] = $columnObject;
         }
@@ -254,7 +253,8 @@ class Table
                 $this->table->getName(),
                 $column,
                 $foreignKey->getReferenceTableName(),
-                $referenceColumn
+                $referenceColumn,
+                $this->json
             );
 
             if (in_array($relation->getName(), $names)) {
@@ -291,7 +291,8 @@ class Table
                     $this->table->getName(),
                     $referenceColumn,
                     $table->getName(),
-                    $column
+                    $column,
+                    $this->json
                 );
 
                 if ($this->table->getName() === $foreignKey->getReferenceTableName() && !in_array($relation->getName(), $names)) {
@@ -313,6 +314,7 @@ class Table
                 $relationTableColumns[0],
                 $relationTableNames[1],
                 $relationTableColumns[1],
+                $this->json,
                 $table->getName()
             );
             if ($hasRelation && $this->detectRelationTable($table) && !in_array($relation->getName(), $names)) {

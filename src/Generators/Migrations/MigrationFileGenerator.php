@@ -162,7 +162,7 @@ class MigrationFileGenerator extends BaseGenerator
                 continue;
             }
 
-            $columnObject = new Column($column);
+            $columnObject = new Column($column, $table, $this->json);
             $line         = $columnObject->generateAddMigration();
 
             $result['columns'][] = $line.';';
@@ -253,7 +253,7 @@ class MigrationFileGenerator extends BaseGenerator
         $previousColumnName = '';
         foreach ($columns as $column) {
             if (in_array($column->getName(), $addedColumns)) {
-                $columnObject = new Column($column);
+                $columnObject = new Column($column, $table, $this->json);
 
                 $upMigrations['columns']['add'][]    = $columnObject->generateAddMigration($previousColumnName).';';
                 $downMigrations['columns']['drop'][] = $columnObject->generateDropMigration().';';
@@ -265,7 +265,7 @@ class MigrationFileGenerator extends BaseGenerator
         $previousColumnName = '';
         foreach ($currentColumns as $column) {
             if (in_array($column->getName(), $removedColumns)) {
-                $columnObject = new Column($column);
+                $columnObject = new Column($column, $table, $this->json);
 
                 $upMigrations['columns']['drop'][]  = $columnObject->generateDropMigration().';';
                 $downMigrations['columns']['add'][] = $columnObject->generateAddMigration($previousColumnName).';';
@@ -276,9 +276,11 @@ class MigrationFileGenerator extends BaseGenerator
 
         $currentIndexes = $databaseService->getTableIndexes($name);
         $newIndexNames  = array_map(function ($index) {
+            /* @var \TakaakiMizuno\MWBParser\Elements\Index $index */
             return $index->getName();
         }, $indexes);
         $oldIndexNames  = array_map(function ($index) {
+            /* @var \TakaakiMizuno\MWBParser\Elements\Index $index */
             return $index->getName();
         }, $currentIndexes);
 

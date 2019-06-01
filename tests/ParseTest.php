@@ -20,7 +20,6 @@ class ParseTest extends TestCase
         $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7, $lexer);
 
         $statements = $parser->parse(file_get_contents(__DIR__.'/data/test.php'));
-        print_r($statements);
         $this->travarse($statements);
         $const = $this->getConst($statements);
 
