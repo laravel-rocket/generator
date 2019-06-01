@@ -10,6 +10,11 @@ use App\Http\Responses\Api\Admin\{{ $modelName }};
 use App\Http\Responses\Api\Admin\{{ \ICanBoogie\pluralize($modelName) }};
 use App\Http\Responses\Api\Admin\Status;
 use App\Repositories\{{ $modelName }}RepositoryInterface;
+@foreach( $table->getRelations() as $relation )
+@if( $relation->isRoles())
+use \App\Repositories\{{ $relation->getReferenceModel() }}RepositoryInterface;
+@endif
+@endforeach
 use App\Services\AdminUserServiceInterface;
 use App\Services\FileServiceInterface;
 
@@ -18,18 +23,35 @@ class {{ $modelName }}Controller extends Controller
     /** @var \App\Repositories\{{ $modelName }}RepositoryInterface */
     protected ${{ $variableName }}Repository;
 
-    /** @var \App\Services\AdminUserServiceInterface $adminUserServicee */
+    /** @var \App\Services\AdminUserServiceInterface $adminUserService */
     protected $adminUserService;
 
     /** @var \App\Services\FileServiceInterface $fileService */
     protected $fileService;
 
+@foreach( $table->getRelations() as $relation )
+@if( $relation->isRoles())
+    /** @var \App\Repositories\{{ $relation->getReferenceModel() }}RepositoryInterface */
+    protected ${{ lcfirst($relation->getReferenceModel()) }}Repository;
+@endif
+@endforeach
+
     public function __construct(
         {{ $modelName }}RepositoryInterface ${{ $variableName }}Repository,
+@foreach( $table->getRelations() as $relation )
+@if( $relation->isRoles())
+        {{ $relation->getReferenceModel() }}RepositoryInterface ${{ lcfirst($relation->getReferenceModel()) }}Repository,
+@endif
+@endforeach
         FileServiceInterface $fileService,
         AdminUserServiceInterface $adminUserService
     ) {
         $this->{{ $variableName }}Repository = ${{ $variableName }}Repository;
+@foreach( $table->getRelations() as $relation )
+    @if( $relation->isRoles())
+        $this->{{ lcfirst($relation->getReferenceModel()) }}Repository = ${{ lcfirst($relation->getReferenceModel()) }}Repository;
+    @endif
+@endforeach
         $this->adminUserService    = $adminUserService;
         $this->fileService         = $fileService;
     }
@@ -78,7 +100,7 @@ class {{ $modelName }}Controller extends Controller
 @endif
 @endforeach
 @foreach( $table->getRelations() as $relation )
-@if( $relation->shouldIncludeInAPI() && !$relation->isFile())
+@if( $relation->shouldIncludeInAPI() && !$relation->isFile() && $relation->getType() == \LaravelRocket\Generator\Objects\Relation::TYPE_BELONGS_TO )
             '{{ $relation->getColumn()->getName() }}',
 @endif
 @endforeach
@@ -104,9 +126,17 @@ class {{ $modelName }}Controller extends Controller
 
         ${{ $variableName }} = $this->{{ $variableName }}Repository->create($input);
 
+
         if (empty(${{ $variableName }})) {
             throw new APIErrorException('unknown', '{{ $modelName }} Creation Failed');
         }
+@foreach( $table->getRelations() as $relation )
+@if( $relation->isRoles())
+
+        $roles = $request->get('{{ $relation->getQueryName() }}', []);
+        $this->{{ lcfirst($relation->getReferenceModel()) }}Repository->updateMultipleEntries(${{ $variableName }}->id, '{{ $relation->getReferenceColumn()->getName() }}', 'role', $roles);
+@endif
+@endforeach
 
         return {{ $modelName }}::updateWithModel(${{ $variableName }})->withStatus(201)->response();
     }
@@ -148,12 +178,12 @@ class {{ $modelName }}Controller extends Controller
         $input = $request->only([
 @foreach( $table->getColumns() as $column )
 @if( $column->isEditable() && !$column->hasRelation())
-        '{{ $column->getName() }}',
+            '{{ $column->getName() }}',
 @endif
 @endforeach
 @foreach( $table->getRelations() as $relation )
-@if( $relation->shouldIncludeInAPI() && !$relation->isFile())
-        '{{ $relation->getColumn()->getName() }}',
+@if( $relation->shouldIncludeInAPI() && !$relation->isFile() && $relation->getType() == \LaravelRocket\Generator\Objects\Relation::TYPE_BELONGS_TO )
+            '{{ $relation->getColumn()->getName() }}',
 @endif
 @endforeach
         ]);
@@ -181,6 +211,13 @@ class {{ $modelName }}Controller extends Controller
 @endforeach
 
         ${{ $variableName }} = $this->{{ $variableName }}Repository->update(${{ $variableName }}, $input);
+
+@foreach( $table->getRelations() as $relation )
+    @if( $relation->isRoles())
+        $roles = $request->get('{{ $relation->getQueryName() }}', []);
+        $this->{{ lcfirst($relation->getReferenceModel()) }}Repository->updateMultipleEntries(${{ $variableName }}->id, '{{ $relation->getReferenceColumn()->getName() }}', 'role', $roles);
+    @endif
+@endforeach
 
         return {{ $modelName }}::updateWithModel(${{ $variableName }})->response();
     }

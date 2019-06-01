@@ -41,11 +41,11 @@ class {{ $className }} extends Response
 @foreach( $table->getRelations() as $relation )
 @if( $relation->shouldIncludeInAPI())
 @if( $relation->isMultipleSelection())
-                '{{ $relation->getName() }}' => !empty($model->{{ $relation->getName() }}) ? {{ ucfirst(camel_case($relation->getName())) }}::updateWithModel($model->{{ camel_case($relation->getName()) }}) : null,
+                '{{ $relation->getName() }}' => !empty($model->{{ $relation->getName() }}) ? {{ ucfirst(\Illuminate\Support\Str::camel($relation->getName())) }}::updateWithModels($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}) : null,
 @elseif( $relation->isImage() )
-                '{{ $relation->getName() }}' => empty($model->{{ camel_case($relation->getName()) }}) ? null : Image::updateWithModel($model->{{ camel_case($relation->getName()) }}),
+                '{{ $relation->getName() }}' => empty($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}) ? null : Image::updateWithModel($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}),
 @else
-                '{{ $relation->getName() }}' => empty($model->{{ camel_case($relation->getName()) }}) ? null : {{ ucfirst(camel_case(\ICanBoogie\singularize($relation->getReferenceModel()))) }}::updateWithModel($model->{{ camel_case($relation->getName()) }}),
+                '{{ $relation->getName() }}' => empty($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}) ? null : {{ ucfirst(\Illuminate\Support\Str::camel(\ICanBoogie\singularize($relation->getReferenceModel()))) }}::updateWithModel($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}),
 @endif
 @endif
 @endforeach
