@@ -1,23 +1,10 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin;
 
-use Illuminate\Support\Str;
-use LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater;
 use function ICanBoogie\pluralize;
 
-class RouterFileUseUpdater extends TableBaseFileUpdater
+class RouterFileUseUpdater extends ReactCRUDAdminFileUpdater
 {
-    public function needGenerate()
-    {
-        foreach ($this->excludePostfixes as $excludePostfix) {
-            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
-                return false;
-            }
-        }
-
-        return !$this->detectRelationTable($this->table);
-    }
-
     protected function getTargetFilePath(): string
     {
         return resource_path('assets/admin/src/containers/App/App.js');
@@ -68,8 +55,8 @@ class RouterFileUseUpdater extends TableBaseFileUpdater
      */
     protected function getInsertData(): string
     {
-        $modelName   = $this->getModelName();
-        $pathName    = pluralize($modelName);
+        $modelName = $this->getModelName();
+        $pathName  = pluralize($modelName);
 
         return <<< EOS
 import {$modelName}Index from '../../views/$pathName/{$modelName}Index';

@@ -2,27 +2,9 @@
 namespace LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
-use LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater;
 
-class SideBarFileUpdater extends TableBaseFileUpdater
+class SideBarFileUpdater extends ReactCRUDAdminFileUpdater
 {
-    public function needGenerate()
-    {
-        foreach ($this->excludePostfixes as $excludePostfix) {
-            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
-                return false;
-            }
-        }
-
-        $excludes = $this->json->get('admin.cruds.exclude', []);
-        if (in_array($this->table->getName(), $excludes)) {
-            return false;
-        }
-
-        return !$this->detectRelationTable($this->table);
-    }
-
     /**
      * @param \TakaakiMizuno\MWBParser\Elements\Table      $table
      * @param \TakaakiMizuno\MWBParser\Elements\Table[]    $tables

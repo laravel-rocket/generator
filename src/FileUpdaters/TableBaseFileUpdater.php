@@ -7,7 +7,7 @@ use function ICanBoogie\singularize;
 
 class TableBaseFileUpdater extends BaseFileUpdater
 {
-    protected $excludePostfixes = ['password_resets'];
+    protected $excludePostfixes = ['password_resets', 'roles'];
 
     /**
      * @var \TakaakiMizuno\MWBParser\Elements\Table

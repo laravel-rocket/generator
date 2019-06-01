@@ -2,23 +2,11 @@
 namespace LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin;
 
 use Illuminate\Support\Str;
-use LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater;
 use LaravelRocket\Generator\Objects\Table;
 use function ICanBoogie\pluralize;
 
-class RouterFileRouteUpdater extends TableBaseFileUpdater
+class RouterFileRouteUpdater extends ReactCRUDAdminFileUpdater
 {
-    public function needGenerate()
-    {
-        foreach ($this->excludePostfixes as $excludePostfix) {
-            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
-                return false;
-            }
-        }
-
-        return !$this->detectRelationTable($this->table);
-    }
-
     protected function getTargetFilePath(): string
     {
         return resource_path('assets/admin/src/containers/App/App.js');
