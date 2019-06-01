@@ -38,7 +38,7 @@ class {{ $modelName }}Presenter extends BasePresenter
         $model = $this->entity->{{ $relation->getName() }};
         if (!$model) {
             $model      = new \App\Models\{{ $relation->getReferenceModel() }}();
-@if( ends_with(strtolower($relation->getName()), 'image'))
+@if( \Illuminate\Support\Str::endsWith(strtolower($relation->getName()), 'image'))
 @if( $authenticatable )
             $model->url = \URLHelper::asset('images/user.png', 'common');
 @else

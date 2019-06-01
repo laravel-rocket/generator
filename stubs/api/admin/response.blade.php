@@ -43,7 +43,7 @@ class {{ $className }} extends Response
 @if( $relation->isMultipleSelection())
                 '{{ $relation->getName() }}' => !empty($model->{{ $relation->getName() }}) ? {{ ucfirst(\Illuminate\Support\Str::camel($relation->getReferenceModel())) }}::updateWithModels($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}, "{{ $relation->getInterestedColumnName() }}") : null,
 @elseif( $relation->isImage() )
-                '{{ $relation->getName() }}' => empty($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}) ? null : Image::updateWithModel($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}),
+                '{{ $relation->getName() }}' => Image::updateWithModel($model->present()->{{ \Illuminate\Support\Str::camel($relation->getName()) }}),
 @else
                 '{{ $relation->getName() }}' => empty($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}) ? null : {{ ucfirst(\Illuminate\Support\Str::camel(\ICanBoogie\singularize($relation->getReferenceModel()))) }}::updateWithModel($model->{{ \Illuminate\Support\Str::camel($relation->getName()) }}),
 @endif

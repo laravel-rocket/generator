@@ -89,7 +89,7 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
             if ($relation->shouldIncludeInAPI()) {
                 $options              = [];
                 $optionNames          = [];
-                foreach ($relation->getEditFieldOptions() as $option) {
+                foreach ($relation->getInterestedColumnOptions() as $option) {
                     $optionValue               = Arr::get($option, 'value', 'unknown');
                     $optionName                = Arr::get($option, 'name', 'Unknown');
                     $options[]                 = $optionValue;
