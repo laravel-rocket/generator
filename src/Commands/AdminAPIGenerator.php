@@ -1,6 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use function ICanBoogie\pluralize;
+use function ICanBoogie\singularize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\APIs\Admin\RouterFileUpdater;
 use LaravelRocket\Generator\Generators\APIs\Admin\ControllerGenerator;
@@ -9,8 +11,6 @@ use LaravelRocket\Generator\Generators\APIs\Admin\RequestGenerator;
 use LaravelRocket\Generator\Generators\APIs\Admin\ResponseGenerator;
 use LaravelRocket\Generator\Generators\APIs\Admin\UnitTestGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
-use function ICanBoogie\pluralize;
-use function ICanBoogie\singularize;
 
 class AdminAPIGenerator extends MWBGenerator
 {

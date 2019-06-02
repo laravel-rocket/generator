@@ -1,10 +1,10 @@
 <?php
 namespace LaravelRocket\Generator\Generators\React\CRUD\Admin;
 
+use function ICanBoogie\pluralize;
 use Illuminate\Support\Arr;
 use LaravelRocket\Generator\Generators\React\CRUD\ReactCRUDBaseGenerator;
 use LaravelRocket\Generator\Objects\Table;
-use function ICanBoogie\pluralize;
 
 class ColumnGenerator extends ReactCRUDBaseGenerator
 {
@@ -49,46 +49,44 @@ class ColumnGenerator extends ReactCRUDBaseGenerator
         $crudEditColumns = Arr::get($this->json->getTableCRUDDefinition($tableObject->getName(), 'edit'), 'columns', []);
 
         foreach ($tableObject->getColumns() as $column) {
-            if ($column->isAPIReturnable()) {
-                $options              = [];
-                $optionNames          = [];
-                foreach ($column->getEditFieldOptions() as $option) {
-                    $optionValue               = Arr::get($option, 'value', 'unknown');
-                    $optionName                = Arr::get($option, 'name', 'Unknown');
-                    $options[]                 = $optionValue;
-                    $optionNames[$optionValue] = $optionName;
-                }
+            $options     = [];
+            $optionNames = [];
+            foreach ($column->getEditFieldOptions() as $option) {
+                $optionValue               = Arr::get($option, 'value', 'unknown');
+                $optionName                = Arr::get($option, 'name', 'Unknown');
+                $options[]                 = $optionValue;
+                $optionNames[$optionValue] = $optionName;
+            }
 
-                $result['columns'][$column->getKeyName()] = [
-                    'name'         => $column->getDisplayName(),
-                    'type'         => $column->getEditFieldType(),
-                    'editable'     => $column->isEditable(),
-                    'queryName'    => $column->getQueryName(),
-                    'apiName'      => $column->getAPIName(),
-                    'presentation' => $column->getPresentation(),
-                    'options'      => $options,
-                    'optionNames'  => $optionNames,
-                ];
-                if ((count($crudListColumns) === 0 && $column->isListable()) || (count($crudListColumns) > 0 && in_array($column->getKeyName(), $crudListColumns))) {
-                    $result['list'][] = $column->getKeyName();
-                }
-                if ((count($crudShowColumns) === 0 && $column->isShowable()) || (count($crudShowColumns) > 0 && in_array($column->getKeyName(), $crudShowColumns))) {
-                    $result['show'][] = $column->getKeyName();
-                }
-                if ((count($crudEditColumns) === 0 && $column->isEditable()) || (count($crudEditColumns) > 0 && in_array($column->getKeyName(), $crudEditColumns))) {
-                    $result['edit'][] = $column->getKeyName();
-                }
-                $relation = $column->getRelation();
-                if (!empty($relation)) {
-                    $result['columns'][$column->getKeyName()]['relation'] = $relation->getName();
-                }
+            $result['columns'][$column->getKeyName()] = [
+                'name'         => $column->getDisplayName(),
+                'type'         => $column->getEditFieldType(),
+                'editable'     => $column->isEditable(),
+                'queryName'    => $column->getQueryName(),
+                'apiName'      => $column->getAPIName(),
+                'presentation' => $column->getPresentation(),
+                'options'      => $options,
+                'optionNames'  => $optionNames,
+            ];
+            if ((count($crudListColumns) === 0 && $column->isListable()) || (count($crudListColumns) > 0 && in_array($column->getKeyName(), $crudListColumns))) {
+                $result['list'][] = $column->getKeyName();
+            }
+            if ((count($crudShowColumns) === 0 && $column->isShowable()) || (count($crudShowColumns) > 0 && in_array($column->getKeyName(), $crudShowColumns))) {
+                $result['show'][] = $column->getKeyName();
+            }
+            if ((count($crudEditColumns) === 0 && $column->isEditable()) || (count($crudEditColumns) > 0 && in_array($column->getKeyName(), $crudEditColumns))) {
+                $result['edit'][] = $column->getKeyName();
+            }
+            $relation = $column->getRelation();
+            if (!empty($relation)) {
+                $result['columns'][$column->getKeyName()]['relation'] = $relation->getName();
             }
         }
 
         foreach ($tableObject->getRelations() as $relation) {
             if ($relation->shouldIncludeInAPI()) {
-                $options              = [];
-                $optionNames          = [];
+                $options     = [];
+                $optionNames = [];
                 foreach ($relation->getInterestedColumnOptions() as $option) {
                     $optionValue               = Arr::get($option, 'value', 'unknown');
                     $optionName                = Arr::get($option, 'name', 'Unknown');

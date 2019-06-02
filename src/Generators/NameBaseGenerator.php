@@ -1,8 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators;
 
-use Illuminate\Support\Str;
 use function ICanBoogie\singularize;
+use Illuminate\Support\Str;
 
 class NameBaseGenerator extends BaseGenerator
 {

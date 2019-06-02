@@ -1,10 +1,10 @@
 <?php
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
+use function ICanBoogie\pluralize;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Objects\Table;
-use function ICanBoogie\pluralize;
 
 class Definition
 {

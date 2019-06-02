@@ -1,9 +1,9 @@
 <?php
 namespace LaravelRocket\Generator\Objects;
 
+use function ICanBoogie\singularize;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use function ICanBoogie\singularize;
 
 class Table
 {

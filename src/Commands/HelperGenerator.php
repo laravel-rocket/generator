@@ -1,13 +1,13 @@
 <?php
 namespace LaravelRocket\Generator\Commands;
 
+use function ICanBoogie\singularize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\Helpers\AppConfigFileUpdater;
 use LaravelRocket\Generator\FileUpdaters\Helpers\RegisterHelperFileUpdater;
 use LaravelRocket\Generator\Generators\Helpers\FacadeGenerator;
 use LaravelRocket\Generator\Generators\Helpers\HelperInterfaceGenerator;
 use LaravelRocket\Generator\Generators\Helpers\HelperUnitTestGenerator;
-use function ICanBoogie\singularize;
 
 class HelperGenerator extends BaseCommand
 {

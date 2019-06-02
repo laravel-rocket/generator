@@ -1,11 +1,11 @@
 <?php
 namespace LaravelRocket\Generator\Validators\Tables\Rules\Tables;
 
+use function ICanBoogie\pluralize;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Validators\BaseRule;
 use LaravelRocket\Generator\Validators\Error;
-use function ICanBoogie\pluralize;
 
 class TableName extends BaseRule
 {

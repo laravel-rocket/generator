@@ -1,10 +1,10 @@
 <?php
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use function ICanBoogie\pluralize;
 use function ICanBoogie\singularize;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class Action
 {

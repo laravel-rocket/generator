@@ -1,8 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\Generators\React\CRUD\Admin;
 
-use LaravelRocket\Generator\Generators\React\CRUD\ReactCRUDBaseGenerator;
 use function ICanBoogie\pluralize;
+use LaravelRocket\Generator\Generators\React\CRUD\ReactCRUDBaseGenerator;
 
 class InfoGenerator extends ReactCRUDBaseGenerator
 {

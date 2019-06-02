@@ -1,8 +1,8 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters;
 
-use Illuminate\Support\Str;
 use function ICanBoogie\singularize;
+use Illuminate\Support\Str;
 
 class NameBaseFileUpdater extends BaseFileUpdater
 {
