@@ -507,7 +507,7 @@ class Column
             return;
         }
 
-        if (Str::endsWith($name, 'type') || $type === 'type') {
+        if ($this->isStatus() || $this->isType()) {
             $this->editFieldType    = 'select_single';
             $this->editFieldOptions = Arr::get($this->definition, 'options', []);
 
@@ -538,6 +538,18 @@ class Column
             } else {
                 $this->editFieldType = 'country';
             }
+
+            return;
+        }
+
+        if (Str::endsWith($name, 'language_code') && $type === 'varchar') {
+            $this->editFieldType = 'language';
+
+            return;
+        }
+
+        if (Str::endsWith($name, 'currency_code') && $type === 'varchar') {
+            $this->editFieldType = 'currency';
 
             return;
         }
@@ -575,7 +587,7 @@ class Column
 
         if ($this->hasRelation()) {
             if ($this->relation->getType() === Relation::TYPE_BELONGS_TO && Str::endsWith($name, '_id')) {
-                $this->editFieldType = 'select_single';
+                $this->editFieldType = 'label';
             }
         }
 
@@ -640,6 +652,12 @@ class Column
             case 'decimal':
                 $type    = 'decimal';
                 $postfix = ', '.$column->getPrecision().', '.$column->getScale();
+                break;
+            case 'float':
+                $type    = 'float';
+                break;
+            case 'double':
+                $type    = 'double';
                 break;
             default:
                 $type = 'unknown';

@@ -1,19 +1,12 @@
 <?php
 namespace LaravelRocket\Generator\FileUpdaters\Models;
 
-use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\TableBaseFileUpdater;
 
 class RegisterRepositoryFileUpdater extends TableBaseFileUpdater
 {
     public function needGenerate()
     {
-        foreach ($this->excludePostfixes as $excludePostfix) {
-            if (Str::endsWith($this->table->getName(), $excludePostfix)) {
-                return false;
-            }
-        }
-
         return true;
     }
 
@@ -43,7 +36,7 @@ class RegisterRepositoryFileUpdater extends TableBaseFileUpdater
         }
 
         foreach ($lines as $index => $line) {
-            if (strpos($line, $modelName.'RepositoryInterface::class') !== false) {
+            if (strpos($line, '\\'.$modelName.'RepositoryInterface::class') !== false) {
                 if (strpos($line, 'singleton') !== false) {
                     return $index + 1;
                 }
