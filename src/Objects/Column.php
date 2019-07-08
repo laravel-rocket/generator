@@ -446,6 +446,14 @@ class Column
     }
 
     /**
+     * @return bool
+     */
+    public function isSoftDelete(): bool
+    {
+        return $this->getName() === 'deleted_at' and ($this->getType() === 'timestamp' || $this->getType() === 'timestamp_f');
+    }
+
+    /**
      * @return mixed|null|string
      */
     public function getDefaultValue()
@@ -602,6 +610,10 @@ class Column
     public function generateAddMigration($previousColumnName = null): string
     {
         $column  = $this->column;
+
+        if ($this->isSoftDelete()) {
+            return '$table->softDeletes()';
+        }
         $postfix = '';
         switch ($this->getType()) {
             case 'tinyint':
@@ -654,10 +666,10 @@ class Column
                 $postfix = ', '.$column->getPrecision().', '.$column->getScale();
                 break;
             case 'float':
-                $type    = 'float';
+                $type = 'float';
                 break;
             case 'double':
-                $type    = 'double';
+                $type = 'double';
                 break;
             default:
                 $type = 'unknown';
@@ -710,7 +722,8 @@ class Column
      */
     public function generateDropMigration(): string
     {
-        $line = '$table->dropColumn(\''.$this->column->getName().'\')';
+        $line = $this->isSoftDelete() ? '$table->dropSoftDeletes()'
+            : '$table->dropColumn(\''.$this->column->getName().'\')';
 
         return $line;
     }
