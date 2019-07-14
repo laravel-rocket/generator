@@ -19,7 +19,7 @@
             throw new APIErrorException('authFailed');
         }
         $password          = $user->password;
-        $temporaryPassword = str_random(16);
+        $temporaryPassword = Str::random(16);
         $this->userRepository->update($user, [
             'password' => $temporaryPassword,
         ]);

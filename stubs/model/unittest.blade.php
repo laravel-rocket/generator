@@ -2,6 +2,7 @@ namespace Tests\Models;
 
 use App\Models\{{ $modelName }};
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
 class {{ $modelName }}Test extends TestCase
 {

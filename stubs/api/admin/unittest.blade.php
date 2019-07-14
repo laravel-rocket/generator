@@ -1,6 +1,7 @@
 namespace Tests\Controllers\Api\Admin;
 
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
 class {{ $modelName }}ControllerTest extends TestCase
 {

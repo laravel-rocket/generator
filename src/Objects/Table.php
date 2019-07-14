@@ -178,7 +178,7 @@ class Table
             }
             if (in_array($column->getType(), ['varchar', 'text', 'mediumtext', 'longtext'])) {
                 $variables['testColumnName'] = $column->getName();
-                $variables['testData']       = 'str_random(10)';
+                $variables['testData']       = 'Str::random(10)';
                 $found                       = true;
                 break;
             }

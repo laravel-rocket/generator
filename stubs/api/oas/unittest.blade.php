@@ -1,6 +1,7 @@
 namespace Tests\Controllers\Api\{{ $versionNamespace }};
 
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
 class {{ $className }}Test extends TestCase
 {

@@ -99,7 +99,7 @@ class ModelFactoryGenerator extends ModelBaseGenerator
             if (empty($value)) {
                 switch ($type) {
                     case 'varchar':
-                        $value = 'str_random(10)';
+                        $value = '\Illuminate\Support\Str::random(10)';
                         break;
                     case 'text':
                     case 'mediumtext':
@@ -127,7 +127,7 @@ class ModelFactoryGenerator extends ModelBaseGenerator
             }
 
             if (is_null($value)) {
-                $value = 'str_random(10)';
+                $value = '\Illuminate\Support\Str::random(10)';
             }
             $columnInfo['columns'][$name] = $value;
         }
