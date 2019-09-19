@@ -61,7 +61,7 @@
     </div>
 </div>
 @foreach( $relations as $key => $relation )
-@if( array_get($relation, 'type') == 'hasMany')
+@if( \Illuminate\Support\Arr::get($relation, 'type') == 'hasMany')
     <div class="box box-primary">
         <div class="box-header with-border">
             <h3 class="box-title">＠lang('tables/{{ $tableName }}/columns.{{ $key }}.name')</h3>
@@ -71,12 +71,12 @@
                 <th style="width: 10px">ID</th>
                 <th>&nbsp;</th>
                 <th>&nbsp;</th>
-＠foreach( ${{ $variableName }}->{{ array_get($relation, 'name') }}  as $relationModel )
+＠foreach( ${{ $variableName }}->{{ \Illuminate\Support\Arr::get($relation, 'name') }}  as $relationModel )
 <tr>
     <td>｛｛ $relationModel->id ｝｝</td>
     <td>｛｛ $relationModel->present()->toString() ｝｝</td>
     <td>
-        <a href="｛!! action('Admin\{{ ucfirst(\ICanBoogie\singularize(array_get($relation, 'name'))) }}Controller＠show', $relationModel->id) !!｝" class="btn btn-block btn-primary btn-sm"><i class="far fa-file-alt"></i> ＠lang('admin.pages.common.buttons.show')</a>
+        <a href="｛!! action('Admin\{{ ucfirst(\ICanBoogie\singularize(\Illuminate\Support\Arr::get($relation, 'name'))) }}Controller＠show', $relationModel->id) !!｝" class="btn btn-block btn-primary btn-sm"><i class="far fa-file-alt"></i> ＠lang('admin.pages.common.buttons.show')</a>
     </td>
 </tr>
 ＠endforeach

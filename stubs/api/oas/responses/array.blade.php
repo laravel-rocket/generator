@@ -19,7 +19,7 @@ class {{ $className }} extends Response
         if (!empty($array)) {
             $modelArray = [
 @foreach( $properties as $property)
-                '{{ $property['name'] }}' => {!! $property['cast'] !!} array_get($array, '{!! $property['name'] !!}', {!! $property['default'] !!}),
+                '{{ $property['name'] }}' => {!! $property['cast'] !!} \Illuminate\Support\Arr::get($array, '{!! $property['name'] !!}', {!! $property['default'] !!}),
 @endforeach
             ];
             $response = new static($modelArray, 200);
