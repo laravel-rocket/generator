@@ -54,7 +54,7 @@ class AppConfigFileUpdater extends NameBaseFileUpdater
     protected function getInsertData(): string
     {
         return <<< EOS
-        '{$this->name}Helper'     => App\Facades\{$this->name}Helper::class,
+        '{$this->name}Helper'     => App\Facades\\{$this->name}Helper::class,
 EOS;
     }
 }
