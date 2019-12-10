@@ -13,7 +13,7 @@ use App\Http\Responses\Api\{{ $versionNamespace }}\{{ $name }};
 @foreach( $controller->getRequiredRequests() as $request )
 use App\Http\Requests\Api\{{ $versionNamespace }}{{ $request->getNamespace() }}\{{ $request->getName() }};
 @endforeach
-@if( ends_with($className, 'AuthController'))
+@if( \Illuminate\Support\Str::endsWith($className, 'AuthController'))
 use App\Http\Requests\Api\V1\PsrServerRequest;
 use App\Repositories\UserRepositoryInterface;
 use App\Services\UserServiceAuthenticationServiceInterface;
@@ -29,7 +29,7 @@ class {{ $className }} extends Controller
     /** @var FileServiceInterface $fileService */
     protected $fileService;
 
-@if( ends_with($className, 'AuthController'))
+@if( \Illuminate\Support\Str::endsWith($className, 'AuthController'))
     /** @var UserServiceInterface $authenticatableService */
     protected $authenticatableService;
 
@@ -52,7 +52,7 @@ class {{ $className }} extends Controller
 @foreach( $controller->getRequiredRepositoryNames() as $name )
         {{ $name }}Interface ${{ lcfirst($name) }},
 @endforeach
-@if( ends_with($className, 'AuthController'))
+@if( \Illuminate\Support\Str::endsWith($className, 'AuthController'))
         UserServiceAuthenticationServiceInterface $serviceAuthenticationService,
         AuthorizationServer $server,
         UserRepositoryInterface $userRepository,
@@ -65,7 +65,7 @@ class {{ $className }} extends Controller
 @endforeach
         $this->userService        = $userService;
         $this->fileService        = $fileService;
-@if( ends_with($className, 'AuthController'))
+@if( \Illuminate\Support\Str::endsWith($className, 'AuthController'))
         $this->authenticatableService       = $userService;
         $this->serviceAuthenticationService = $serviceAuthenticationService;
         $this->server                       = $server;
