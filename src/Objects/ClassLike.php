@@ -1,6 +1,7 @@
 <?php
 namespace LaravelRocket\Generator\Objects;
 
+use Illuminate\Support\Str;
 use PhpParser\Error;
 use PhpParser\Lexer;
 use PhpParser\Node\Stmt\ClassConst;
@@ -175,7 +176,7 @@ class ClassLike
         }
         foreach ($classLike->stmts as $statement) {
             if (is_a($statement, ClassMethod::class)) {
-                if (!in_array($statement->name->name, $this->excludeMethods) && !starts_with($statement->name, '__')) {
+                if (!in_array($statement->name->name, $this->excludeMethods) && !Str::startsWith($statement->name, '__')) {
                     $this->methods[$statement->name->name] = $statement;
                 }
             } elseif (is_a($statement, Property::class)) {

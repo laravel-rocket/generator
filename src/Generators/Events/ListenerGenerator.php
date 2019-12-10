@@ -59,7 +59,7 @@ class ListenerGenerator extends NameBaseGenerator
         $relatedModels = [];
         $models        = $this->getModels();
         foreach ($models as $model) {
-            if (starts_with($this->name, $model)) {
+            if (Str::startsWith($this->name, $model)) {
                 $relatedModels[] = $model;
             }
         }
@@ -72,7 +72,7 @@ class ListenerGenerator extends NameBaseGenerator
         $relatedServices = [];
         $services        = $this->getServices();
         foreach ($services as $service) {
-            if (starts_with($this->name, $service)) {
+            if (Str::startsWith($this->name, $service)) {
                 $relatedServices[] = $service;
             }
         }
