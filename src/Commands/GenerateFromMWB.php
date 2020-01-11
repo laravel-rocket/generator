@@ -37,6 +37,8 @@ class GenerateFromMWB extends MWBGenerator
 
     protected $description = 'Create Migrations/Models/Repositories';
 
+    /** @var \TakaakiMizuno\MWBParser\Elements\Table[] $allTables */
+    protected $allTables = [];
     /**
      * Execute the console command.
      *
@@ -47,6 +49,7 @@ class GenerateFromMWB extends MWBGenerator
     public function handle()
     {
         $this->tables = $this->getTablesFromMWBFile();
+        $this->allTables = $this->tables;
         if ($this->tables === false) {
             return false;
         }
@@ -182,10 +185,11 @@ class GenerateFromMWB extends MWBGenerator
         foreach ($this->tables as $table) {
             $this->output('Processing '.$table->getName().'...', 'green');
             foreach ($generators as $generator) {
-                $generator->generate($table, $this->tables, $this->json);
+                $this->output('Processing in class '.get_class($generator).'...', 'green');
+                $generator->generate($table, $this->allTables, $this->json);
             }
             foreach ($fileUpdaters as $fileUpdater) {
-                $fileUpdater->insert($table, $this->tables, $this->json);
+                $fileUpdater->insert($table, $this->allTables, $this->json);
             }
         }
     }
