@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Validators\Tables;
 
 use LaravelRocket\Generator\Validators\BaseValidator;

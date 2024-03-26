@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\Models;
 
 use Illuminate\Support\Str;

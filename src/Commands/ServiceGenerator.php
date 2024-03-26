@@ -1,11 +1,13 @@
 <?php
+
 namespace LaravelRocket\Generator\Commands;
 
-use function ICanBoogie\singularize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\Services\RegisterServiceFileUpdater;
 use LaravelRocket\Generator\Generators\Services\ServiceInterfaceGenerator;
 use LaravelRocket\Generator\Generators\Services\ServiceUnitTestGenerator;
+
+use function ICanBoogie\singularize;
 
 class ServiceGenerator extends BaseCommand
 {

@@ -1,8 +1,7 @@
 <?php
+
 namespace LaravelRocket\Generator\Commands;
 
-use function ICanBoogie\pluralize;
-use function ICanBoogie\singularize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Generators\Models\ColumnLanguageFileGenerator;
 use LaravelRocket\Generator\Generators\Models\ConfigFileGenerator;
@@ -11,6 +10,9 @@ use LaravelRocket\Generator\Generators\Models\ModelUnitTestGenerator;
 use LaravelRocket\Generator\Generators\Models\PresenterGenerator;
 use LaravelRocket\Generator\Generators\Models\RelationLanguageFileGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
+
+use function ICanBoogie\pluralize;
+use function ICanBoogie\singularize;
 
 class ModelGenerator extends MWBGenerator
 {

@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\FileUpdaters;
 
 use Illuminate\Config\Repository;
@@ -266,7 +267,7 @@ class BaseFileUpdater
                 $result = $this->getArrayItem($name, $statement->stmts);
             } elseif (property_exists($statement, 'expr') &&
                 property_exists($statement->expr, 'items')
-             ) {
+            ) {
                 $result = $this->getArrayItem($name, $statement->expr->items);
             }
             if (!empty($result)) {

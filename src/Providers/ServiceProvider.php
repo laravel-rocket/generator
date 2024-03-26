@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Providers;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;

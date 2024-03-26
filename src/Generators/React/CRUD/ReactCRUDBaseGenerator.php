@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\React\CRUD;
 
 use Illuminate\Support\Str;

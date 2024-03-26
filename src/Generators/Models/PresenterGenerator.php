@@ -1,8 +1,10 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\Models;
 
-use function ICanBoogie\pluralize;
 use Illuminate\Support\Str;
+
+use function ICanBoogie\pluralize;
 
 class PresenterGenerator extends ModelBaseGenerator
 {

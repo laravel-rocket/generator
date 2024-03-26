@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Services;
 
 use LaravelRocket\Generator\Objects\OpenAPI\OpenAPISpec;

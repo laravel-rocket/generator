@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Validators\Services\Rules;
 
 use Illuminate\Support\Arr;

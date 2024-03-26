@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Objects;
 
 use Illuminate\Support\Str;
@@ -191,7 +192,7 @@ class ClassLike
     {
         $methods       = $this->getMethods();
         $constructor   = null;
-        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard();
         foreach ($methods as $method) {
             if ($methods->name === '__construct') {
                 $constructor = $method;

@@ -36,3 +36,5 @@ public/static/swagger-ui
 *.bak
 db.mwb.beforefix
 /.phpunit.result.cache
+
+.php-cs-fixer.cache

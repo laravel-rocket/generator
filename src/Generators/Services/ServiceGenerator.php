@@ -1,9 +1,11 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\Services;
 
-use function ICanBoogie\singularize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Generators\NameBaseGenerator;
+
+use function ICanBoogie\singularize;
 
 class ServiceGenerator extends NameBaseGenerator
 {

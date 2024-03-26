@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\APIs\Admin;
 
 use LaravelRocket\Generator\Generators\TableBaseGenerator;

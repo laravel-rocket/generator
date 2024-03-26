@@ -1,11 +1,13 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators;
 
-use function ICanBoogie\singularize;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Objects\Column;
 use TakaakiMizuno\MWBParser\Elements\Table;
+
+use function ICanBoogie\singularize;
 
 class TableBaseGenerator extends BaseGenerator
 {

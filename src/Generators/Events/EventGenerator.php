@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\Events;
 
 use Illuminate\Support\Str;

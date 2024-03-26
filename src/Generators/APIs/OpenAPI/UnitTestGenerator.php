@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\APIs\OpenAPI;
 
 use LaravelRocket\Generator\Generators\APIBaseGenerator;

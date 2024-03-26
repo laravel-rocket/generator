@@ -1,9 +1,11 @@
 <?php
+
 namespace LaravelRocket\Generator\Objects\OpenAPI;
+
+use LaravelRocket\Generator\Objects\Table;
 
 use function ICanBoogie\pluralize;
 use function ICanBoogie\singularize;
-use LaravelRocket\Generator\Objects\Table;
 
 class OpenAPISpec
 {

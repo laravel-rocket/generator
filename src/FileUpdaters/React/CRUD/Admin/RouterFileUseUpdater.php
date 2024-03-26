@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin;
 
 use function ICanBoogie\pluralize;

@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Console\Commands;
 
 use Illuminate\Config\Repository as ConfigRepository;

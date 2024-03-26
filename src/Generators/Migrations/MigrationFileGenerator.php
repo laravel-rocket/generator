@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\Migrations;
 
 use Carbon\Carbon;

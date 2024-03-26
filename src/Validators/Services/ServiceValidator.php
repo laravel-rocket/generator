@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Validators\Services;
 
 use LaravelRocket\Generator\Objects\ClassLike;

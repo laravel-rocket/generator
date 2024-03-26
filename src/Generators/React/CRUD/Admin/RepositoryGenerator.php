@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\React\CRUD\Admin;
 
 use LaravelRocket\Generator\Generators\React\CRUD\ReactCRUDBaseGenerator;

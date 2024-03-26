@@ -1,9 +1,11 @@
 <?php
+
 namespace LaravelRocket\Generator\FileUpdaters\Services;
 
-use function ICanBoogie\singularize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater;
+
+use function ICanBoogie\singularize;
 
 class RegisterServiceFileUpdater extends NameBaseFileUpdater
 {
