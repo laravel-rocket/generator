@@ -1,11 +1,12 @@
 <?php
+
 namespace LaravelRocket\Generator\Validators;
 
 class Error
 {
-    const LEVEL_ERROR   = 'error';
-    const LEVEL_WARNING = 'warning';
-    const LEVEL_INFO    = 'info';
+    public const LEVEL_ERROR   = 'error';
+    public const LEVEL_WARNING = 'warning';
+    public const LEVEL_INFO    = 'info';
 
     /** @var string */
     protected $message = '';

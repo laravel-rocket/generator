@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators;
 
 use Illuminate\Config\Repository;
@@ -144,7 +145,7 @@ class BaseGenerator
         $class = new ClassLike($this->getPath());
 
         $methods       = $class->getMethods();
-        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard();
         $result        = [];
         foreach ($methods as $name => $method) {
             $statement = $prettyPrinter->prettyPrint([$method]);
@@ -213,7 +214,7 @@ class BaseGenerator
 
     protected function getAllUses($statements, &$result)
     {
-        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard();
         foreach ($statements as $statement) {
             if (get_class($statement) === \PhpParser\Node\Stmt\Use_::class) {
                 foreach ($statement->uses as $use) {
@@ -233,7 +234,7 @@ class BaseGenerator
 
     protected function getAllTraits($statements, &$result)
     {
-        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard();
         foreach ($statements as $statement) {
             if (get_class($statement) === \PhpParser\Node\Stmt\TraitUse::class) {
                 /** @var \PhpParser\Node\Name $trait */
@@ -253,7 +254,7 @@ class BaseGenerator
 
     protected function getAllConstants($statements, &$result)
     {
-        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard;
+        $prettyPrinter = new \PhpParser\PrettyPrinter\Standard();
         foreach ($statements as $statement) {
             if (get_class($statement) === \PhpParser\Node\Stmt\ClassConst::class) {
                 foreach ($statement->consts as $constant) {

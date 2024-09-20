@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Commands;
 
 use LaravelRocket\Generator\Validators\Error;

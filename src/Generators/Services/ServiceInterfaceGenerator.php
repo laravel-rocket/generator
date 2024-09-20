@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\Services;
 
 class ServiceInterfaceGenerator extends ServiceGenerator

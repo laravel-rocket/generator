@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\Events;
 
 class UnitTestGenerator extends EventGenerator

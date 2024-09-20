@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Validators\Tables\Rules\Columns;
 
 use Illuminate\Support\Arr;

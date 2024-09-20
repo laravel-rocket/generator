@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\FileUpdaters\APIs\OpenAPI;
 
 use LaravelRocket\Generator\FileUpdaters\OpenAPIBaseFileUpdater;

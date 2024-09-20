@@ -1,10 +1,12 @@
 <?php
+
 namespace LaravelRocket\Generator\Objects;
 
-use function ICanBoogie\singularize;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Helpers\StringHelper;
+
+use function ICanBoogie\singularize;
 
 class Relation
 {
@@ -43,17 +45,17 @@ class Relation
      */
     protected $json = null;
 
-    const TYPE_BELONGS_TO      = 'belongsTo';
-    const TYPE_HAS_MANY        = 'hasMany';
-    const TYPE_HAS_ONE         = 'hasOne';
-    const TYPE_BELONGS_TO_MANY = 'belongsToMany';
+    public const TYPE_BELONGS_TO      = 'belongsTo';
+    public const TYPE_HAS_MANY        = 'hasMany';
+    public const TYPE_HAS_ONE         = 'hasOne';
+    public const TYPE_BELONGS_TO_MANY = 'belongsToMany';
 
-    const EDIT_TYPE_CHECKBOX      = 'checkbox';
-    const EDIT_TYPE_RADIO_BUTTON  = 'radio_button';
-    const EDIT_TYPE_SELECT_SINGLE = 'select_single';
-    const EDIT_TYPE_SELECT_MULTI  = 'select_multi';
-    const EDIT_TYPE_IMAGE         = 'image';
-    const EDIT_TYPE_FILE          = 'file';
+    public const EDIT_TYPE_CHECKBOX      = 'checkbox';
+    public const EDIT_TYPE_RADIO_BUTTON  = 'radio_button';
+    public const EDIT_TYPE_SELECT_SINGLE = 'select_single';
+    public const EDIT_TYPE_SELECT_MULTI  = 'select_multi';
+    public const EDIT_TYPE_IMAGE         = 'image';
+    public const EDIT_TYPE_FILE          = 'file';
 
     /**
      * Relation constructor.

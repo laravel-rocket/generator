@@ -1,9 +1,11 @@
 <?php
+
 namespace LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin;
 
-use function ICanBoogie\pluralize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Objects\Table;
+
+use function ICanBoogie\pluralize;
 
 class RouterFileRouteUpdater extends ReactCRUDAdminFileUpdater
 {

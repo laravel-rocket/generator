@@ -1,12 +1,14 @@
 <?php
+
 namespace LaravelRocket\Generator\Commands;
 
-use function ICanBoogie\pluralize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\Models\RegisterRepositoryFileUpdater;
 use LaravelRocket\Generator\Generators\Models\RepositoryInterfaceGenerator;
 use LaravelRocket\Generator\Generators\Models\RepositoryUnitTestGenerator;
 use LaravelRocket\Generator\Services\DatabaseService;
+
+use function ICanBoogie\pluralize;
 
 class RepositoryGenerator extends MWBGenerator
 {

@@ -1,10 +1,12 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\React\CRUD\Admin;
 
-use function ICanBoogie\pluralize;
 use Illuminate\Support\Arr;
 use LaravelRocket\Generator\Generators\React\CRUD\ReactCRUDBaseGenerator;
 use LaravelRocket\Generator\Objects\Table;
+
+use function ICanBoogie\pluralize;
 
 class ColumnGenerator extends ReactCRUDBaseGenerator
 {

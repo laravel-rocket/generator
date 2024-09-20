@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Objects\OpenAPI;
 
 class Request

@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Validators\APIs;
 
 use LaravelRocket\Generator\Validators\BaseValidator;

@@ -1,9 +1,11 @@
 <?php
+
 namespace LaravelRocket\Generator\FileUpdaters\Tests;
 
-use function ICanBoogie\singularize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\NameBaseFileUpdater;
+
+use function ICanBoogie\singularize;
 
 class ServiceTestFileUpdater extends NameBaseFileUpdater
 {

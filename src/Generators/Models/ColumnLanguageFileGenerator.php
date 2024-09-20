@@ -1,10 +1,12 @@
 <?php
+
 namespace LaravelRocket\Generator\Generators\Models;
 
-use function ICanBoogie\pluralize;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Objects\Column;
+
+use function ICanBoogie\pluralize;
 
 class ColumnLanguageFileGenerator extends ModelBaseGenerator
 {

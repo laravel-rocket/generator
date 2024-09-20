@@ -1,7 +1,7 @@
 <?php
+
 namespace LaravelRocket\Generator\Commands;
 
-use function ICanBoogie\pluralize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\RouterFileRouteUpdater;
 use LaravelRocket\Generator\FileUpdaters\React\CRUD\Admin\RouterFileUseUpdater;
@@ -13,6 +13,8 @@ use LaravelRocket\Generator\Generators\React\CRUD\Admin\RoleConfigGenerator;
 use LaravelRocket\Generator\Generators\React\CRUD\Admin\ViewGenerator;
 use LaravelRocket\Generator\Objects\Table;
 use LaravelRocket\Generator\Services\DatabaseService;
+
+use function ICanBoogie\pluralize;
 
 class AdminCRUDGenerator extends MWBGenerator
 {

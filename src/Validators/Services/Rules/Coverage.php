@@ -1,4 +1,5 @@
 <?php
+
 namespace LaravelRocket\Generator\Validators\Services\Rules;
 
 use Illuminate\Support\Arr;
@@ -26,7 +27,7 @@ class Coverage extends BaseRule
                 Error::LEVEL_ERROR,
                 $name,
                 'Add unit test file named : '.$test->getPath()
-                );
+            );
 
             return $this->response($errors);
         }

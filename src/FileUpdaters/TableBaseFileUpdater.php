@@ -1,9 +1,11 @@
 <?php
+
 namespace LaravelRocket\Generator\FileUpdaters;
 
-use function ICanBoogie\singularize;
 use Illuminate\Support\Str;
 use LaravelRocket\Generator\Objects\Table;
+
+use function ICanBoogie\singularize;
 
 class TableBaseFileUpdater extends BaseFileUpdater
 {
